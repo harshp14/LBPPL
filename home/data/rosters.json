@@ -1,0 +1,592 @@
+{
+  "teams": [
+    {
+      "team_name": "King of Duskull Servants",
+      "coach_name": "Qasim",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Dragapult",
+          "points": 19
+        },
+        {
+          "name": "Tapu Lele",
+          "points": 16
+        },
+        {
+          "name": "Ting-Lu",
+          "points": 16
+        },
+        {
+          "name": "Heatran",
+          "points": 14
+        },
+        {
+          "name": "Hawlucha",
+          "points": 11
+        },
+        {
+          "name": "Tentacruel",
+          "points": 9
+        },
+        {
+          "name": "Eelektross",
+          "points": 7
+        },
+        {
+          "name": "Mega Venusaur",
+          "points": 11
+        },
+        {
+          "name": "Obstagoon",
+          "points": 9
+        },
+        {
+          "name": "Golurk",
+          "points": 6
+        },
+        {
+          "name": "Alcremie",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "Cincinnati BenGallades",
+      "coach_name": "Charu",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Great Tusk",
+          "points": 19
+        },
+        {
+          "name": "Zeraora",
+          "points": 16
+        },
+        {
+          "name": "Slowking",
+          "points": 13
+        },
+        {
+          "name": "Archaludon",
+          "points": 14
+        },
+        {
+          "name": "Spectrier",
+          "points": 18
+        },
+        {
+          "name": "Fezandipiti",
+          "points": 10
+        },
+        {
+          "name": "Phione",
+          "points": 1
+        },
+        {
+          "name": "Talonflame",
+          "points": 10
+        },
+        {
+          "name": "Rotom-Mow",
+          "points": 8
+        },
+        {
+          "name": "Mega Tyranitar",
+          "points": 11
+        }
+      ],
+      "free_agents_used": 2
+    },
+    {
+      "team_name": "Doom Desires",
+      "coach_name": "Tricia",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Iron Valiant",
+          "points": 19
+        },
+        {
+          "name": "Roaring Moon",
+          "points": 16
+        },
+        {
+          "name": "Galarian Slowking",
+          "points": 16
+        },
+        {
+          "name": "Empoleon",
+          "points": 12
+        },
+        {
+          "name": "Tangrowth",
+          "points": 10
+        },
+        {
+          "name": "Porygon2",
+          "points": 9
+        },
+        {
+          "name": "Arcanine",
+          "points": 11
+        },
+        {
+          "name": "Mega Raichu X",
+          "points": 16
+        },
+        {
+          "name": "Gligar",
+          "points": 6
+        },
+        {
+          "name": "Cryogonal",
+          "points": 4
+        },
+        {
+          "name": "Piplup",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "Gouging Gooners",
+      "coach_name": "Harnoor",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Gouging Fire",
+          "points": 17
+        },
+        {
+          "name": "Corviknight",
+          "points": 13
+        },
+        {
+          "name": "Scream Tail",
+          "points": 13
+        },
+        {
+          "name": "Torkoal",
+          "points": 11
+        },
+        {
+          "name": "Iron Hands",
+          "points": 15
+        },
+        {
+          "name": "Krookodile",
+          "points": 13
+        },
+        {
+          "name": "Ribombee",
+          "points": 9
+        },
+        {
+          "name": "Venusaur",
+          "points": 9
+        },
+        {
+          "name": "Walking Wake",
+          "points": 15
+        },
+        {
+          "name": "Dusclops",
+          "points": 4
+        },
+        {
+          "name": "Bastiodon",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "Armenian Armarouges",
+      "coach_name": "Uday",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Meowscarada",
+          "points": 18
+        },
+        {
+          "name": "Primarina",
+          "points": 13
+        },
+        {
+          "name": "Scizor",
+          "points": 14
+        },
+        {
+          "name": "Moltres",
+          "points": 11
+        },
+        {
+          "name": "Mega Lopunny",
+          "points": 16
+        },
+        {
+          "name": "Uxie",
+          "points": 11
+        },
+        {
+          "name": "Raging Bolt",
+          "points": 15
+        },
+        {
+          "name": "Landorus-Incarnate",
+          "points": 17
+        },
+        {
+          "name": "Eldegoss",
+          "points": 4
+        },
+        {
+          "name": "Hisuian Sliggoo",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "HydreiGoldenState Warriors",
+      "coach_name": "Ajay",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Mega Diancie",
+          "points": 18
+        },
+        {
+          "name": "Sneasler",
+          "points": 17
+        },
+        {
+          "name": "Zygarde-50%",
+          "points": 15
+        },
+        {
+          "name": "Rotom-Heat",
+          "points": 12
+        },
+        {
+          "name": "Mew",
+          "points": 16
+        },
+        {
+          "name": "Skarmory",
+          "points": 12
+        },
+        {
+          "name": "Gengar",
+          "points": 11
+        },
+        {
+          "name": "Milotic",
+          "points": 10
+        },
+        {
+          "name": "Umbreon",
+          "points": 8
+        },
+        {
+          "name": "Bouffalant",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "Alakazam Wizards",
+      "coach_name": "Arnav",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Mega Raichu Y",
+          "points": 19
+        },
+        {
+          "name": "Landorus-Therian",
+          "points": 16
+        },
+        {
+          "name": "Slowbro",
+          "points": 14
+        },
+        {
+          "name": "Cinderace",
+          "points": 15
+        },
+        {
+          "name": "Florges",
+          "points": 9
+        },
+        {
+          "name": "Greninja",
+          "points": 17
+        },
+        {
+          "name": "Hitmontop",
+          "points": 6
+        },
+        {
+          "name": "Alolan Muk",
+          "points": 11
+        },
+        {
+          "name": "Bronzong",
+          "points": 8
+        },
+        {
+          "name": "Arboliva",
+          "points": 5
+        }
+      ],
+      "free_agents_used": 3
+    },
+    {
+      "team_name": "Golisopod Goons",
+      "coach_name": "Jashan",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Tapu Koko",
+          "points": 19
+        },
+        {
+          "name": "Gliscor",
+          "points": 16
+        },
+        {
+          "name": "Iron Moth",
+          "points": 16
+        },
+        {
+          "name": "Baxcalibur",
+          "points": 15
+        },
+        {
+          "name": "Quaquaval",
+          "points": 14
+        },
+        {
+          "name": "Iron Crown",
+          "points": 13
+        },
+        {
+          "name": "Mega Meganium",
+          "points": 13
+        },
+        {
+          "name": "Incineroar",
+          "points": 8
+        },
+        {
+          "name": "Golisopod",
+          "points": 5
+        },
+        {
+          "name": "Charjabug",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "Bayern Munchlax",
+      "coach_name": "Daren",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Mega Dragalge",
+          "points": 14
+        },
+        {
+          "name": "Iron Treads",
+          "points": 16
+        },
+        {
+          "name": "Tornadus-Therian",
+          "points": 17
+        },
+        {
+          "name": "Rotom-Wash",
+          "points": 14
+        },
+        {
+          "name": "Chi-Yu",
+          "points": 17
+        },
+        {
+          "name": "Slither Wing",
+          "points": 13
+        },
+        {
+          "name": "Klefki",
+          "points": 11
+        },
+        {
+          "name": "Sinistcha",
+          "points": 9
+        },
+        {
+          "name": "Ditto",
+          "points": 5
+        },
+        {
+          "name": "Bewear",
+          "points": 4
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": "The Smogon Larpers",
+      "coach_name": "Gurpreet",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Urshifu-Single-Strike",
+          "points": 17
+        },
+        {
+          "name": "Iron Bundle",
+          "points": 17
+        },
+        {
+          "name": "Thundurus-Incarnate",
+          "points": 14
+        },
+        {
+          "name": "Mega Chimecho",
+          "points": 11
+        },
+        {
+          "name": "Sylveon",
+          "points": 12
+        },
+        {
+          "name": "Alomomola",
+          "points": 10
+        },
+        {
+          "name": "Ogerpon-Hearthflame",
+          "points": 15
+        },
+        {
+          "name": "Salamence",
+          "points": 13
+        },
+        {
+          "name": "Clodsire",
+          "points": 10
+        },
+        {
+          "name": "Probopass",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    },
+    {
+      "team_name": null,
+      "coach_name": "Harsh",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Mega Greninja",
+          "points": 18
+        },
+        {
+          "name": "Terapagos",
+          "points": 17
+        },
+        {
+          "name": "Clefable",
+          "points": 15
+        },
+        {
+          "name": "Rillaboom",
+          "points": 14
+        },
+        {
+          "name": "Thundurus-Therian",
+          "points": 14
+        },
+        {
+          "name": "Hisuian Zoroark",
+          "points": 12
+        },
+        {
+          "name": "Reuniclus",
+          "points": 11
+        },
+        {
+          "name": "Flareon",
+          "points": 3
+        },
+        {
+          "name": "Glimmet",
+          "points": 1
+        },
+        {
+          "name": "Celesteela",
+          "points": 15
+        }
+      ],
+      "free_agents_used": 2
+    },
+    {
+      "team_name": "Blazin' Mages",
+      "coach_name": "Ishan",
+      "logo": "",
+      "pokemon": [
+        {
+          "name": "Mega Delphox",
+          "points": 18
+        },
+        {
+          "name": "Palafin",
+          "points": 18
+        },
+        {
+          "name": "Garchomp",
+          "points": 17
+        },
+        {
+          "name": "Zapdos",
+          "points": 16
+        },
+        {
+          "name": "Tyranitar",
+          "points": 14
+        },
+        {
+          "name": "Dhelmise",
+          "points": 7
+        },
+        {
+          "name": "Tinkaton",
+          "points": 10
+        },
+        {
+          "name": "Snorlax",
+          "points": 10
+        },
+        {
+          "name": "Okidogi",
+          "points": 9
+        },
+        {
+          "name": "Murkrow",
+          "points": 1
+        }
+      ],
+      "free_agents_used": 0
+    }
+  ]
+}

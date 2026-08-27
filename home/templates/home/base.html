@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Draft League</title>
+    <script>
+        (function () {
+            document.documentElement.setAttribute('data-scheme', localStorage.getItem('draftleague-scheme') || 'slate');
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&family=Merriweather:wght@400;700&family=Fredoka:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <h1>LBPP Draft League</h1>
+    </header>
+    <nav class="tabs">
+        <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">Homepage</a>
+        <a href="{% url 'rosters' %}" class="{% if request.resolver_match.url_name == 'rosters' %}active{% endif %}">Rosters</a>
+        <a href="{% url 'draft_board' %}" class="{% if request.resolver_match.url_name == 'draft_board' %}active{% endif %}">Draft Board</a>
+        <a href="{% url 'schedule' %}" class="{% if request.resolver_match.url_name == 'schedule' %}active{% endif %}">Schedule</a>
+        <a href="{% url 'statistics' %}" class="{% if request.resolver_match.url_name == 'statistics' %}active{% endif %}">Statistics</a>
+        <a href="{% url 'free_agency_tracker' %}" class="{% if request.resolver_match.url_name == 'free_agency_tracker' %}active{% endif %}">Free Agency Tracker</a>
+        <div class="scheme-picker" role="group" aria-label="Design">
+            <button type="button" class="scheme-swatch" data-scheme="slate" style="background: linear-gradient(135deg, #43607f, #12161c);" title="Slate" aria-label="Slate design" aria-pressed="false"></button>
+            <button type="button" class="scheme-swatch" data-scheme="crimson" style="background: linear-gradient(135deg, #c0392b, #180b0b);" title="Crimson" aria-label="Crimson design" aria-pressed="false"></button>
+            <button type="button" class="scheme-swatch" data-scheme="ocean" style="background: linear-gradient(135deg, #2563eb, #eef5f7);" title="Ocean" aria-label="Ocean design" aria-pressed="false"></button>
+            <button type="button" class="scheme-swatch" data-scheme="forest" style="background: linear-gradient(135deg, #1e8f5f, #f3f6ee);" title="Forest" aria-label="Forest design" aria-pressed="false"></button>
+            <button type="button" class="scheme-swatch" data-scheme="sunset" style="background: linear-gradient(135deg, #e07b39, #1c1018);" title="Sunset" aria-label="Sunset design" aria-pressed="false"></button>
+            <button type="button" class="scheme-swatch" data-scheme="royal" style="background: linear-gradient(135deg, #7c3aed, #f6f3fb);" title="Royal" aria-label="Royal design" aria-pressed="false"></button>
+        </div>
+    </nav>
+    <main>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="message message-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{% static 'home/js/theme.js' %}"></script>
+</body>
+</html>

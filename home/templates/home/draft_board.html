@@ -1,0 +1,35 @@
+{% extends "home/base.html" %}
+{% block content %}
+<h1>Draft Board</h1>
+<p>Every draftable Pok&eacute;mon, grouped by point cost.</p>
+
+<div class="card draft-board-card">
+    <div class="draft-board-scroll">
+        <table class="draft-board">
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column.label }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    {% for cell in row %}
+                    <td class="{% if cell.drafted %}drafted{% endif %}">
+                        {% if cell %}
+                        <span class="mon-cell">
+                            {% if cell.sprite %}<img src="{{ cell.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                            <span>{{ cell.name }}</span>
+                        </span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Free Agency Tracker</h1>
+        <p>Swap roster mons for available free agents.</p>
+    </div>
+    <a href="#submit-fa" class="btn-primary">Submit Free Agency Move</a>
+</div>
+
+<div class="card fa-status-card">
+    <table class="roster-table">
+        <thead>
+            <tr>
+                <th>Coach</th>
+                <th>Team</th>
+                <th>Points Used</th>
+                <th>Free Agents Left</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td>{{ team.coach_name }}</td>
+                <td>{{ team.team_name|default:"TBD" }}</td>
+                <td>{{ team.points_used }} / {{ points_cap }}</td>
+                <td>{{ team.free_agents_remaining }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card fa-log-card">
+    <h2>Transaction Log</h2>
+    <table class="roster-table">
+        <thead>
+            <tr>
+                <th>Coach</th>
+                <th>Dropped</th>
+                <th>Picked Up</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for txn in log %}
+            <tr>
+                <td>{{ txn.coach }}</td>
+                <td>
+                    {% for mon in txn.drops %}{{ mon.name }} ({{ mon.points }}){% if not forloop.last %}, {% endif %}{% empty %}&mdash;{% endfor %}
+                </td>
+                <td>
+                    {% for mon in txn.pickups %}{{ mon.name }} ({{ mon.points }}){% if not forloop.last %}, {% endif %}{% empty %}&mdash;{% endfor %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No free agency moves yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{{ teams|json_script:"teams-data" }}
+{{ free_agents|json_script:"free-agents-data" }}
+
+<div id="submit-fa" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-dialog card fa-modal" role="dialog" aria-modal="true">
+        <a href="#" class="modal-close" aria-label="Close">&times;</a>
+        <h3>Submit Free Agency Move</h3>
+        <p class="modal-subtitle">Pick a coach, then list what they're dropping and picking up.</p>
+        <form method="post" action="{% url 'submit_free_agency' %}" id="fa-form">
+            {% csrf_token %}
+            <select name="coach" id="fa-coach" class="modal-input" required>
+                <option value="" disabled selected>Select coach&hellip;</option>
+                {% for team in teams %}
+                <option value="{{ team.coach_name }}">{{ team.coach_name }} ({{ team.team_name|default:"TBD" }})</option>
+                {% endfor %}
+            </select>
+
+            <div id="fa-rows" class="fa-rows">
+                <div class="fa-row">
+                    <select name="drop" class="modal-input fa-drop-select">
+                        <option value="">No drop</option>
+                    </select>
+                    <select name="pickup" class="modal-input fa-pickup-select">
+                        <option value="">No pickup</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" id="fa-add-row" class="fa-add-row">+ Add another entry</button>
+            <button type="submit" class="modal-submit">Submit</button>
+        </form>
+    </div>
+</div>
+<script src="{% static 'home/js/free_agency.js' %}"></script>
+{% endblock %}

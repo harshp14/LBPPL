@@ -1,0 +1,44 @@
+{% extends "home/base.html" %}
+{% block content %}
+<h1>Rosters</h1>
+<p>Coach, drafted Pok&eacute;mon, and points spent per team.</p>
+
+<div class="roster-grid">
+    {% for team in teams %}
+    <div class="card roster-card">
+        <div class="roster-card-header">
+            {% if team.logo %}
+            <img src="{{ team.logo }}" alt="{{ team.team_name }} logo" class="roster-logo">
+            {% else %}
+            <div class="roster-logo roster-logo-placeholder"></div>
+            {% endif %}
+            <div>
+                <h2>{{ team.team_name|default:"TBD" }}</h2>
+                <p class="roster-coach">Coach: {{ team.coach_name }}</p>
+            </div>
+        </div>
+        <table class="roster-table">
+            <thead>
+                <tr>
+                    <th>Pok&eacute;mon</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mon in team.pokemon %}
+                <tr>
+                    <td>
+                        <span class="mon-cell">
+                            {% if mon.sprite %}<img src="{{ mon.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                            <span>{{ mon.name }}</span>
+                        </span>
+                    </td>
+                    <td>{{ mon.points }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

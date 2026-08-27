@@ -1,0 +1,83 @@
+{% extends "home/base.html" %}
+{% block content %}
+<h1>Schedule</h1>
+<p>Pick a week, then a match, to see that matchup.</p>
+
+<div class="schedule-layout">
+    <aside class="week-list">
+        {% for week in weeks %}
+        <a href="?week={{ week.week }}" class="week-card{% if week.week == selected_week.week %} active{% endif %}">
+            <span class="week-card-label">{{ week.label }}</span>
+            <span class="week-card-meta">{{ week.played }}/{{ week.total }} played</span>
+        </a>
+        {% endfor %}
+    </aside>
+
+    <div class="week-matches">
+        <nav class="match-nav">
+            {% for match in selected_week.matches %}
+            <a href="?week={{ selected_week.week }}&match={{ forloop.counter0 }}" class="match-nav-item{% if forloop.counter0 == selected_match_index %} active{% endif %}">
+                <span class="match-nav-player{% if match.winner == 'player1' %} winner{% endif %}">{{ match.player1 }}</span>
+                <span class="match-nav-vs">vs</span>
+                <span class="match-nav-player{% if match.winner == 'player2' %} winner{% endif %}">{{ match.player2 }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+
+        {% with match=selected_match %}
+        {% if match %}
+        <div class="match-card card">
+            <div class="match-players">
+                <span class="match-player{% if match.winner == 'player1' %} winner{% endif %}">{{ match.player1 }}</span>
+                <span class="match-vs">vs</span>
+                <span class="match-player{% if match.winner == 'player2' %} winner{% endif %}">{{ match.player2 }}</span>
+            </div>
+
+            {% if match.margin %}
+            <div class="match-result">
+                {% if match.winner == 'player1' %}{{ match.player1 }}{% else %}{{ match.player2 }}{% endif %} won by {{ match.margin }}
+            </div>
+            {% else %}
+            <div class="match-result match-result-pending">Not yet played</div>
+            {% endif %}
+
+            {% if match.replay_url %}
+            <a href="{{ match.replay_url }}" target="_blank" rel="noopener noreferrer" class="match-replay-link">Watch replay &#8599;</a>
+            {% else %}
+            <a href="#submit-{{ selected_week.week }}-{{ selected_match_index }}" class="match-submit-link">Submit game +</a>
+            {% endif %}
+
+            <div class="match-stats">
+                {% if match.stats %}
+                {% include "home/_match_stats_table.html" with mons=match.stats.player1 label=match.player1 %}
+                {% include "home/_match_stats_table.html" with mons=match.stats.player2 label=match.player2 %}
+                {% else %}
+                <span class="match-stats-placeholder">Pok&eacute;mon-by-Pok&eacute;mon stats coming soon</span>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if not match.replay_url %}
+        <div id="submit-{{ selected_week.week }}-{{ selected_match_index }}" class="modal">
+            <a href="#" class="modal-backdrop" aria-label="Close"></a>
+            <div class="modal-dialog card" role="dialog" aria-modal="true">
+                <a href="#" class="modal-close" aria-label="Close">&times;</a>
+                <h3>Submit replay link</h3>
+                <p class="modal-subtitle">{{ match.player1 }} vs {{ match.player2 }}</p>
+                <form method="post" action="{% url 'submit_replay' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="week" value="{{ selected_week.week }}">
+                    <input type="hidden" name="match_index" value="{{ selected_match_index }}">
+                    <input type="url" name="replay_url" class="modal-input" placeholder="https://champsnatdex.dedyn.io/replays/..." required>
+                    <button type="submit" class="modal-submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <p>No matches scheduled for this week.</p>
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}

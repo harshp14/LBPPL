@@ -1,0 +1,63 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<h1>Statistics</h1>
+<p>Career Pok&eacute;mon performance, aggregated from every logged battle. Populates as weeks are played. Click a column to sort.</p>
+
+<div class="card draft-board-card">
+    <div class="draft-board-scroll">
+        <table class="stats-table" id="stats-table">
+            <thead>
+                <tr>
+                    <th data-sort="text" data-default-dir="asc">Pok&eacute;mon</th>
+                    <th data-sort="num">GP</th>
+                    <th data-sort="num" aria-sort="descending">Kills</th>
+                    <th data-sort="num">K/D</th>
+                    <th data-sort="num">K/Pt</th>
+                    <th data-sort="num">Turns Active</th>
+                    <th data-sort="num">Dmg Dealt</th>
+                    <th data-sort="num">Dmg Taken</th>
+                    <th data-sort="num">Statuses Inflicted</th>
+                    <th data-sort="num">Missed Moves</th>
+                    <th data-sort="num">Dodged Moves</th>
+                    <th data-sort="num">Resisted Hits Taken</th>
+                    <th data-sort="num">Super Effective Hits Taken</th>
+                    <th data-sort="num">Hazards Set</th>
+                    <th data-sort="num">Indirect Dmg</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td data-value="{{ row.name }}">
+                        <span class="mon-cell">
+                            {% if row.sprite %}<img src="{{ row.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                            <span>{{ row.name }}</span>
+                        </span>
+                    </td>
+                    <td data-value="{{ row.games_played }}">{{ row.games_played }}</td>
+                    <td data-value="{{ row.kills }}">{{ row.kills }}</td>
+                    <td data-value="{{ row.kills_per_death }}">{{ row.kills_per_death }}</td>
+                    <td data-value="{{ row.kills_per_point|default_if_none:'' }}">{{ row.kills_per_point|default:"&mdash;" }}</td>
+                    <td data-value="{{ row.turns_active }}">{{ row.turns_active }}</td>
+                    <td data-value="{{ row.damage_dealt }}">{{ row.damage_dealt }}</td>
+                    <td data-value="{{ row.damage_taken }}">{{ row.damage_taken }}/{{ row.max_hp }}</td>
+                    <td data-value="{{ row.statuses_inflicted }}">{{ row.statuses_inflicted }}</td>
+                    <td data-value="{{ row.missed_moves }}">{{ row.missed_moves }}</td>
+                    <td data-value="{{ row.dodged_moves }}">{{ row.dodged_moves }}</td>
+                    <td data-value="{{ row.resisted_hits_taken }}">{{ row.resisted_hits_taken }}</td>
+                    <td data-value="{{ row.super_effective_hits_taken }}">{{ row.super_effective_hits_taken }}</td>
+                    <td data-value="{{ row.hazards_set }}">{{ row.hazards_set }}</td>
+                    <td data-value="{{ row.indirect_damage }}">{{ row.indirect_damage }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="15">No battles logged yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="{% static 'home/js/statistics.js' %}"></script>
+{% endblock %}
