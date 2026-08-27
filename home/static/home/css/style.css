@@ -233,35 +233,43 @@ nav.tabs {
     transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.scheme-picker {
+.picker-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 16px;
     margin-left: auto;
     padding: 10px 0;
 }
 
-.scheme-swatch {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    padding: 0;
+.picker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.picker-label {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.picker-select {
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    font-family: inherit;
     cursor: pointer;
-    box-shadow: 0 0 0 1px var(--color-border);
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.scheme-swatch:hover {
-    transform: scale(1.1);
+.picker-select:hover {
+    border-color: var(--color-primary);
 }
 
-.scheme-swatch[aria-pressed="true"] {
-    border-color: var(--color-text);
-    transform: scale(1.15);
-}
-
-.scheme-swatch:focus-visible {
+.picker-select:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
@@ -337,6 +345,38 @@ main a:hover {
     box-shadow: var(--shadow), var(--card-ring, 0 0 0 0 transparent);
     padding: 24px 28px;
     transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.changelog-feed {
+    display: flex;
+    flex-direction: column;
+}
+
+.changelog-entry {
+    display: flex;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.changelog-entry:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.changelog-entry:first-child {
+    padding-top: 0;
+}
+
+.changelog-date {
+    flex: 0 0 110px;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.changelog-text {
+    flex: 1;
 }
 
 .roster-grid {
@@ -523,30 +563,41 @@ table.stats-table th.sortable[aria-sort="descending"]::after {
     flex-shrink: 0;
 }
 
+.mon-tera-badge {
+    font-size: 0.65em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: var(--color-bg);
+    flex-shrink: 0;
+}
+
 table.draft-board td.drafted .mon-sprite {
     opacity: 0.5;
 }
 
 .schedule-layout {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     margin-top: 24px;
-    align-items: start;
 }
 
 .week-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
-    position: sticky;
-    top: 76px;
 }
 
 .week-card {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1 1 140px;
     padding: 12px 16px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -942,20 +993,6 @@ table.match-stats-table tbody tr.died .match-stats-fainted-cell {
 }
 
 @media (max-width: 640px) {
-    .schedule-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .week-list {
-        position: static;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .week-card {
-        flex: 1 1 140px;
-    }
-
     .match-replay-link {
         margin-left: 0;
     }

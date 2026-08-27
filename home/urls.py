@@ -11,4 +11,5 @@ urlpatterns = [
     path('statistics/', views.statistics, name='statistics'),
     path('free-agency-tracker/', views.free_agency_tracker, name='free_agency_tracker'),
     path('free-agency-tracker/submit/', views.submit_free_agency, name='submit_free_agency'),
+    path('changelog/', views.changelog, name='changelog'),
 ]

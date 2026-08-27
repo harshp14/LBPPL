@@ -7,17 +7,42 @@ import json
 import re
 from pathlib import Path
 
+import requests
+
 from . import replay_parser
+from .models import S1Pokedex, S2Pokedex, S3Pokedex, S4Pokedex
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 
 FREE_AGENT_CAP = 5
 POINTS_CAP = 120
 
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1542556245486075995/UaKu_0Lu6hDDWbLDqMiYaOZFhRkl3T2tP7Ybbj8_q1YuM9sewVFwc1m_Fb8OSEq6h8Dn"
+
 SPRITE_BASE_URL = "https://play.pokemonshowdown.com/sprites/home/"
 
-_sprite_ids = None
-_board_by_norm = None
+# Season 4 was the first season built, so its data files live at the root
+# of DATA_DIR for backwards compatibility; seasons 1-3 live in their own
+# subdirectory (e.g. home/data/s2/).
+POKEDEX_MODELS = {"1": S1Pokedex, "2": S2Pokedex, "3": S3Pokedex, "4": S4Pokedex}
+
+
+def _season_dir(season):
+    return DATA_DIR if season == "4" else DATA_DIR / f"s{season}"
+
+
+# Each season's *_pokedex table (points + sprite + species data for every
+# Pokemon on that season's draft board) is small and effectively static --
+# it only changes when someone reruns load_s{n}_pokedex. Pull each one once,
+# lazily, on first use instead of hitting the DB on every lookup.
+_pokedex_cache = {}
+_board_by_norm_cache = {}
+
+
+def _get_pokedex(season):
+    if season not in _pokedex_cache:
+        _pokedex_cache[season] = {p.name: p for p in POKEDEX_MODELS[season].objects.all()}
+    return _pokedex_cache[season]
 
 # Showdown's own species string for these is genuinely just the base name
 # (not context-dependent) -- Landorus/Thundurus/Tornadus's Showdown species
@@ -34,6 +59,14 @@ _BARE_SPECIES_OVERRIDES = {
 _BATTLE_FORME_OVERRIDES = {
     "Palafin-Hero": "Palafin",
     "Terapagos-Terastal": "Terapagos",
+    # Ogerpon's Embody Aspect changes its displayed species to a "-Tera"
+    # variant on Terastallizing; the draft board only tracks the mask
+    # forme itself, not a separate Tera'd entry.
+    "Ogerpon-Tera": "Ogerpon",
+    "Ogerpon-Teal-Tera": "Ogerpon",
+    "Ogerpon-Wellspring-Tera": "Ogerpon-Wellspring",
+    "Ogerpon-Hearthflame-Tera": "Ogerpon-Hearthflame",
+    "Ogerpon-Cornerstone-Tera": "Ogerpon-Cornerstone",
 }
 
 
@@ -41,22 +74,25 @@ def _norm(s):
     return re.sub(r"[^a-z0-9]", "", s.lower())
 
 
-def canonicalize_pokemon_name(name):
+def _get_board_by_norm(season):
+    if season not in _board_by_norm_cache:
+        _board_by_norm_cache[season] = {_norm(name): name for name in _get_pokedex(season)}
+    return _board_by_norm_cache[season]
+
+
+def canonicalize_pokemon_name(name, season):
     """Map any naming-convention variant of a Pokémon name (raw Showdown
     species like "Venusaur-Mega", a battle-only forme like "Palafin-Hero")
-    to the exact name used as the key in draft_board.json / sprites.json.
-    Falls back to the input unchanged if nothing matches, so callers never
-    get None. This is what keeps sprites and point lookups working no
-    matter which naming convention upstream data (replay parsing, manual
-    entry) happens to use."""
-    global _board_by_norm
-    if _board_by_norm is None:
-        _board_by_norm = {_norm(k): k for k in _load("draft_board.json")}
-
+    to the exact name used as the key in that season's pokedex table. Falls
+    back to the input unchanged if nothing matches, so callers never get
+    None. This is what keeps sprites and point lookups working no matter
+    which naming convention upstream data (replay parsing, manual entry)
+    happens to use."""
     name = _BARE_SPECIES_OVERRIDES.get(name, name)
     name = _BATTLE_FORME_OVERRIDES.get(name, name)
 
-    direct = _board_by_norm.get(_norm(name))
+    board_by_norm = _get_board_by_norm(season)
+    direct = board_by_norm.get(_norm(name))
     if direct:
         return direct
 
@@ -73,49 +109,49 @@ def canonicalize_pokemon_name(name):
             prefix = {"alola": "Alolan", "galar": "Galarian", "hisui": "Hisuian", "paldea": "Paldean"}[forme_head]
             candidates.append(f"{prefix} {base}")
         for cand in candidates:
-            match = _board_by_norm.get(_norm(cand))
+            match = board_by_norm.get(_norm(cand))
             if match:
                 return match
 
     return name
 
 
-def get_sprite_url(pokemon_name):
-    """Showdown "Home"-style sprite URL for a Pokémon name, or None if we
-    don't have a mapping (see data/sprites.json, built from pokedex.json)."""
-    global _sprite_ids
-    if _sprite_ids is None:
-        _sprite_ids = _load("sprites.json")
-    sprite_id = _sprite_ids.get(canonicalize_pokemon_name(pokemon_name))
-    return f"{SPRITE_BASE_URL}{sprite_id}.png" if sprite_id else None
+def get_sprite_url(pokemon_name, season):
+    """Showdown "Home"-style sprite URL for a Pokémon name in a given
+    season, or None if we don't have a mapping (see that season's pokedex
+    table)."""
+    entry = _get_pokedex(season).get(canonicalize_pokemon_name(pokemon_name, season))
+    return f"{SPRITE_BASE_URL}{entry.sprite_id}.png" if entry and entry.sprite_id else None
 
 
-def _load(filename):
-    with open(DATA_DIR / filename, encoding="utf-8") as f:
+def _load(season, filename, default):
+    path = _season_dir(season) / filename
+    if not path.exists():
+        return default
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
-def _save(filename, data):
-    with open(DATA_DIR / filename, "w", encoding="utf-8") as f:
+def _save(season, filename, data):
+    path = _season_dir(season) / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def get_rosters():
-    """Return the list of team roster dicts (team_name, coach_name, logo, pokemon)."""
-    with open(DATA_DIR / "rosters.json", encoding="utf-8") as f:
-        data = json.load(f)
-    return data["teams"]
+def get_rosters(season):
+    """Return the list of team roster dicts (team_name, coach_name, logo,
+    pokemon) for a season, or [] if that season has no rosters.json yet."""
+    return _load(season, "rosters.json", {"teams": []})["teams"]
 
 
-def get_draft_board():
-    """Return draft board columns, sorted most to least expensive, with a
-    trailing "Banned" column (points 0) for mons with no point value."""
-    with open(DATA_DIR / "draft_board.json", encoding="utf-8") as f:
-        points_by_pokemon = json.load(f)
-
+def get_draft_board(season):
+    """Return draft board columns for a season, sorted most to least
+    expensive, with a trailing "Banned" column (points 0) for mons with no
+    point value."""
     pokemon_by_points = {}
-    for name, points in points_by_pokemon.items():
-        pokemon_by_points.setdefault(points, []).append(name)
+    for name, entry in _get_pokedex(season).items():
+        pokemon_by_points.setdefault(entry.points, []).append(name)
 
     columns = []
     for points in sorted(pokemon_by_points, reverse=True):
@@ -128,40 +164,52 @@ def get_draft_board():
     return columns
 
 
-def get_schedule():
-    """Return the list of week dicts (week, label, matches) for the schedule.
-    Pokémon names in each match's stats are canonicalized to the draft
-    board's naming convention, so callers never see raw Showdown-style
-    names regardless of how they ended up in the stored data."""
-    with open(DATA_DIR / "schedule.json", encoding="utf-8") as f:
-        data = json.load(f)
-    for week in data["weeks"]:
+def get_schedule(season):
+    """Return the list of week dicts (week, label, matches) for a season's
+    schedule, or [] if that season has no schedule.json yet. Pokémon names
+    in each match's stats are canonicalized to the draft board's naming
+    convention, so callers never see raw Showdown-style names regardless of
+    how they ended up in the stored data."""
+    weeks = _load(season, "schedule.json", {"weeks": []})["weeks"]
+    for week in weeks:
         for match in week["matches"]:
             stats = match.get("stats")
             if stats:
                 for mon in stats["player1"] + stats["player2"]:
-                    mon["pokemon"] = canonicalize_pokemon_name(mon["pokemon"])
-    return data["weeks"]
+                    mon["pokemon"] = canonicalize_pokemon_name(mon["pokemon"], season)
+    return weeks
 
 
-STAT_SUM_FIELDS = [
-    "turns_active", "damage_dealt", "damage_taken", "indirect_damage",
-    "statuses_inflicted", "missed_moves", "dodged_moves",
-    "resisted_hits_taken", "super_effective_hits_taken", "hazards_set",
+# Every numeric per-Pokemon field the replay parser produces (damage
+# splits, healing, statuses, hazards, boosts, etc.) - kept in sync with
+# the parser instead of duplicated here, so a new tracked stat shows up
+# in career totals automatically.
+STAT_SUM_FIELDS = replay_parser.STAT_FIELDS
+
+_HEALING_FIELDS = [
+    "healing_received_move", "healing_received_wish", "healing_received_leech_seed",
+    "healing_received_item_ability", "healing_received_terrain", "healing_received_other",
 ]
 
 
-def get_statistics():
-    """Aggregate per-Pokémon career stats across every logged battle in
-    schedule.json. Every stat (turns active, statuses inflicted, raw
-    damage dealt/taken/indirect, etc.) is summed across appearances --
-    no percentages. "Dmg Taken" is shown as damage_taken / max_hp, both
-    flat sums with no division, so a career total reads like "820/1089"
-    rather than a computed ratio. Only Pokémon that have appeared in at
-    least one battle are included. Returns rows sorted by kills, most
-    first."""
-    weeks = get_schedule()
-    points_by_pokemon = _load("draft_board.json")
+def healing_received_total(mon):
+    """Sum of a Pokemon's healing_received_* breakdown fields (works on
+    both a single match's per-mon stats dict and a get_statistics() row)."""
+    return sum(mon.get(f, 0) for f in _HEALING_FIELDS)
+
+
+def get_statistics(season):
+    """Aggregate per-Pokémon career stats across every logged battle in a
+    season's schedule.json. Every stat (turns active, statuses inflicted,
+    raw damage dealt/taken/indirect, etc.) is summed across appearances --
+    no percentages, except the parser's own "_pct" fields (damage already
+    normalized to % of the target's max HP per hit). "Dmg Taken" is shown
+    as damage_taken / max_hp, both flat sums with no division, so a career
+    total reads like "820/1089" rather than a computed ratio. Only
+    Pokémon that have appeared in at least one battle are included.
+    Returns rows sorted by kills, most first."""
+    weeks = get_schedule(season)
+    pokedex = _get_pokedex(season)
 
     agg = {}
     for week in weeks:
@@ -171,12 +219,16 @@ def get_statistics():
                 continue
             for mon in stats["player1"] + stats["player2"]:
                 row = agg.setdefault(mon["pokemon"], {
-                    "games_played": 0, "kills": 0, "deaths": 0, "max_hp": 0,
+                    "games_played": 0, "kills": 0, "direct_kills": 0,
+                    "indirect_kills": 0, "deaths": 0, "self_kos": 0, "max_hp": 0,
                     **{f: 0 for f in STAT_SUM_FIELDS},
                 })
                 row["games_played"] += 1
                 row["kills"] += mon["kills"]
+                row["direct_kills"] += mon.get("direct_kills", 0)
+                row["indirect_kills"] += mon.get("indirect_kills", 0)
                 row["deaths"] += 1 if mon["died"] else 0
+                row["self_kos"] += 1 if mon.get("self_ko") else 0
                 row["max_hp"] += mon.get("max_hp", 0)
                 for field in STAT_SUM_FIELDS:
                     row[field] += mon.get(field, 0)
@@ -184,27 +236,34 @@ def get_statistics():
     rows = []
     for name, row in agg.items():
         games = row["games_played"]
-        points = points_by_pokemon.get(name, 0)
+        points = pokedex[name].points if name in pokedex else 0
         entry = {
             "name": name,
-            "sprite": get_sprite_url(name),
+            "sprite": get_sprite_url(name, season),
             "games_played": games,
             "kills": row["kills"],
+            "direct_kills": row["direct_kills"],
+            "indirect_kills": row["indirect_kills"],
             "deaths": row["deaths"],
+            "self_kos": row["self_kos"],
             "kills_per_death": round(row["kills"] / row["deaths"], 2) if row["deaths"] else row["kills"],
             "kills_per_point": round(row["kills"] / points, 2) if points else None,
             "max_hp": row["max_hp"],
         }
         entry.update({f: row[f] for f in STAT_SUM_FIELDS})
+        entry["healing_received_total"] = healing_received_total(row)
         rows.append(entry)
 
     return sorted(rows, key=lambda r: r["kills"], reverse=True)
 
 
-def set_match_replay(week, match_index, replay_url):
+def set_match_replay(season, week, match_index, replay_url):
     """Persist a user-submitted replay link for one match. Returns False if
-    the week/match couldn't be found, True on success."""
-    path = DATA_DIR / "schedule.json"
+    the season has no schedule.json yet or the week/match couldn't be
+    found, True on success."""
+    path = _season_dir(season) / "schedule.json"
+    if not path.exists():
+        return False
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
 
@@ -232,13 +291,15 @@ def _normalize_pokemon_name(name):
     return re.sub(r"[^a-z0-9]", "", n)
 
 
-def set_match_from_replay(week, match_index, replay_url):
+def set_match_from_replay(season, week, match_index, replay_url):
     """Fetch and parse a replay, then persist the full per-Pokemon stats
     (kills, deaths, turns active, damage%, etc.) plus the derived
     winner/margin for one match. Returns (True, None) on success or
     (False, error_message) on failure. Raises replay_parser.ReplayParseError
     on fetch/parse failure (caller decides how to handle that)."""
-    path = DATA_DIR / "schedule.json"
+    path = _season_dir(season) / "schedule.json"
+    if not path.exists():
+        return False, "Couldn't find that match."
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
 
@@ -249,7 +310,7 @@ def set_match_from_replay(week, match_index, replay_url):
 
     parsed = replay_parser.parse_replay(replay_url)
 
-    rosters = {team["coach_name"]: team for team in get_rosters()}
+    rosters = {team["coach_name"]: team for team in get_rosters(season)}
     team1 = rosters.get(match["player1"])
     team2 = rosters.get(match["player2"])
     if team1 is None or team2 is None:
@@ -268,7 +329,7 @@ def set_match_from_replay(week, match_index, replay_url):
         side_of_player1, side_of_player2 = "p2", "p1"
 
     for mon in parsed["p1"] + parsed["p2"]:
-        mon["pokemon"] = canonicalize_pokemon_name(mon["pokemon"])
+        mon["pokemon"] = canonicalize_pokemon_name(mon["pokemon"], season)
 
     stats = {
         "player1": parsed[side_of_player1],
@@ -302,24 +363,43 @@ def get_roster_points(team):
     return sum(mon["points"] for mon in team["pokemon"])
 
 
-def get_free_agents():
-    """Draftable (non-banned) Pokémon not currently on any roster."""
-    points_by_pokemon = _load("draft_board.json")
-    rostered = {mon["name"] for team in get_rosters() for mon in team["pokemon"]}
+def get_free_agents(season):
+    """Draftable (non-banned) Pokémon not currently on any roster in a season."""
+    rostered = {mon["name"] for team in get_rosters(season) for mon in team["pokemon"]}
     agents = [
-        {"name": name, "points": points}
-        for name, points in points_by_pokemon.items()
-        if points > 0 and name not in rostered
+        {"name": name, "points": entry.points}
+        for name, entry in _get_pokedex(season).items()
+        if entry.points > 0 and name not in rostered
     ]
     return sorted(agents, key=lambda a: a["name"])
 
 
-def get_free_agency_log():
-    """Past free agency transactions, most recent first."""
-    return list(reversed(_load("free_agency_log.json")["transactions"]))
+def get_free_agency_log(season):
+    """Past free agency transactions for a season, most recent first."""
+    return list(reversed(_load(season, "free_agency_log.json", {"transactions": []})["transactions"]))
 
 
-def submit_free_agency(coach_name, drop_names, pickup_names):
+def _notify_discord_free_agency(season, coach_name, team_name, drop_names, pickup_names):
+    """Best-effort post of a free agency move to the league Discord. Never
+    raises - a webhook outage shouldn't block a transaction that already
+    saved successfully.
+    """
+    dropping = "\n".join(drop_names) if drop_names else "(none)"
+    picking_up = "\n".join(pickup_names) if pickup_names else "(none)"
+    content = (
+        f"Season: S{season}\n"
+        f"Coach: {coach_name}\n"
+        f"Team: {team_name}\n\n"
+        f"Dropping: \n{dropping}\n\n"
+        f"Picking Up:\n{picking_up}"
+    )
+    try:
+        requests.post(DISCORD_WEBHOOK_URL, json={"content": content}, timeout=5)
+    except requests.RequestException:
+        pass
+
+
+def submit_free_agency(season, coach_name, drop_names, pickup_names):
     """Validate and, if valid, apply a free agency move: drop_names come off
     the coach's roster, pickup_names (drafted at their board cost) go on.
     Returns (True, None) on success or (False, error_message) on failure.
@@ -331,7 +411,8 @@ def submit_free_agency(coach_name, drop_names, pickup_names):
     if len(set(pickup_names)) != len(pickup_names):
         return False, "The same free agent was selected more than once."
 
-    rosters = _load("rosters.json")
+    pokedex = _get_pokedex(season)
+    rosters = _load(season, "rosters.json", {"teams": []})
     team = next((t for t in rosters["teams"] if t["coach_name"] == coach_name), None)
     if team is None:
         return False, "Unknown coach."
@@ -341,7 +422,6 @@ def submit_free_agency(coach_name, drop_names, pickup_names):
         if name not in roster_by_name:
             return False, f"{name} is not on {coach_name}'s roster."
 
-    points_by_pokemon = _load("draft_board.json")
     rostered_elsewhere = {
         mon["name"]
         for t in rosters["teams"]
@@ -349,7 +429,8 @@ def submit_free_agency(coach_name, drop_names, pickup_names):
         if t is not team
     }
     for name in pickup_names:
-        if points_by_pokemon.get(name, 0) <= 0:
+        entry = pokedex.get(name)
+        if entry is None or entry.points <= 0:
             return False, f"{name} is not a draftable Pokémon."
         if name in rostered_elsewhere or (name in roster_by_name and name not in drop_names):
             return False, f"{name} is already on a roster."
@@ -360,24 +441,26 @@ def submit_free_agency(coach_name, drop_names, pickup_names):
 
     current_points = get_roster_points(team)
     drop_points = sum(roster_by_name[name] for name in drop_names)
-    pickup_points = sum(points_by_pokemon[name] for name in pickup_names)
+    pickup_points = sum(pokedex[name].points for name in pickup_names)
     new_points = current_points - drop_points + pickup_points
     if new_points > POINTS_CAP:
         return False, f"That would put {coach_name} at {new_points} points (cap is {POINTS_CAP})."
 
     remaining_pokemon = [mon for mon in team["pokemon"] if mon["name"] not in drop_names]
-    remaining_pokemon += [{"name": name, "points": points_by_pokemon[name]} for name in pickup_names]
+    remaining_pokemon += [{"name": name, "points": pokedex[name].points} for name in pickup_names]
     team["pokemon"] = remaining_pokemon
     team["free_agents_used"] = team.get("free_agents_used", 0) + len(pickup_names)
-    _save("rosters.json", rosters)
+    _save(season, "rosters.json", rosters)
 
-    log = _load("free_agency_log.json")
+    log = _load(season, "free_agency_log.json", {"transactions": []})
     log["transactions"].append({
         "coach": coach_name,
         "team_name": team.get("team_name"),
         "drops": [{"name": name, "points": roster_by_name[name]} for name in drop_names],
-        "pickups": [{"name": name, "points": points_by_pokemon[name]} for name in pickup_names],
+        "pickups": [{"name": name, "points": pokedex[name].points} for name in pickup_names],
     })
-    _save("free_agency_log.json", log)
+    _save(season, "free_agency_log.json", log)
+
+    _notify_discord_free_agency(season, coach_name, team.get("team_name"), drop_names, pickup_names)
 
     return True, None

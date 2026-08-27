@@ -1,29 +1,28 @@
 {% extends "home/base.html" %}
 {% block content %}
 <h1>Schedule</h1>
-<p>Pick a week, then a match, to see that matchup.</p>
 
 <div class="schedule-layout">
-    <aside class="week-list">
+    <nav class="week-list">
         {% for week in weeks %}
         <a href="?week={{ week.week }}" class="week-card{% if week.week == selected_week.week %} active{% endif %}">
             <span class="week-card-label">{{ week.label }}</span>
             <span class="week-card-meta">{{ week.played }}/{{ week.total }} played</span>
         </a>
         {% endfor %}
-    </aside>
+    </nav>
+
+    <nav class="match-nav">
+        {% for match in selected_week.matches %}
+        <a href="?week={{ selected_week.week }}&match={{ forloop.counter0 }}" class="match-nav-item{% if forloop.counter0 == selected_match_index %} active{% endif %}">
+            <span class="match-nav-player{% if match.winner == 'player1' %} winner{% endif %}">{{ match.player1 }}</span>
+            <span class="match-nav-vs">vs</span>
+            <span class="match-nav-player{% if match.winner == 'player2' %} winner{% endif %}">{{ match.player2 }}</span>
+        </a>
+        {% endfor %}
+    </nav>
 
     <div class="week-matches">
-        <nav class="match-nav">
-            {% for match in selected_week.matches %}
-            <a href="?week={{ selected_week.week }}&match={{ forloop.counter0 }}" class="match-nav-item{% if forloop.counter0 == selected_match_index %} active{% endif %}">
-                <span class="match-nav-player{% if match.winner == 'player1' %} winner{% endif %}">{{ match.player1 }}</span>
-                <span class="match-nav-vs">vs</span>
-                <span class="match-nav-player{% if match.winner == 'player2' %} winner{% endif %}">{{ match.player2 }}</span>
-            </a>
-            {% endfor %}
-        </nav>
-
         {% with match=selected_match %}
         {% if match %}
         <div class="match-card card">

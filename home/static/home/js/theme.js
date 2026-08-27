@@ -1,21 +1,41 @@
 (function () {
     var root = document.documentElement;
-    var swatches = document.querySelectorAll('.scheme-swatch');
+    var schemeSelect = document.getElementById('scheme-select');
+    var leagueSelect = document.getElementById('league-select');
 
     function applyScheme(scheme) {
         root.setAttribute('data-scheme', scheme);
-        swatches.forEach(function (btn) {
-            btn.setAttribute('aria-pressed', btn.getAttribute('data-scheme') === scheme ? 'true' : 'false');
-        });
+        if (schemeSelect) {
+            schemeSelect.value = scheme;
+        }
     }
 
     applyScheme(root.getAttribute('data-scheme') || 'slate');
 
-    swatches.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var scheme = btn.getAttribute('data-scheme');
+    if (schemeSelect) {
+        schemeSelect.addEventListener('change', function () {
+            var scheme = schemeSelect.value;
             localStorage.setItem('draftleague-scheme', scheme);
             applyScheme(scheme);
         });
-    });
+    }
+
+    function setSeasonCookie(season) {
+        document.cookie = 'draftleague-season=' + season + ';path=/;max-age=31536000';
+    }
+
+    if (leagueSelect) {
+        var savedSeason = localStorage.getItem('draftleague-season') || '4';
+        leagueSelect.value = savedSeason;
+        setSeasonCookie(savedSeason);
+
+        leagueSelect.addEventListener('change', function () {
+            var season = leagueSelect.value;
+            localStorage.setItem('draftleague-season', season);
+            setSeasonCookie(season);
+            if (leagueSelect.dataset.reloadOnChange === 'true') {
+                window.location.reload();
+            }
+        });
+    }
 })();

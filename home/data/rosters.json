@@ -418,14 +418,6 @@
           "points": 14
         },
         {
-          "name": "Chi-Yu",
-          "points": 17
-        },
-        {
-          "name": "Slither Wing",
-          "points": 13
-        },
-        {
           "name": "Klefki",
           "points": 11
         },
@@ -434,15 +426,23 @@
           "points": 9
         },
         {
-          "name": "Ditto",
-          "points": 5
-        },
-        {
           "name": "Bewear",
           "points": 4
+        },
+        {
+          "name": "Darkrai",
+          "points": 18
+        },
+        {
+          "name": "Victini",
+          "points": 15
+        },
+        {
+          "name": "Lapras",
+          "points": 2
         }
       ],
-      "free_agents_used": 0
+      "free_agents_used": 3
     },
     {
       "team_name": "The Smogon Larpers",

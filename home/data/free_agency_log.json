@@ -111,6 +111,38 @@
           "points": 1
         }
       ]
+    },
+    {
+      "coach": "Daren",
+      "team_name": "Bayern Munchlax",
+      "drops": [
+        {
+          "name": "Chi-Yu",
+          "points": 17
+        },
+        {
+          "name": "Slither Wing",
+          "points": 13
+        },
+        {
+          "name": "Ditto",
+          "points": 5
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Darkrai",
+          "points": 18
+        },
+        {
+          "name": "Victini",
+          "points": 15
+        },
+        {
+          "name": "Lapras",
+          "points": 2
+        }
+      ]
     }
   ]
 }
