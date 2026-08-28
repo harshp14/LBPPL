@@ -23,8 +23,12 @@
         <a href="{% url 'rosters' %}" class="{% if request.resolver_match.url_name == 'rosters' %}active{% endif %}">Rosters</a>
         <a href="{% url 'draft_board' %}" class="{% if request.resolver_match.url_name == 'draft_board' %}active{% endif %}">Draft Board</a>
         <a href="{% url 'schedule' %}" class="{% if request.resolver_match.url_name == 'schedule' %}active{% endif %}">Schedule</a>
+        <a href="{% url 'upcoming_games' %}" class="{% if request.resolver_match.url_name == 'upcoming_games' %}active{% endif %}">Upcoming Games</a>
+        <a href="{% url 'playoffs' %}" class="{% if request.resolver_match.url_name == 'playoffs' %}active{% endif %}">Playoffs</a>
         <a href="{% url 'statistics' %}" class="{% if request.resolver_match.url_name == 'statistics' %}active{% endif %}">Statistics</a>
+        <a href="{% url 'accolades' %}" class="{% if request.resolver_match.url_name == 'accolades' %}active{% endif %}">Accolades</a>
         <a href="{% url 'free_agency_tracker' %}" class="{% if request.resolver_match.url_name == 'free_agency_tracker' %}active{% endif %}">Free Agency Tracker</a>
+        <a href="{% url 'all_time_stats' %}" class="{% if request.resolver_match.url_name == 'all_time_stats' %}active{% endif %}">All-Time Stats</a>
         <a href="{% url 'changelog' %}" class="{% if request.resolver_match.url_name == 'changelog' %}active{% endif %}">Changelog</a>
         <div class="picker-group">
             <div class="picker">
@@ -40,7 +44,7 @@
             </div>
             <div class="picker">
                 <label for="league-select" class="picker-label">League</label>
-                <select id="league-select" class="picker-select" aria-label="League" data-reload-on-change="{% if request.resolver_match.url_name == 'changelog' %}false{% else %}true{% endif %}">
+                <select id="league-select" class="picker-select" aria-label="League" data-reload-on-change="{% if request.resolver_match.url_name == 'changelog' or request.resolver_match.url_name == 'all_time_stats' %}false{% else %}true{% endif %}">
                     <option value="1">Season 1</option>
                     <option value="2">Season 2</option>
                     <option value="3">Season 3</option>

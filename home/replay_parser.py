@@ -12,15 +12,23 @@ reliable source (an effect with no `[of]` tag and no matching prior move),
 the event is recorded as taken/received but left unattributed rather than
 guessed at.
 """
+import json
 import re
 import ssl
 import urllib.request
+from urllib.parse import urlparse
 
 # The league's replay host (champsnatdex.dedyn.io) has been serving an
 # expired TLS cert. The data itself is public, non-sensitive replay logs,
 # so we skip verification for this one known, trusted host rather than
 # fail every fetch.
 _UNVERIFIED_SSL_CONTEXT = ssl._create_unverified_context()
+
+# Hosts whose replay page is a client-rendered SPA with no embedded log --
+# fetch the log via their JSON API (<url>.json -> {"log": "..."}) instead of
+# scraping the page HTML, which is what fetch_replay_log() does for other
+# hosts (e.g. champsnatdex.dedyn.io, which server-renders the log inline).
+_JSON_API_HOSTS = {"replay.pokemonshowdown.com"}
 
 STAT_FIELDS = [
     # activity
@@ -98,6 +106,17 @@ class ReplayParseError(Exception):
 
 
 def fetch_replay_log(replay_url):
+    host = urlparse(replay_url).hostname
+    if host in _JSON_API_HOSTS:
+        json_url = replay_url.rstrip("/") + ".json"
+        req = urllib.request.Request(json_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=20, context=_UNVERIFIED_SSL_CONTEXT) as resp:
+            data = json.loads(resp.read().decode("utf-8", errors="replace"))
+        log = data.get("log")
+        if not log:
+            raise ReplayParseError(f"No battle log found at {json_url}")
+        return log
+
     req = urllib.request.Request(replay_url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=20, context=_UNVERIFIED_SSL_CONTEXT) as resp:
         html = resp.read().decode("utf-8", errors="replace")

@@ -135,9 +135,60 @@ def submit_replay(request):
     return redirect(f"{reverse('schedule')}?week={week}&match={match_index}")
 
 
+def upcoming_games(request):
+    season = _get_season(request)
+    return render(request, 'home/upcoming_games.html', {
+        'games': data_access.get_upcoming_games(season),
+    })
+
+
+def submit_game_time(request):
+    season = _get_season(request)
+    week = request.POST.get('week')
+    match_index = request.POST.get('match_index')
+    day = request.POST.get('day', '').strip()
+
+    try:
+        week = int(week)
+        match_index = int(match_index)
+    except (TypeError, ValueError):
+        messages.error(request, "Couldn't find that match.")
+        return redirect(reverse('schedule'))
+
+    if not day:
+        messages.error(request, "Pick a day first.")
+        return redirect(f"{reverse('schedule')}?week={week}&match={match_index}")
+
+    ok, error = data_access.set_match_game_time(season, week, match_index, day)
+    if ok:
+        messages.success(request, 'Game time sent to Discord.')
+    else:
+        messages.error(request, error)
+
+    return redirect(f"{reverse('schedule')}?week={week}&match={match_index}")
+
+
+def playoffs(request):
+    season = _get_season(request)
+    return render(request, 'home/playoffs.html', {'season': season})
+
+
 def statistics(request):
     season = _get_season(request)
     return render(request, 'home/statistics.html', {'rows': data_access.get_statistics(season)})
+
+
+def accolades(request):
+    season = _get_season(request)
+    accolades_data = data_access.get_accolades(season)
+    for category in accolades_data['pokemon_awards']:
+        for entry in category['entries']:
+            entry['sprite'] = data_access.get_sprite_url(entry['pokemon'], season)
+    return render(request, 'home/accolades.html', {'season': season, 'accolades': accolades_data})
+
+
+def all_time_stats(request):
+    return render(request, 'home/all_time_stats.html', {'rows': data_access.get_all_time_statistics()})
 
 
 def free_agency_tracker(request):
@@ -151,7 +202,7 @@ def free_agency_tracker(request):
         'teams': teams,
         'free_agents': data_access.get_free_agents(season),
         'log': data_access.get_free_agency_log(season),
-        'points_cap': data_access.POINTS_CAP,
+        'points_cap': data_access.get_points_cap(season),
     })
 
 

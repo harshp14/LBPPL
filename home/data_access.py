@@ -7,17 +7,17 @@ import json
 import re
 from pathlib import Path
 
-import requests
-
-from . import replay_parser
+from . import discord_webhooks, replay_parser
 from .models import S1Pokedex, S2Pokedex, S3Pokedex, S4Pokedex
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 
 FREE_AGENT_CAP = 5
-POINTS_CAP = 120
+POINTS_CAP_BY_SEASON = {"1": 120, "2": 120, "3": 125, "4": 120}
 
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1542556245486075995/UaKu_0Lu6hDDWbLDqMiYaOZFhRkl3T2tP7Ybbj8_q1YuM9sewVFwc1m_Fb8OSEq6h8Dn"
+
+def get_points_cap(season):
+    return POINTS_CAP_BY_SEASON[season]
 
 SPRITE_BASE_URL = "https://play.pokemonshowdown.com/sprites/home/"
 
@@ -180,6 +180,26 @@ def get_schedule(season):
     return weeks
 
 
+def get_upcoming_games(season):
+    """Matches that have a proposed day to play but no replay submitted
+    yet, across every week, soonest first (scheduled_day is stored as an
+    ISO yyyy-mm-dd string, so a plain string sort is chronological)."""
+    upcoming = [
+        {
+            "week": week["week"],
+            "week_label": week["label"],
+            "match_index": index,
+            "player1": match["player1"],
+            "player2": match["player2"],
+            "scheduled_day": match["scheduled_day"],
+        }
+        for week in get_schedule(season)
+        for index, match in enumerate(week["matches"])
+        if match.get("scheduled_day") and not match.get("replay_url")
+    ]
+    return sorted(upcoming, key=lambda m: m["scheduled_day"])
+
+
 # Every numeric per-Pokemon field the replay parser produces (damage
 # splits, healing, statuses, hazards, boosts, etc.) - kept in sync with
 # the parser instead of duplicated here, so a new tracked stat shows up
@@ -198,6 +218,43 @@ def healing_received_total(mon):
     return sum(mon.get(f, 0) for f in _HEALING_FIELDS)
 
 
+def _new_stat_row():
+    return {
+        "games_played": 0, "kills": 0, "direct_kills": 0,
+        "indirect_kills": 0, "deaths": 0, "self_kos": 0, "max_hp": 0,
+        **{f: 0 for f in STAT_SUM_FIELDS},
+    }
+
+
+def _accumulate_stat_row(row, mon):
+    row["games_played"] += 1
+    row["kills"] += mon["kills"]
+    row["direct_kills"] += mon.get("direct_kills", 0)
+    row["indirect_kills"] += mon.get("indirect_kills", 0)
+    row["deaths"] += 1 if mon["died"] else 0
+    row["self_kos"] += 1 if mon.get("self_ko") else 0
+    row["max_hp"] += mon.get("max_hp", 0)
+    for field in STAT_SUM_FIELDS:
+        row[field] += mon.get(field, 0)
+
+
+def _aggregate_schedule_stats(weeks):
+    """Sum every logged battle's per-Pokemon stats (keyed by canonicalized
+    name) across a season's weeks. Shared by get_statistics and
+    get_all_time_statistics so both sum the exact same fields the same
+    way."""
+    agg = {}
+    for week in weeks:
+        for match in week["matches"]:
+            stats = match.get("stats")
+            if not stats:
+                continue
+            for mon in stats["player1"] + stats["player2"]:
+                row = agg.setdefault(mon["pokemon"], _new_stat_row())
+                _accumulate_stat_row(row, mon)
+    return agg
+
+
 def get_statistics(season):
     """Aggregate per-Pokémon career stats across every logged battle in a
     season's schedule.json. Every stat (turns active, statuses inflicted,
@@ -208,39 +265,16 @@ def get_statistics(season):
     total reads like "820/1089" rather than a computed ratio. Only
     Pokémon that have appeared in at least one battle are included.
     Returns rows sorted by kills, most first."""
-    weeks = get_schedule(season)
+    agg = _aggregate_schedule_stats(get_schedule(season))
     pokedex = _get_pokedex(season)
-
-    agg = {}
-    for week in weeks:
-        for match in week["matches"]:
-            stats = match.get("stats")
-            if not stats:
-                continue
-            for mon in stats["player1"] + stats["player2"]:
-                row = agg.setdefault(mon["pokemon"], {
-                    "games_played": 0, "kills": 0, "direct_kills": 0,
-                    "indirect_kills": 0, "deaths": 0, "self_kos": 0, "max_hp": 0,
-                    **{f: 0 for f in STAT_SUM_FIELDS},
-                })
-                row["games_played"] += 1
-                row["kills"] += mon["kills"]
-                row["direct_kills"] += mon.get("direct_kills", 0)
-                row["indirect_kills"] += mon.get("indirect_kills", 0)
-                row["deaths"] += 1 if mon["died"] else 0
-                row["self_kos"] += 1 if mon.get("self_ko") else 0
-                row["max_hp"] += mon.get("max_hp", 0)
-                for field in STAT_SUM_FIELDS:
-                    row[field] += mon.get(field, 0)
 
     rows = []
     for name, row in agg.items():
-        games = row["games_played"]
         points = pokedex[name].points if name in pokedex else 0
         entry = {
             "name": name,
             "sprite": get_sprite_url(name, season),
-            "games_played": games,
+            "games_played": row["games_played"],
             "kills": row["kills"],
             "direct_kills": row["direct_kills"],
             "indirect_kills": row["indirect_kills"],
@@ -248,6 +282,49 @@ def get_statistics(season):
             "self_kos": row["self_kos"],
             "kills_per_death": round(row["kills"] / row["deaths"], 2) if row["deaths"] else row["kills"],
             "kills_per_point": round(row["kills"] / points, 2) if points else None,
+            "max_hp": row["max_hp"],
+        }
+        entry.update({f: row[f] for f in STAT_SUM_FIELDS})
+        entry["healing_received_total"] = healing_received_total(row)
+        rows.append(entry)
+
+    return sorted(rows, key=lambda r: r["kills"], reverse=True)
+
+
+ALL_TIME_SEASONS = ["1", "2", "3", "4"]
+
+
+def get_all_time_statistics():
+    """Aggregate per-Pokémon career stats across every logged battle in
+    every season's schedule.json (see get_statistics for field semantics).
+    Point costs vary season to season, so there's no single "kills per
+    point" that means anything across seasons -- that field is omitted
+    here. A season with no schedule.json yet (no battles logged) simply
+    contributes nothing. Returns rows sorted by kills, most first."""
+    agg = {}
+    sprite_by_name = {}
+    for season in ALL_TIME_SEASONS:
+        for name, row in _aggregate_schedule_stats(get_schedule(season)).items():
+            total = agg.setdefault(name, _new_stat_row())
+            for field, value in row.items():
+                total[field] += value
+            if name not in sprite_by_name:
+                sprite = get_sprite_url(name, season)
+                if sprite:
+                    sprite_by_name[name] = sprite
+
+    rows = []
+    for name, row in agg.items():
+        entry = {
+            "name": name,
+            "sprite": sprite_by_name.get(name),
+            "games_played": row["games_played"],
+            "kills": row["kills"],
+            "direct_kills": row["direct_kills"],
+            "indirect_kills": row["indirect_kills"],
+            "deaths": row["deaths"],
+            "self_kos": row["self_kos"],
+            "kills_per_death": round(row["kills"] / row["deaths"], 2) if row["deaths"] else row["kills"],
             "max_hp": row["max_hp"],
         }
         entry.update({f: row[f] for f in STAT_SUM_FIELDS})
@@ -275,6 +352,29 @@ def set_match_replay(season, week, match_index, replay_url):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
     return True
+
+
+def set_match_game_time(season, week, match_index, day):
+    """Persist a coach-proposed day to play an unplayed match, and post it
+    to Discord. Returns (True, None) on success or (False, error_message)
+    on failure."""
+    path = _season_dir(season) / "schedule.json"
+    if not path.exists():
+        return False, "Couldn't find that match."
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    target_week = next((w for w in data["weeks"] if w["week"] == week), None)
+    if target_week is None or not (0 <= match_index < len(target_week["matches"])):
+        return False, "Couldn't find that match."
+    match = target_week["matches"][match_index]
+
+    match["scheduled_day"] = day
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+    discord_webhooks.notify_game_time(season, target_week["label"], match["player1"], match["player2"], day)
+    return True, None
 
 
 def _normalize_pokemon_name(name):
@@ -355,6 +455,12 @@ def set_match_from_replay(season, week, match_index, replay_url):
 
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+
+    match_url = f"{discord_webhooks.SITE_BASE_URL}/schedule/?week={week}&match={match_index}"
+    discord_webhooks.notify_battle_concluded(
+        season, team1.get("team_name"), team1["coach_name"],
+        team2.get("team_name"), team2["coach_name"], replay_url, match_url,
+    )
     return True, None
 
 
@@ -374,29 +480,23 @@ def get_free_agents(season):
     return sorted(agents, key=lambda a: a["name"])
 
 
+def get_accolades(season):
+    """Season awards/superlatives (finals matchup, player/Pokémon/match
+    award categories, community superlatives) from that season's
+    superlatives.json, or an empty structure if that season hasn't had
+    any voted on yet."""
+    return _load(season, "superlatives.json", {
+        "finals": None,
+        "player_awards": [],
+        "pokemon_awards": [],
+        "match_awards": [],
+        "community": [],
+    })
+
+
 def get_free_agency_log(season):
     """Past free agency transactions for a season, most recent first."""
     return list(reversed(_load(season, "free_agency_log.json", {"transactions": []})["transactions"]))
-
-
-def _notify_discord_free_agency(season, coach_name, team_name, drop_names, pickup_names):
-    """Best-effort post of a free agency move to the league Discord. Never
-    raises - a webhook outage shouldn't block a transaction that already
-    saved successfully.
-    """
-    dropping = "\n".join(drop_names) if drop_names else "(none)"
-    picking_up = "\n".join(pickup_names) if pickup_names else "(none)"
-    content = (
-        f"Season: S{season}\n"
-        f"Coach: {coach_name}\n"
-        f"Team: {team_name}\n\n"
-        f"Dropping: \n{dropping}\n\n"
-        f"Picking Up:\n{picking_up}"
-    )
-    try:
-        requests.post(DISCORD_WEBHOOK_URL, json={"content": content}, timeout=5)
-    except requests.RequestException:
-        pass
 
 
 def submit_free_agency(season, coach_name, drop_names, pickup_names):
@@ -439,12 +539,13 @@ def submit_free_agency(season, coach_name, drop_names, pickup_names):
     if len(pickup_names) > remaining_agents:
         return False, f"{coach_name} only has {remaining_agents} free agent pickup(s) left."
 
+    points_cap = get_points_cap(season)
     current_points = get_roster_points(team)
     drop_points = sum(roster_by_name[name] for name in drop_names)
     pickup_points = sum(pokedex[name].points for name in pickup_names)
     new_points = current_points - drop_points + pickup_points
-    if new_points > POINTS_CAP:
-        return False, f"That would put {coach_name} at {new_points} points (cap is {POINTS_CAP})."
+    if new_points > points_cap:
+        return False, f"That would put {coach_name} at {new_points} points (cap is {points_cap})."
 
     remaining_pokemon = [mon for mon in team["pokemon"] if mon["name"] not in drop_names]
     remaining_pokemon += [{"name": name, "points": pokedex[name].points} for name in pickup_names]
@@ -461,6 +562,6 @@ def submit_free_agency(season, coach_name, drop_names, pickup_names):
     })
     _save(season, "free_agency_log.json", log)
 
-    _notify_discord_free_agency(season, coach_name, team.get("team_name"), drop_names, pickup_names)
+    discord_webhooks.notify_free_agency(season, coach_name, team.get("team_name"), drop_names, pickup_names)
 
     return True, None

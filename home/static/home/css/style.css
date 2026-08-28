@@ -379,6 +379,38 @@ main a:hover {
     flex: 1;
 }
 
+.upcoming-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.upcoming-game-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+.upcoming-game-day {
+    flex: 0 0 110px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.upcoming-game-matchup {
+    flex: 1;
+    font-weight: 600;
+}
+
+.upcoming-game-week {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
 .roster-grid {
     display: flex;
     flex-wrap: wrap;
@@ -561,6 +593,85 @@ table.stats-table th.sortable[aria-sort="descending"]::after {
     height: 32px;
     object-fit: contain;
     flex-shrink: 0;
+}
+
+.award-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.award-list-wide {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.award-card {
+    flex: 1 1 260px;
+    max-width: 360px;
+    padding: 16px 20px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.award-card-wide {
+    flex-basis: 100%;
+    max-width: none;
+}
+
+.award-card-title {
+    margin: 0 0 10px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: var(--color-text);
+}
+
+.award-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.award-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.award-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.award-rank {
+    flex: 0 0 22px;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.award-detail {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.award-points {
+    flex: 0 0 auto;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.community-list li {
+    overflow-wrap: break-word;
 }
 
 .mon-tera-badge {
@@ -789,8 +900,20 @@ table.match-stats-table tbody tr.died .match-stats-fainted-cell {
     color: #c0392b;
 }
 
-.match-submit-link {
+.match-actions {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.match-scheduled-day {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.match-submit-link {
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;

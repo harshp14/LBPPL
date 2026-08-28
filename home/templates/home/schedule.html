@@ -43,7 +43,13 @@
             {% if match.replay_url %}
             <a href="{{ match.replay_url }}" target="_blank" rel="noopener noreferrer" class="match-replay-link">Watch replay &#8599;</a>
             {% else %}
-            <a href="#submit-{{ selected_week.week }}-{{ selected_match_index }}" class="match-submit-link">Submit game +</a>
+            <div class="match-actions">
+                {% if match.scheduled_day %}
+                <span class="match-scheduled-day">Scheduled: {{ match.scheduled_day }}</span>
+                {% endif %}
+                <a href="#schedule-{{ selected_week.week }}-{{ selected_match_index }}" class="match-submit-link">{% if match.scheduled_day %}Reschedule{% else %}Schedule game time{% endif %} +</a>
+                <a href="#submit-{{ selected_week.week }}-{{ selected_match_index }}" class="match-submit-link">Submit game +</a>
+            </div>
             {% endif %}
 
             <div class="match-stats">
@@ -69,6 +75,22 @@
                     <input type="hidden" name="match_index" value="{{ selected_match_index }}">
                     <input type="url" name="replay_url" class="modal-input" placeholder="https://champsnatdex.dedyn.io/replays/..." required>
                     <button type="submit" class="modal-submit">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="schedule-{{ selected_week.week }}-{{ selected_match_index }}" class="modal">
+            <a href="#" class="modal-backdrop" aria-label="Close"></a>
+            <div class="modal-dialog card" role="dialog" aria-modal="true">
+                <a href="#" class="modal-close" aria-label="Close">&times;</a>
+                <h3>Schedule game time</h3>
+                <p class="modal-subtitle">{{ match.player1 }} vs {{ match.player2 }}</p>
+                <form method="post" action="{% url 'submit_game_time' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="week" value="{{ selected_week.week }}">
+                    <input type="hidden" name="match_index" value="{{ selected_match_index }}">
+                    <input type="date" name="day" class="modal-input" value="{{ match.scheduled_day|default:'' }}" required>
+                    <button type="submit" class="modal-submit">Send to Discord</button>
                 </form>
             </div>
         </div>
