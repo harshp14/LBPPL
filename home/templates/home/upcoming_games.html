@@ -1,0 +1,20 @@
+{% extends "home/base.html" %}
+{% block content %}
+<h1>Upcoming Games</h1>
+
+{% if games %}
+<div class="upcoming-games-list">
+    {% for game in games %}
+    <a href="{% url 'schedule' %}?week={{ game.week }}&match={{ game.match_index }}" class="upcoming-game-card card">
+        <span class="upcoming-game-day">{{ game.scheduled_day }}</span>
+        <span class="upcoming-game-matchup">{{ game.player1 }} vs {{ game.player2 }}</span>
+        <span class="upcoming-game-week">{{ game.week_label }}</span>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <p class="match-stats-placeholder">No games have a scheduled day yet.</p>
+</div>
+{% endif %}
+{% endblock %}

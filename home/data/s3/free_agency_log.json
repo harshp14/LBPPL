@@ -1,0 +1,276 @@
+{
+  "transactions": [
+    {
+      "coach": "Harsh",
+      "team_name": "Miami Palafins",
+      "drops": [
+        {
+          "name": "Glimmora",
+          "points": 13
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Tsareena",
+          "points": 8
+        }
+      ]
+    },
+    {
+      "coach": "Harsh",
+      "team_name": "Miami Palafins",
+      "drops": [
+        {
+          "name": "Dipplin-Tera",
+          "points": 3
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Thwackey-Tera",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "coach": "Charu",
+      "team_name": "New York Lugiants",
+      "drops": [
+        {
+          "name": "Frosmoth",
+          "points": 4
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Cryogonal",
+          "points": 4
+        }
+      ]
+    },
+    {
+      "coach": "Harnoor",
+      "team_name": "Gambling Gambits",
+      "drops": [
+        {
+          "name": "Slowbro-Galar",
+          "points": 9
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Zapdos",
+          "points": 15
+        }
+      ]
+    },
+    {
+      "coach": "Harnoor",
+      "team_name": "Gambling Gambits",
+      "drops": [
+        {
+          "name": "Enamorus-Therian",
+          "points": 11
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Amoonguss",
+          "points": 11
+        }
+      ]
+    },
+    {
+      "coach": "Harnoor",
+      "team_name": "Gambling Gambits",
+      "drops": [
+        {
+          "name": "Raging Bolt",
+          "points": 14
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Cyclizar",
+          "points": 8
+        }
+      ]
+    },
+    {
+      "coach": "Harnoor",
+      "team_name": "Gambling Gambits",
+      "drops": [
+        {
+          "name": "Noivern",
+          "points": 10
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Hatterene",
+          "points": 10
+        }
+      ]
+    },
+    {
+      "coach": "Charu",
+      "team_name": "New York Lugiants",
+      "drops": [
+        {
+          "name": "Cryogonal",
+          "points": 4
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Gumshoos",
+          "points": 1
+        }
+      ]
+    },
+    {
+      "coach": "Charu",
+      "team_name": "New York Lugiants",
+      "drops": [
+        {
+          "name": "Moltres",
+          "points": 12
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Glimmora",
+          "points": 13
+        }
+      ]
+    },
+    {
+      "coach": "Charu",
+      "team_name": "New York Lugiants",
+      "drops": [
+        {
+          "name": "Slowking-Galar",
+          "points": 16
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Entei",
+          "points": 11
+        }
+      ]
+    },
+    {
+      "coach": "Charu",
+      "team_name": "New York Lugiants",
+      "drops": [
+        {
+          "name": "Greninja",
+          "points": 17
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Lugia",
+          "points": 24
+        }
+      ]
+    },
+    {
+      "coach": "Yuvraj",
+      "team_name": "LeBronzongeles Lakers",
+      "drops": [
+        {
+          "name": "Latias",
+          "points": 14
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Spectrier",
+          "points": 20
+        }
+      ]
+    },
+    {
+      "coach": "Yuvraj",
+      "team_name": "LeBronzongeles Lakers",
+      "drops": [
+        {
+          "name": "Conkeldurr",
+          "points": 11
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Donphan",
+          "points": 11
+        }
+      ]
+    },
+    {
+      "coach": "Yuvraj",
+      "team_name": "LeBronzongeles Lakers",
+      "drops": [
+        {
+          "name": "Salazzle",
+          "points": 10
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Moltres",
+          "points": 12
+        }
+      ]
+    },
+    {
+      "coach": "Yuvraj",
+      "team_name": "LeBronzongeles Lakers",
+      "drops": [
+        {
+          "name": "Thundurus-Therian",
+          "points": 14
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Alomomola",
+          "points": 9
+        }
+      ]
+    },
+    {
+      "coach": "Yuvraj",
+      "team_name": "LeBronzongeles Lakers",
+      "drops": [
+        {
+          "name": "Skarmory",
+          "points": 11
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Dragalge",
+          "points": 7
+        }
+      ]
+    },
+    {
+      "coach": "Megh",
+      "team_name": "Montreal Moxie",
+      "drops": [
+        {
+          "name": "Bronzong",
+          "points": 9
+        }
+      ],
+      "pickups": [
+        {
+          "name": "Dudunsparce",
+          "points": 9
+        }
+      ]
+    }
+  ]
+}

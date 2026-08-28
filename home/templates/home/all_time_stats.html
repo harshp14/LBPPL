@@ -1,0 +1,77 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<h1>All-Time Stats</h1>
+<p>Master Pok&eacute;mon performance, aggregated from every logged battle across Seasons 1&ndash;4. Click a column to sort.</p>
+
+<div class="card draft-board-card">
+    <div class="draft-board-scroll">
+        <table class="stats-table" id="stats-table">
+            <thead>
+                <tr>
+                    <th data-sort="text" data-default-dir="asc">Pok&eacute;mon</th>
+                    <th data-sort="num">GP</th>
+                    <th data-sort="num" aria-sort="descending">Kills</th>
+                    <th data-sort="num">Direct</th>
+                    <th data-sort="num">Indirect</th>
+                    <th data-sort="num">K/D</th>
+                    <th data-sort="num">Deaths</th>
+                    <th data-sort="num">Self-KOs</th>
+                    <th data-sort="num">Turns Active</th>
+                    <th data-sort="num">Dmg Dealt (Direct)</th>
+                    <th data-sort="num">Dmg Taken</th>
+                    <th data-sort="num">Healing Received</th>
+                    <th data-sort="num">Crits Dealt</th>
+                    <th data-sort="num">Crits Taken</th>
+                    <th data-sort="num">Boosts Given</th>
+                    <th data-sort="num">Boosts Received</th>
+                    <th data-sort="num">Missed Moves</th>
+                    <th data-sort="num">Dodged Moves</th>
+                    <th data-sort="num">Resisted Hits Taken</th>
+                    <th data-sort="num">Super Effective Hits Taken</th>
+                    <th data-sort="num">Hazards Set</th>
+                    <th data-sort="num">Hazards Removed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td data-value="{{ row.name }}">
+                        <span class="mon-cell">
+                            {% if row.sprite %}<img src="{{ row.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                            <span>{{ row.name }}</span>
+                        </span>
+                    </td>
+                    <td data-value="{{ row.games_played }}">{{ row.games_played }}</td>
+                    <td data-value="{{ row.kills }}">{{ row.kills }}</td>
+                    <td data-value="{{ row.direct_kills }}">{{ row.direct_kills }}</td>
+                    <td data-value="{{ row.indirect_kills }}">{{ row.indirect_kills }}</td>
+                    <td data-value="{{ row.kills_per_death }}">{{ row.kills_per_death }}</td>
+                    <td data-value="{{ row.deaths }}">{{ row.deaths }}</td>
+                    <td data-value="{{ row.self_kos }}">{{ row.self_kos }}</td>
+                    <td data-value="{{ row.turns_active }}">{{ row.turns_active }}</td>
+                    <td data-value="{{ row.damage_dealt_direct }}">{{ row.damage_dealt_direct }}</td>
+                    <td data-value="{{ row.damage_taken_direct }}">{{ row.damage_taken_direct }}</td>
+                    <td data-value="{{ row.healing_received_total }}">{{ row.healing_received_total }}</td>
+                    <td data-value="{{ row.crits_dealt }}">{{ row.crits_dealt }}</td>
+                    <td data-value="{{ row.crits_taken }}">{{ row.crits_taken }}</td>
+                    <td data-value="{{ row.boosts_given }}">{{ row.boosts_given }}</td>
+                    <td data-value="{{ row.boosts_received }}">{{ row.boosts_received }}</td>
+                    <td data-value="{{ row.missed_moves }}">{{ row.missed_moves }}</td>
+                    <td data-value="{{ row.dodged_moves }}">{{ row.dodged_moves }}</td>
+                    <td data-value="{{ row.resisted_hits_taken }}">{{ row.resisted_hits_taken }}</td>
+                    <td data-value="{{ row.super_effective_hits_taken }}">{{ row.super_effective_hits_taken }}</td>
+                    <td data-value="{{ row.hazards_set }}">{{ row.hazards_set }}</td>
+                    <td data-value="{{ row.hazards_removed }}">{{ row.hazards_removed }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="22">No battles logged yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="{% static 'home/js/statistics.js' %}"></script>
+{% endblock %}

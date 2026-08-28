@@ -1,0 +1,108 @@
+{
+  "finals": {
+    "team1": {"name": "Calgary TalonFlames", "coach": "Rovin", "seed": "#1", "record": "Reg: 10-2 (+42), PF: 4-0 (+16)"},
+    "team2": {"name": "Slowkings XI Punjab", "coach": "Jashanpreet", "seed": "#2", "record": "Reg: 9-3 (+24), PF: 3-2 (+7)"},
+    "champion": "team1"
+  },
+  "player_awards": [
+    {"category": "Rookie of the Year", "entries": [
+      {"name": "Uday", "points": 32},
+      {"name": "Megh", "points": 25},
+      {"name": "Harsh", "points": 7}
+    ]},
+    {"category": "\"ARE YOU NOT ENTERTAINED\"", "entries": [
+      {"name": "Megh", "points": 28},
+      {"name": "Ajay", "points": 10},
+      {"name": "Shabd/Jashanpreet", "points": 6}
+    ]},
+    {"category": "Biggest Stall Merchant", "entries": [
+      {"name": "Gurpreet", "points": 26},
+      {"name": "Charu", "points": 15},
+      {"name": "Rovin", "points": 14}
+    ]},
+    {"category": "Ghost Writer Award", "entries": [
+      {"name": "Jashanpreet", "points": 28},
+      {"name": "Rovin", "points": 16},
+      {"name": "Charu", "points": 11}
+    ]},
+    {"category": "\"Fuck it We Ball\"", "entries": [
+      {"name": "Arnav", "points": 28},
+      {"name": "Shabd", "points": 24},
+      {"name": "Qasim", "points": 8}
+    ]},
+    {"category": "Bob the Builder", "entries": [
+      {"name": "Rovin", "points": 31},
+      {"name": "Gurpreet", "points": 17},
+      {"name": "Jashanpreet", "points": 13}
+    ]},
+    {"category": "Gordon Ramsay", "entries": [
+      {"name": "Harsh", "points": 23},
+      {"name": "Jashanpreet", "points": 20},
+      {"name": "Rovin", "points": 8}
+    ]},
+    {"category": "People's Champ", "entries": [
+      {"name": "Megh", "points": 25},
+      {"name": "Jashanpreet", "points": 9},
+      {"name": "Rovin/Ajay", "points": 6}
+    ]}
+  ],
+  "pokemon_awards": [
+    {"category": "League MVP", "entries": [
+      {"pokemon": "Gastrodon", "coach": "Gurpreet", "points": 30},
+      {"pokemon": "Hawlucha", "coach": "Charu", "points": 20},
+      {"pokemon": "Scream Tail", "coach": "Jashanpreet", "points": 17}
+    ]},
+    {"category": "\"Fuck it We Stall\"", "entries": [
+      {"pokemon": "Gastrodon", "coach": "Gurpreet", "points": 19},
+      {"pokemon": "Scream Tail", "coach": "Jashanpreet", "points": 14},
+      {"pokemon": "Corviknight", "coach": "Gurpreet", "points": 10}
+    ]},
+    {"category": "Literally Hitler", "entries": [
+      {"pokemon": "Sinistcha", "coach": "Rovin", "points": 19},
+      {"pokemon": "Gastrodon", "coach": "Gurpreet", "points": 16},
+      {"pokemon": "Alomomola", "coach": "Charu", "points": 10}
+    ]},
+    {"category": "Head Janitor", "entries": [
+      {"pokemon": "Sinistcha", "coach": "Rovin", "points": 22},
+      {"pokemon": "Hawlucha", "coach": "Charu", "points": 9},
+      {"pokemon": "Volcarona", "coach": "Rovin", "points": 9}
+    ]},
+    {"category": "Dark Horse", "entries": [
+      {"pokemon": "Gastrodon", "coach": "Gurpreet", "points": 17},
+      {"pokemon": "Sinistcha", "coach": "Rovin", "points": 16},
+      {"pokemon": "Arboliva", "coach": "Harnoor", "points": 9}
+    ]}
+  ],
+  "match_awards": [
+    {"category": "Battle of the Year", "entries": [
+      {"name": "Megh vs Charu (Playoffs Round 2)", "points": 42},
+      {"name": "Harsh v Megh (Week 5)", "points": 28},
+      {"name": "Jashan vs Rovin (Playoffs Round 5)", "points": 18}
+    ]},
+    {"category": "\"Unfortunate doesn't even begin to describe\"", "entries": [
+      {"name": "Gurpreet vs Jashanpreet (Week 6)", "points": 21},
+      {"name": "Harnoor vs Shabd (Playoffs Round 2)", "points": 19},
+      {"name": "Charu vs Megh (Playoffs Round 2)", "points": 14}
+    ]},
+    {"category": "Most Tilting", "entries": [
+      {"name": "Gurpreet vs Jashan (Week 10)", "points": 17},
+      {"name": "Shabd vs Harnoor (Playoffs Round 2)", "points": 13},
+      {"name": "Megh vs Daren (Week 2)", "points": 12}
+    ]},
+    {"category": "The Single Worst Turn EVER Clicked", "entries": [
+      {"name": "Ajay clicking Endure while in Custap Range (Playoffs Round 1)", "points": 21},
+      {"name": "When Gurpreet clicks Earthquake into a flying type (Week 1)", "points": 19},
+      {"name": "When Megh clicked Grassy Glide into an Archaludon (Week 2)", "points": 15}
+    ]}
+  ],
+  "community": [
+    "Uday MVP",
+    "Biggest Fraud (Player) Award - Charu",
+    "Biggest Fraud Charuhas Unni",
+    "Biggest Fraud mr unni",
+    "Worst player in playoffs: Charu, most aura Mon: lumineon, Best player: Qasim, second best player: also Qasim (no bias)",
+    "Biggest Fraud: Fraudu",
+    "Best Mental = Megh, Best 1 cost = Qasim (lumineon)",
+    "Best player: Qasim Saadat (rzoneflamez)"
+  ]
+}

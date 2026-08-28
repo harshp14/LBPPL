@@ -1,0 +1,882 @@
+{
+ "teams": [
+  {
+   "team_name": "ChelSeaking",
+   "coach_name": "Qasim",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Great Tusk",
+     "points": 18
+    },
+    {
+     "name": "Pelipper",
+     "points": 11
+    },
+    {
+     "name": "Lumineon",
+     "points": 1,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Water",
+      "Fairy",
+      "Ghost"
+     ]
+    },
+    {
+     "name": "Gouging Fire",
+     "points": 18
+    },
+    {
+     "name": "Grimmsnarl",
+     "points": 13
+    },
+    {
+     "name": "Ludicolo",
+     "points": 6,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Water",
+      "Ghost",
+      "Ice"
+     ]
+    },
+    {
+     "name": "Iron Hands",
+     "points": 14
+    },
+    {
+     "name": "Klefki",
+     "points": 10
+    },
+    {
+     "name": "Weezing",
+     "points": 7,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Poison",
+      "Normal",
+      "Steel"
+     ]
+    },
+    {
+     "name": "Tornadus-Incarnate",
+     "points": 10
+    },
+    {
+     "name": "Dondozo",
+     "points": 11
+    },
+    {
+     "name": "Lickitung",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Raichu Racists",
+   "coach_name": "Uday",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Dragapult",
+     "points": 19
+    },
+    {
+     "name": "Skarmory",
+     "points": 13
+    },
+    {
+     "name": "Weavile",
+     "points": 17
+    },
+    {
+     "name": "Clefable",
+     "points": 15
+    },
+    {
+     "name": "Iron Crown",
+     "points": 15
+    },
+    {
+     "name": "Tentacruel",
+     "points": 12
+    },
+    {
+     "name": "Flygon",
+     "points": 9,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Water",
+      "Steel",
+      "Bug"
+     ]
+    },
+    {
+     "name": "Breloom",
+     "points": 12
+    },
+    {
+     "name": "Typhlosion",
+     "points": 5,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Fire",
+      "Ground",
+      "Dark"
+     ]
+    },
+    {
+     "name": "Golduck",
+     "points": 3
+    },
+    {
+     "name": "Ferrothorn",
+     "points": 0
+    },
+    {
+     "name": "Lickilicky",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Cincinnati BenGallades",
+   "coach_name": "Charu",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Ogerpon-Heartflame",
+     "points": 16
+    },
+    {
+     "name": "Latios",
+     "points": 19
+    },
+    {
+     "name": "Rotom-Wash",
+     "points": 15
+    },
+    {
+     "name": "Scizor",
+     "points": 14
+    },
+    {
+     "name": "Clodsire",
+     "points": 11
+    },
+    {
+     "name": "Glastrier",
+     "points": 8,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Ghost",
+      "Ice",
+      "Ground"
+     ]
+    },
+    {
+     "name": "Alomomola",
+     "points": 8
+    },
+    {
+     "name": "Hawlucha",
+     "points": 13
+    },
+    {
+     "name": "Alolan Persian",
+     "points": 4,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Dark",
+      "Fairy",
+      "Electric"
+     ]
+    },
+    {
+     "name": "Galarian Weezing",
+     "points": 12
+    },
+    {
+     "name": "Miltank",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Slowkings XI Punjab",
+   "coach_name": "Jashanpreet",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Darkrai",
+     "points": 19
+    },
+    {
+     "name": "Galarian Slowking",
+     "points": 16
+    },
+    {
+     "name": "Baxcalibur",
+     "points": 17
+    },
+    {
+     "name": "Scream Tail",
+     "points": 12
+    },
+    {
+     "name": "Landorus-Therian",
+     "points": 16
+    },
+    {
+     "name": "Lucario",
+     "points": 9
+    },
+    {
+     "name": "Lokix",
+     "points": 10
+    },
+    {
+     "name": "Tsareena",
+     "points": 8,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Grass",
+      "Water",
+      "Steel"
+     ]
+    },
+    {
+     "name": "Volcanion",
+     "points": 12
+    },
+    {
+     "name": "Impidimp",
+     "points": 1
+    },
+    {
+     "name": "Galarian Stunfisk",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 1
+  },
+  {
+   "team_name": "Calgary TalonFlames",
+   "coach_name": "Rovin",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Kingambit",
+     "points": 14
+    },
+    {
+     "name": "Volcarona",
+     "points": 14
+    },
+    {
+     "name": "Primarina",
+     "points": 14
+    },
+    {
+     "name": "Ursaluna-Bloodmoon",
+     "points": 16
+    },
+    {
+     "name": "Torkoal",
+     "points": 11
+    },
+    {
+     "name": "Walking Wake",
+     "points": 16
+    },
+    {
+     "name": "Garganacl",
+     "points": 11
+    },
+    {
+     "name": "Galarian Articuno",
+     "points": 8,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Flying",
+      "Steel",
+      "Rock"
+     ]
+    },
+    {
+     "name": "Sinistcha",
+     "points": 9
+    },
+    {
+     "name": "Bronzong",
+     "points": 6,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Steel",
+      "Water",
+      "Poison"
+     ]
+    },
+    {
+     "name": "Cutiefly",
+     "points": 1,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Fairy",
+      "Steel",
+      "Ghost"
+     ]
+    },
+    {
+     "name": "Lopunny",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Toxtricity Hotspur",
+   "coach_name": "Daren",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Iron Bundle",
+     "points": 18
+    },
+    {
+     "name": "Gholdengo",
+     "points": 16
+    },
+    {
+     "name": "Skeledirge",
+     "points": 13
+    },
+    {
+     "name": "Alolan Ninetales",
+     "points": 14
+    },
+    {
+     "name": "Archaludon",
+     "points": 14
+    },
+    {
+     "name": "Zapdos",
+     "points": 15
+    },
+    {
+     "name": "Donphan",
+     "points": 11
+    },
+    {
+     "name": "Ogerpon-Teal",
+     "points": 13
+    },
+    {
+     "name": "Toxel",
+     "points": 1
+    },
+    {
+     "name": "Bombirdier",
+     "points": 5,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Flying",
+      "Ground",
+      "Dark"
+     ]
+    },
+    {
+     "name": "Bidoof",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Chennai SuperKingdras",
+   "coach_name": "Megh",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Iron Treads",
+     "points": 16
+    },
+    {
+     "name": "Heatran",
+     "points": 15
+    },
+    {
+     "name": "Enamorus-Therian",
+     "points": 12
+    },
+    {
+     "name": "Rillaboom",
+     "points": 14
+    },
+    {
+     "name": "Raging Bolt",
+     "points": 14
+    },
+    {
+     "name": "Quaquaval",
+     "points": 16
+    },
+    {
+     "name": "Zoroark",
+     "points": 9,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Dark",
+      "Fire",
+      "Fighting"
+     ]
+    },
+    {
+     "name": "Kyurem",
+     "points": 18
+    },
+    {
+     "name": "Pawniard",
+     "points": 1
+    },
+    {
+     "name": "Paldean Tauros",
+     "points": 5
+    },
+    {
+     "name": "Bouffalant",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Cleveland Escavaliers",
+   "coach_name": "Ajay",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Tornadus-Therian",
+     "points": 17
+    },
+    {
+     "name": "Ogerpon-Wellspring",
+     "points": 14
+    },
+    {
+     "name": "Iron Valiant",
+     "points": 19
+    },
+    {
+     "name": "Hisuian Goodra",
+     "points": 13
+    },
+    {
+     "name": "Krookodile",
+     "points": 13
+    },
+    {
+     "name": "Salamence",
+     "points": 14
+    },
+    {
+     "name": "Rotom-Heat",
+     "points": 11
+    },
+    {
+     "name": "Ditto",
+     "points": 5,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Normal",
+      "Fairy",
+      "Steel"
+     ]
+    },
+    {
+     "name": "Glimmora",
+     "points": 13
+    },
+    {
+     "name": "Murkrow",
+     "points": 1
+    },
+    {
+     "name": "Escavalier",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Pittsburg Sphealers",
+   "coach_name": "Shabd",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Gliscor",
+     "points": 16
+    },
+    {
+     "name": "Ribombee",
+     "points": 11
+    },
+    {
+     "name": "Hippowdon",
+     "points": 12
+    },
+    {
+     "name": "Eiscue",
+     "points": 3,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Fairy",
+      "Ice",
+      "Water"
+     ]
+    },
+    {
+     "name": "Hisuian Arcanine",
+     "points": 13
+    },
+    {
+     "name": "Hoopa-Unbound",
+     "points": 14
+    },
+    {
+     "name": "Fezandipiti",
+     "points": 9
+    },
+    {
+     "name": "Incineroar",
+     "points": 10
+    },
+    {
+     "name": "Ursaluna",
+     "points": 15
+    },
+    {
+     "name": "Dragonite",
+     "points": 15
+    },
+    {
+     "name": "Mr. Rime",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Golden State Wartortles",
+   "coach_name": "Arnav",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Meowscarada",
+     "points": 18
+    },
+    {
+     "name": "Iron Moth",
+     "points": 15
+    },
+    {
+     "name": "Ting-Lu",
+     "points": 14
+    },
+    {
+     "name": "Toxapex",
+     "points": 12
+    },
+    {
+     "name": "Cresselia",
+     "points": 12
+    },
+    {
+     "name": "Azumarill",
+     "points": 14
+    },
+    {
+     "name": "Haxorus",
+     "points": 13
+    },
+    {
+     "name": "Bellibolt",
+     "points": 6,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Electric",
+      "Flying",
+      "Water"
+     ]
+    },
+    {
+     "name": "Galarian Zapdos",
+     "points": 15
+    },
+    {
+     "name": "Tropius",
+     "points": 1,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Grass",
+      "Poison",
+      "Steel"
+     ]
+    },
+    {
+     "name": "Slurpuff",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "NewYork Mankeys",
+   "coach_name": "Harnoor",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Annihilape",
+     "points": 16
+    },
+    {
+     "name": "Swampert",
+     "points": 13
+    },
+    {
+     "name": "Jirachi",
+     "points": 15
+    },
+    {
+     "name": "Cinderace",
+     "points": 17
+    },
+    {
+     "name": "Latias",
+     "points": 18
+    },
+    {
+     "name": "Lycanroc-Dusk",
+     "points": 14
+    },
+    {
+     "name": "Overqwil",
+     "points": 8
+    },
+    {
+     "name": "Tinkaton",
+     "points": 8
+    },
+    {
+     "name": "Arboliva",
+     "points": 4,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Grass",
+      "Fairy",
+      "Fire"
+     ]
+    },
+    {
+     "name": "Vikavolt",
+     "points": 6,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Electric",
+      "Steel",
+      "Poison"
+     ]
+    },
+    {
+     "name": "Simisage",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 2
+  },
+  {
+   "team_name": null,
+   "coach_name": "Yuvraj",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Landorus-Incarnate",
+     "points": 17
+    },
+    {
+     "name": "Iron Boulder",
+     "points": 17
+    },
+    {
+     "name": "Excadrill",
+     "points": 16
+    },
+    {
+     "name": "Tyranitar",
+     "points": 15
+    },
+    {
+     "name": "Araquanid",
+     "points": 8
+    },
+    {
+     "name": "Mandibuzz",
+     "points": 15
+    },
+    {
+     "name": "Dusknoir",
+     "points": 4
+    },
+    {
+     "name": "Hydrapple",
+     "points": 11
+    },
+    {
+     "name": "Lapras",
+     "points": 6
+    },
+    {
+     "name": "Talonflame",
+     "points": 10
+    },
+    {
+     "name": "Drampa",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 3
+  },
+  {
+   "team_name": "Gujurat Cetitans",
+   "coach_name": "Harsh",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Enamorus-Incarnate",
+     "points": 17
+    },
+    {
+     "name": "Garchomp",
+     "points": 17
+    },
+    {
+     "name": "Galarian Moltres",
+     "points": 12
+    },
+    {
+     "name": "Ogerpon-Cornerstone",
+     "points": 13
+    },
+    {
+     "name": "Goodra",
+     "points": 9,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Dragon",
+      "Fairy",
+      "Electric"
+     ]
+    },
+    {
+     "name": "Kingdra",
+     "points": 12
+    },
+    {
+     "name": "Empoleon",
+     "points": 13
+    },
+    {
+     "name": "Politoed",
+     "points": 10
+    },
+    {
+     "name": "Mew",
+     "points": 15
+    },
+    {
+     "name": "Dewgong",
+     "points": 2,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Water",
+      "Steel",
+      "Ghost"
+     ]
+    },
+    {
+     "name": "Guzzlord",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 0
+  },
+  {
+   "team_name": "Dugtrio Diggers",
+   "coach_name": "Gurpreet",
+   "logo": "",
+   "pokemon": [
+    {
+     "name": "Roaring Moon",
+     "points": 17
+    },
+    {
+     "name": "Corviknight",
+     "points": 14
+    },
+    {
+     "name": "Sneasler",
+     "points": 17
+    },
+    {
+     "name": "Thundurus-Therian",
+     "points": 14
+    },
+    {
+     "name": "Manaphy",
+     "points": 16
+    },
+    {
+     "name": "Gastrodon",
+     "points": 9,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Fire",
+      "Poison",
+      "Ground"
+     ]
+    },
+    {
+     "name": "Arcanine",
+     "points": 11
+    },
+    {
+     "name": "Forretress",
+     "points": 7
+    },
+    {
+     "name": "Dipplin",
+     "points": 3,
+     "is_tera_captain": true,
+     "tera_types": [
+      "Steel",
+      "Fairy",
+      "Dragon"
+     ]
+    },
+    {
+     "name": "Sylveon",
+     "points": 12
+    },
+    {
+     "name": "Diggersby",
+     "points": 0
+    }
+   ],
+   "free_agents_used": 3
+  }
+ ]
+}

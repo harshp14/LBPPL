@@ -1,0 +1,810 @@
+{
+ "weeks": [
+  {
+   "week": 1,
+   "label": "Week 1",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2128608828",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Uday",
+     "player2": "Harsh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2127876545-ghgd8kexg9c3xmpra69av7g0k0yxbo7pw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Charu",
+     "player2": "Yuvraj",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2130641727",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Jashanpreet",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2125210457",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Rovin",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2125182250",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Daren",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2124711295",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Megh",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2129324548-3f0u89u146mcfu7pciob7st4e6f0qhopw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 2,
+   "label": "Week 2",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Harsh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2135146530-s5iyhiote1tv85gz26t2wawg092h06fpw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Gurpreet",
+     "player2": "Yuvraj",
+     "replay_url": null,
+     "winner": null,
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Uday",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2131173249",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Charu",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2135825673",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Jashanpreet",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2133201994",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Rovin",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2135175441-xgrdtb3j1jzurge8re7htnbdhkgsl88pw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Daren",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2133267189",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 3,
+   "label": "Week 3",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Yuvraj",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9customgame-2144676530",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harsh",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2138417189-edv7hah0y6zx2b6ci41svznqwxxumq6pw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Gurpreet",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2139128879",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Uday",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ou-2140272778",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Charu",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2137141382-4eq8cdnbp5c2wvo9d2o9dio55c762nspw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Jashanpreet",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2135154080",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Rovin",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2139735759",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 4,
+   "label": "Week 4",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2143548139",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Yuvraj",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2149512751",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harsh",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2145991315-pxeyxmhpbkzj2dvmtd1caxsbazbimswpw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Gurpreet",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2147227243-eoejieet1wicssuczjsikdhstqfzwsipw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Uday",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2143565406",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Charu",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2145968721",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Jashanpreet",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2144122690",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 5,
+   "label": "Week 5",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2156448154",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harnoor",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2147200842",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Yuvraj",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2153027415-s2l9u5k0gp5l6z6lr85b6xtewxp776vpw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harsh",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2153046040-i1i5o26ug0a8jpk31jtubi2uja2fhdnpw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Gurpreet",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2151961031",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Uday",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2152274970",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Charu",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2152465193",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 6,
+   "label": "Week 6",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9anythinggoes-2156465384",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Arnav",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2162327198",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harnoor",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2158221960",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Yuvraj",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2165732990",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harsh",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2157614811-gad1ssj8k92q7l62jayzwwe2kilo771pw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Gurpreet",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2161703874",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Uday",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2157583068",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 7,
+   "label": "Week 7",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Ajay",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2168170707-4vopmxehypzzca3sy6b2imwp9ryuog0pw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Shabd",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2169888500",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Arnav",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2170410447",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harnoor",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2164068166",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Yuvraj",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2172366488",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harsh",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2161128179",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Gurpreet",
+     "player2": "Uday",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2173000326",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 8,
+   "label": "Week 8",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Megh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2185823828",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Ajay",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2180343103-atwesygooo463ugdvqv9kv51ik6h70jpw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Shabd",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2192038366",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Arnav",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2182933580",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harnoor",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2172373975",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Yuvraj",
+     "player2": "Uday",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2189254886",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harsh",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2179679616-myntsq4iixihqt0bw7vokuahogmcs3opw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 9,
+   "label": "Week 9",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Daren",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2191483186",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Megh",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2190746016",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Ajay",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2192075149-fqyin79ogmgdned3sp31t4ws1z5hn80pw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Shabd",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2185045308",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Arnav",
+     "player2": "Uday",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2196220970",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harnoor",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2196889620",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Yuvraj",
+     "player2": "Harsh",
+     "replay_url": null,
+     "winner": null,
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 10,
+   "label": "Week 10",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Rovin",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2181040661-c2byxtdidxnthmjuom21zu410ytrkaypw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Daren",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2198267663",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Megh",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2192098712",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Ajay",
+     "player2": "Uday",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2204043275-9qmuggznpsfl7rvk7quxuu4zvlaf6h3pw",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Shabd",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2223125353",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Arnav",
+     "player2": "Harsh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2241524933",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Harnoor",
+     "player2": "Yuvraj",
+     "replay_url": null,
+     "winner": null,
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 11,
+   "label": "Week 11",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Jashanpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2194075649",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Rovin",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2194090250",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Daren",
+     "player2": "Uday",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2209060411",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Megh",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2233779394",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Ajay",
+     "player2": "Harsh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2224653081-sgfj4g7yre08060lsnx58zv5zlgi7mppw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Shabd",
+     "player2": "Yuvraj",
+     "replay_url": null,
+     "winner": null,
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Arnav",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9ubers-2213945150",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 12,
+   "label": "Week 12",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Charu",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2204027183",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Jashanpreet",
+     "player2": "Uday",
+     "replay_url": "https://play.pokemonshowdown.com/battle-gen9draft-2212505193-jnhulp6pbak5k2aneunzk6abs7ujor7pw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Rovin",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2226492517",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Daren",
+     "player2": "Harsh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2236783952",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Megh",
+     "player2": "Yuvraj",
+     "replay_url": null,
+     "winner": null,
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Ajay",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2233738240-tyqkfrm9miy0sai5079ev4gf6e790e9pw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Shabd",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2242117813",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  },
+  {
+   "week": 13,
+   "label": "Week 13",
+   "matches": [
+    {
+     "player1": "Qasim",
+     "player2": "Uday",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2236307848",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Charu",
+     "player2": "Gurpreet",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2241410398",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Jashanpreet",
+     "player2": "Harsh",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2235761614",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Rovin",
+     "player2": "Yuvraj",
+     "replay_url": null,
+     "winner": null,
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Daren",
+     "player2": "Harnoor",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2234295682",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Megh",
+     "player2": "Arnav",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2241475960",
+     "winner": "player2",
+     "margin": null,
+     "stats": null
+    },
+    {
+     "player1": "Ajay",
+     "player2": "Shabd",
+     "replay_url": "https://replay.pokemonshowdown.com/gen9draft-2238982774-sdsktzloc6voasa5l8h8mxh8ghrr64rpw",
+     "winner": "player1",
+     "margin": null,
+     "stats": null
+    }
+   ]
+  }
+ ]
+}

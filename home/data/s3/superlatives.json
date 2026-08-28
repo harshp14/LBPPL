@@ -1,0 +1,119 @@
+{
+  "finals": {
+    "team1": {"name": "Los Angeles Kingambits", "coach": "Rovin", "seed": "#1", "record": "Reg: 10-1 (+41), PF: 2-0 (+8)"},
+    "team2": {"name": "Montreal Moxie", "coach": "Megh", "seed": "#3", "record": "Reg: 8-3 (+16), PF: 2-0 (+4)"},
+    "champion": "team1"
+  },
+  "player_awards": [
+    {"category": "ARE YOU NOT ENTERTAINED!?", "entries": [
+      {"name": "Arnav", "points": 17},
+      {"name": "Megh", "points": 13},
+      {"name": "Harnoor", "points": 11}
+    ]},
+    {"category": "Biggest Stall Merchant", "entries": [
+      {"name": "Harnoor", "points": 13},
+      {"name": "Arnav", "points": 10},
+      {"name": "Rovin", "points": 10}
+    ]},
+    {"category": "Ghost Writer", "entries": [
+      {"name": "Uday", "points": 34},
+      {"name": "Jashan", "points": 10},
+      {"name": "Rovin", "points": 10}
+    ]},
+    {"category": "Bob the Builder", "entries": [
+      {"name": "Rovin", "points": 20},
+      {"name": "Megh", "points": 15},
+      {"name": "Charu", "points": 7}
+    ]},
+    {"category": "Gordon Ramsay", "entries": [
+      {"name": "Megh", "points": 18},
+      {"name": "Jashan", "points": 17},
+      {"name": "Harsh", "points": 13}
+    ]},
+    {"category": "\"Fuck it, we ball!\"", "entries": [
+      {"name": "Arnav", "points": 27},
+      {"name": "Harsh", "points": 17},
+      {"name": "Ajay/Daren", "points": 4}
+    ]},
+    {"category": "Low Priority Queue", "entries": [
+      {"name": "Yuvraj", "points": 24},
+      {"name": "Arnav", "points": 20},
+      {"name": "Gurpreet", "points": 14}
+    ]},
+    {"category": "The People's Champ", "entries": [
+      {"name": "Daren", "points": 21},
+      {"name": "Megh", "points": 16},
+      {"name": "Ajay", "points": 7}
+    ]}
+  ],
+  "pokemon_awards": [
+    {"category": "Most Valuable Pokemon", "entries": [
+      {"pokemon": "Iron Moth", "coach": null, "points": 21},
+      {"pokemon": "Salamence", "coach": null, "points": 17},
+      {"pokemon": "Ogerpon", "coach": null, "points": 9}
+    ]},
+    {"category": "Defensive Pokemon of the Year", "entries": [
+      {"pokemon": "Slowking", "coach": null, "points": 14},
+      {"pokemon": "Clodsire", "coach": null, "points": 11},
+      {"pokemon": "Porygon2", "coach": null, "points": 11},
+      {"pokemon": "Uxie", "coach": null, "points": 11},
+      {"pokemon": "Gliscor", "coach": null, "points": 7}
+    ]},
+    {"category": "Literally Hitler", "entries": [
+      {"pokemon": "Mew", "coach": null, "points": 22},
+      {"pokemon": "Necrozma-Dawn-Wings", "coach": null, "points": 11},
+      {"pokemon": "Dialga", "coach": null, "points": 6},
+      {"pokemon": "Kommo-o", "coach": null, "points": 6}
+    ]},
+    {"category": "Head Janitor", "entries": [
+      {"pokemon": "Iron Moth", "coach": null, "points": 19},
+      {"pokemon": "Flutter Mane", "coach": null, "points": 14},
+      {"pokemon": "Kingambit", "coach": null, "points": 10}
+    ]},
+    {"category": "Dark Horse", "entries": [
+      {"pokemon": "Hariyama", "coach": null, "points": 11},
+      {"pokemon": "Iron Hands", "coach": null, "points": 11},
+      {"pokemon": "Hisuian Goodra", "coach": null, "points": 8},
+      {"pokemon": "Thundurus-Incarnate", "coach": null, "points": 7},
+      {"pokemon": "Thwackey", "coach": null, "points": 7}
+    ]},
+    {"category": "Biggest Fraudshifu", "entries": [
+      {"pokemon": "Meowscarada", "coach": null, "points": 19},
+      {"pokemon": "Chien-Pao", "coach": null, "points": 11},
+      {"pokemon": "Dragapult", "coach": null, "points": 11},
+      {"pokemon": "Ditto", "coach": null, "points": 6}
+    ]}
+  ],
+  "match_awards": [
+    {"category": "Game of the Year", "entries": [
+      {"name": "Week 1: Daren vs Rovin", "points": 23},
+      {"name": "Week 11: Rovin vs Charu", "points": 9},
+      {"name": "Week 3: Jashan vs Charu", "points": 8}
+    ]},
+    {"category": "Most Tilting Game", "entries": [
+      {"name": "Week 11 Harnoor vs Arnav: AKA \"The Fool's Gold\" Game", "points": 25},
+      {"name": "Week 3 Charu vs Arnav: Arnav delayed the battle for two hours, then everyone left Charu on call with Arnav alone to be RAGEBAITED RELENTLESSLY. Proceeds to almost got stalled out by a Bellibolt + Clodsire.", "points": 23},
+      {"name": "Week 3 JP vs Gurpreet: Gurpreet tries sacking his Iron Valiant to an Archaludon by clicking T-Wave, but the Arch gets paralyzed immediately. Also, Gurpreet 'forgets' that Chien-Pao can have Ice Shard.", "points": 6}
+    ]},
+    {"category": "\"Unfortunate doesn't begin to describe...\"", "entries": [
+      {"name": "\"The Fool's Gold\" Game: Enough said?", "points": 22},
+      {"name": "Week 5 Jashan vs Daren: Crit+Flinch+Crit+Flinch", "points": 18},
+      {"name": "Week 2 Harnoor vs Yuvraj: Freeze ftw!", "points": 6},
+      {"name": "Week 8 Megh vs Arnav: Megh gets very lucky with critical Heat Wave and Play Rough dodges, and salamence living at 1% to setup and sweep", "points": 6}
+    ]},
+    {"category": "The Single Worst Turn EVER Clicked", "entries": [
+      {"name": "\"The Fool's Gold\" Game: Arnav clicks toxic... IN FRONT OF A MAGIC BOUNCE HATTERENE. HATTERENE MISSED THE TOXIC.", "points": 24},
+      {"name": "\"The Fool's Gold\" Game: Arnav sends his Scizor to get one shot by a Mystical Fire (it was clicked in 2 of the last 4 turns before)", "points": 13},
+      {"name": "Week 2 Jashan vs Ajay: Ajay switches in a Necrozma onto a specs Archaludon, it gets ONE SHOT.", "points": 11}
+    ]}
+  ],
+  "community": [
+    "Most handsome: Gurpreet",
+    "Kingambit should be hitler",
+    "Biggest industry plant: Charu / Worst Player NA: All of us / Best Player NA: Anxious BDDL crashout",
+    "Play of the Season — 1st: Upper Hand Sneasler (Megh vs Yuvraj); 2nd: Arcanine predict on Kingambit switch to win game (Daren vs Harnoor); 3rd: IDK, could be left up to a public vote/further thought",
+    "Most Improved Players — 1st: Megh; 2nd: Daren; 3rd: Qasim; HM: Harsh",
+    "Most Improved Player From Last Season: Megh / Most Regressed Player From Last Season: Ajay (or is it Dragapult curse)",
+    "Most Goated Player of all Time: Ajay, Obviously"
+  ]
+}

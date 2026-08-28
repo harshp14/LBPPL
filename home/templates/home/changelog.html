@@ -1,0 +1,112 @@
+{% extends "home/base.html" %}
+{% block content %}
+<div class="card">
+<h1>Changelog &amp; Roadmap</h1>
+
+<h2>What we have</h2>
+<ul>
+    <li><strong>Rosters</strong> &mdash; every team's drafted Pok&eacute;mon with sprites and point costs.</li>
+    <li><strong>Draft Board</strong> &mdash; the full pool of draftable Pok&eacute;mon, with drafted mons marked off.</li>
+    <li><strong>Schedule</strong> &mdash; weekly matchups, with replay links that auto-parse into full match stats (kills, deaths, damage, etc.) via Showdown replay parsing.</li>
+    <li><strong>Statistics</strong> &mdash; career Pok&eacute;mon performance aggregated from every logged battle, sortable by column.</li>
+    <li><strong>All-Time Stats</strong> &mdash; per-Pok&eacute;mon stats compiled across every season's data into one master, all-time view.</li>
+    <li><strong>Per-season Draft Board</strong> &mdash; the League selector switches the Draft Board, Rosters, Schedule, and Statistics pages between Seasons 1&ndash;4, backed by real per-season SQL data.</li>
+    <li><strong>Game-time scheduling</strong> &mdash; coaches propose a day to play an unplayed match right from the Schedule page; scheduled games show up on an Upcoming Games list.</li>
+    <li><strong>Free Agency Tracker</strong> &mdash; drop/pickup submissions, remaining free agent counts, and a log of past moves.</li>
+    <li><strong>Data layer</strong> &mdash; behind a data-access layer so the storage backend can be swapped without touching page logic. Draft board/sprite/species data now lives in a real SQL table (<code>s4_pokedex</code>), loaded into memory once per process; rosters, schedule, and the free agency log still read/write JSON files directly, though SQL mirrors of those three (<code>s4_rosters</code>, <code>s4_schedule</code>, <code>s4_free_agency_log</code>) already exist and just need wiring in.</li>
+    <li><strong>Discord notifications</strong> &mdash; a webhook bot, Giovanni, that posts to Discord whenever a free agency/trade transaction is submitted on the site, or a coach schedules a game time.</li>
+    <li><strong>Data backup</strong> &mdash; a management command (<code>python manage.py backup_data</code>) that zips up the JSON data files into a timestamped archive. Shipping that archive off the VM (git push, object storage, etc.) is still to be decided.</li>
+</ul>
+
+<h2>Upcoming</h2>
+<ol>
+    <li>Restrict edits so people can only change their own team, unless they're an admin. Likely needs some form of login (OAuth or similar) &mdash; low priority for now since this is an internal tool and everyone can be trusted to only touch their own team.</li>
+    <li>Port the damage calculator and team prep sheet onto the website. They currently live on a separate site and already improve on Smogon's calc by pulling directly from the sheets (cached Pok&eacute;mon/moves/items so you don't need six tabs open, in-progress sets saved mid-battle, etc.) while still using Smogon's own damage calc logic underneath, which shouldn't need to change.</li>
+    <li>Support drafting directly on the site.</li>
+    <li>Decide where backups get shipped off the VM to (git push, object storage, email, etc.) and automate it &mdash; right now <code>backup_data</code> only produces a local zip.</li>
+</ol>
+
+<h2>Changelog</h2>
+<div class="changelog-feed">
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Imported real Season 2 data into the new <code>s2_*</code> tables, sourced from the S2 LBPP sheet: <code>s2_pokedex</code> (1,182 Pok&eacute;mon with S2's own point costs &mdash; the per-season draft board headers now have real data behind them, not just the schema), <code>s2_rosters</code> (15 coaches' teams), <code>s2_schedule</code> (75 regular-season matches across 11 weeks, playoffs excluded), and <code>s2_free_agency_log</code> (21 transactions). Backed by real files under <code>home/data/s2/</code> plus dedicated <code>load_s2_*</code> management commands mirroring the S4 loaders, already run against the database. Per-match battle stats weren't pulled from the season's replay links &mdash; that's a bigger follow-up. Two quirks carried over verbatim from the sheet rather than "corrected": Harnoor's roster sums to 121 points despite the 120-point cap, and Ajay's team name reads "HydreiGolden State Warriors," apparently a mid-season rename the sheet never fully cleaned up. Like the schema-only work before it, none of this is wired into <code>data_access.py</code>, the views, or the League selector yet &mdash; the app still only reads Season 4 data.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Populated the <code>s3_*</code> tables with real Season 3 data from the S3 LBPP sheet: <code>s3_pokedex</code> (1,578 rows &mdash; 990 draftable Pok&eacute;mon across 24 point tiers, plus 588 banned/zero-point entries &mdash; the draft board's point-tier headers for S3), <code>s3_rosters</code> (12 teams, 10 picks each), <code>s3_schedule</code> (66 regular-season matches across 11 weeks, Playoff Bracket excluded), and <code>s3_free_agency_log</code> (17 transactions), all cross-checked against the sheet's own standings and free-agent-used counts. Unlike S2, this ran as a one-off script straight against the database rather than checked-in loader commands, so there's no <code>home/data/s3/</code> JSON or <code>load_s3_*</code> management command in the repo backing it yet. Same caveats as S2 apply: no per-match replay stats, and nothing in the app reads S3 data yet.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Reworked the Schedule page layout: dropped the "pick a week, then a match" subheading, moved the week selector from a sidebar into a horizontal bar above the match list (now three stacked panes &mdash; weeks, matches, matchup), and removed the Self-KO column from the per-Pok&eacute;mon stats table.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Laid the SQL groundwork for per-season data: refactored the <code>s4_pokedex</code>/<code>s4_rosters</code>/<code>s4_schedule</code>/<code>s4_free_agency_log</code> models into shared abstract base classes, then added matching <code>s1</code>/<code>s2</code>/<code>s3</code> tables for each. Schema only for now &mdash; no historical season data has been loaded into them, and nothing in the app switches based on the League selector yet.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Replaced the theme swatch buttons in the nav bar with a proper Theme dropdown, and added a League selector (Season 1&ndash;4, defaulting to Season 4) next to it that remembers your choice via <code>localStorage</code>. The selector doesn't switch any data yet &mdash; only Season 4's data exists right now &mdash; it's just the picker.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Rosters now sort each team's Pok&eacute;mon by points, highest first, instead of draft order.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Wired the new <code>s4_pokedex</code> table into the live app: <code>data_access.py</code> now loads it into an in-memory dict once at import instead of re-reading <code>draft_board.json</code>/<code>sprites.json</code> on every call. Draft board, sprite URLs, name canonicalization, free agents, statistics, and free agency point-costing/validation all read from that cached dict now.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Added a <code>s4_pokedex</code> SQL table (Django model + migration) combining <code>draft_board.json</code>, <code>sprites.json</code>, and <code>pokedex.json</code> &mdash; points, sprite id, types, base stats, tier, etc. for every Pok&eacute;mon on the draft board (1,068 rows), loaded via a new <code>load_s4_pokedex</code> management command. Also added <code>s4_rosters</code>, <code>s4_schedule</code>, and <code>s4_free_agency_log</code> tables mirroring the other three JSON data files, each with its own loader command &mdash; first step of migrating storage off JSON files.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">
+            <strong>Overhauled the battle stat tracker</strong> &mdash; the replay parser went from ~10 tracked stats per Pok&eacute;mon to about 90, rebuilt against a real fetched replay log rather than protocol docs alone so the attribution logic is verified against actual Showdown lines. Now covers:
+            <ul>
+                <li><strong>Kills &amp; deaths</strong> &mdash; split into direct vs. indirect kills, with fainting-attribution carried across switches. Self-KO moves (Explosion, Self-Destruct, Misty Explosion, Final Gambit, Memento) still count their damage but no longer award the user a kill.</li>
+                <li><strong>Damage splits</strong> &mdash; direct, hazard, residual, contact-punishment, delayed, and self-inflicted, each tracked as both raw HP and normalized % of the target's max HP (computed per hit, since max HP is only known at the moment of the event).</li>
+                <li><strong>Residual damage attribution</strong> &mdash; poison, toxic poison, and burn; Sandstorm/Hail credited to the weather setter (including ability-set weather like Sand Stream); Leech Seed, Salt Cure, Curse, Nightmare, and all seven binding moves (Bind, Clamp, Fire Spin, Infestation, Magma Storm, Sand Tomb, Whirlpool, Wrap) credited to whoever caused them &mdash; even after they've switched out.</li>
+                <li><strong>Healing received</strong> &mdash; by source: move healing, Wish (credited to the original wisher via Showdown's <code>[wisher]</code> tag, not whoever's standing in the slot when it resolves), Leech Seed drain, item/ability healing (Leftovers, etc.), and Grassy Terrain.</li>
+                <li><strong>Statuses</strong> &mdash; inflicted and received, broken out by type (poison, toxic, burn, sleep, paralysis, freeze). Rest's self-inflicted sleep is deliberately excluded from both sides so it doesn't pollute a mon's status stats.</li>
+                <li><strong>Entry hazards</strong> &mdash; Stealth Rock, Spikes, Toxic Spikes, Sticky Web, G-Max Steelsurge. Set and removal counts, hazard damage credited back to the setter, Toxic Spikes poison (and its residual ticks) credited to the setter, and Court Change swaps hazard ownership between sides while preserving the original setter's credit.</li>
+                <li><strong>Self-inflicted/punishment damage</strong> &mdash; recoil (including Struggle), Life Orb, Substitute and Belly Drum's HP cost, High Jump Kick/Jump Kick crash damage, confusion self-hits, and contact-punishment items/abilities (Rocky Helmet, Rough Skin, etc.) credited to the defending Pok&eacute;mon.</li>
+                <li><strong>Delayed attacks</strong> &mdash; Future Sight and Doom Desire credited to the original user even after they've switched out or fainted before the hit lands.</li>
+                <li><strong>Hit accounting</strong> &mdash; multi-hit moves count each individual hit; secondary-effect-only successes (status, boosts, hazards, weather) count a move as "landed" even with zero damage; misses, dodges, failed moves, and immunity are tracked separately from hits.</li>
+                <li><strong>Crits &amp; type effectiveness</strong> &mdash; crits dealt and taken, resisted hits taken, super-effective hits taken.</li>
+                <li><strong>Stat changes</strong> &mdash; boosts and drops given, received, and self-applied (so a mon's own Bulk Up or Draco Meteor recoil doesn't get miscredited to an opponent).</li>
+                <li><strong>Activity tracking</strong> &mdash; turns active, switch-ins, forced switches (Roar/Whirlwind/etc.) credited to whoever caused them, and times dragged in.</li>
+                <li><strong>Identity handling</strong> &mdash; team-preview draft position, Terastallization (type + flag), and Ogerpon/Terapagos's battle-only "-Tera" form names normalized back to their draft board entry instead of forking into a separate stat line.</li>
+                <li><strong>Revealed info</strong> &mdash; items and abilities revealed during the battle, tracked per Pok&eacute;mon.</li>
+            </ul>
+            Attribution stays conservative throughout: where the log doesn't expose a reliable source, the event is recorded as taken/received but left unattributed rather than guessed at.
+        </div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Fixed a bug found while validating the tracker rewrite: the HP-delta helper always reported HP <em>lost</em>, so every <code>-heal</code> line was silently registering as zero healing &mdash; Wish, Leech Seed, Roost, drain moves, Leftovers, all of it. Fixed by flipping the sign specifically for the healing path.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Re-parsed all 10 already-submitted replays under the new stat tracker schema so existing matches show the richer stats immediately, rather than sitting at zero until someone resubmits them. Verified end-to-end in the browser: the Schedule match view and Statistics page both render correctly with real data, zero console errors, and zero unattributed damage leaks across a full test replay.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Added new columns to the Schedule match view and Statistics page: direct/indirect kills, self-KOs, healing received, crits dealt/taken, boosts given/received, hazards removed, and a Tera badge next to Terastallized Pok&eacute;mon's name. Not every tracked field got a column &mdash; that would be unusable &mdash; the rest of the ~90 fields are stored per match in the data layer for future use (deeper per-Pok&eacute;mon breakdowns, a match summary view, etc.).</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Added a data backup management command (<code>backup_data</code>) that zips the JSON data files into a timestamped archive.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Giovanni posted a trade to Discord: Bayern Munchlax dropped Chi-Yu, Slither Wing, and Ditto to pick up Darkrai, Victini, and Lapras.</div>
+    </div>
+    <div class="changelog-entry">
+        <div class="changelog-date">Aug 27, 2026</div>
+        <div class="changelog-text">Created Giovanni, a Discord webhook bot that posts free agency/trade transactions to the league Discord.</div>
+    </div>
+</div>
+</div>
+{% endblock %}

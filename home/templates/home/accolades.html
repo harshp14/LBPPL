@@ -1,0 +1,124 @@
+{% extends "home/base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Accolades</h1>
+        <p>Season {{ season }} awards, superlatives, and the road to the finals.</p>
+    </div>
+</div>
+
+{% if accolades.finals %}
+<div class="card">
+    <h2>Finals</h2>
+    <div class="roster-grid">
+        <div class="roster-card">
+            <div class="roster-card-header">
+                <h2>{{ accolades.finals.team1.name }}{% if accolades.finals.champion == 'team1' %} &#127942;{% endif %}</h2>
+            </div>
+            <p class="roster-coach">{{ accolades.finals.team1.coach }}</p>
+            {% if accolades.finals.team1.seed %}<p class="match-stats-placeholder">{{ accolades.finals.team1.seed }}, {{ accolades.finals.team1.record }}</p>{% endif %}
+        </div>
+        <div class="roster-card">
+            <div class="roster-card-header">
+                <h2>{{ accolades.finals.team2.name }}{% if accolades.finals.champion == 'team2' %} &#127942;{% endif %}</h2>
+            </div>
+            <p class="roster-coach">{{ accolades.finals.team2.coach }}</p>
+            {% if accolades.finals.team2.seed %}<p class="match-stats-placeholder">{{ accolades.finals.team2.seed }}, {{ accolades.finals.team2.record }}</p>{% endif %}
+        </div>
+    </div>
+    {% if accolades.finals.champion %}
+    <p class="match-stats-placeholder">Pok&eacute;mon League Champion: {% if accolades.finals.champion == 'team1' %}{{ accolades.finals.team1.coach }} ({{ accolades.finals.team1.name }}){% else %}{{ accolades.finals.team2.coach }} ({{ accolades.finals.team2.name }}){% endif %}</p>
+    {% else %}
+    <p class="match-stats-placeholder">Finals not yet played.</p>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Player Awards</h2>
+    {% if accolades.player_awards %}
+    <div class="award-grid">
+        {% for category in accolades.player_awards %}
+        <div class="award-card">
+            <h3 class="award-card-title">{{ category.category }}</h3>
+            <div class="award-list">
+                {% for entry in category.entries %}
+                <div class="award-row">
+                    <span class="award-rank">{% if forloop.counter == 1 %}&#129351;{% elif forloop.counter == 2 %}&#129352;{% elif forloop.counter == 3 %}&#129353;{% else %}{{ forloop.counter }}.{% endif %}</span>
+                    <span class="award-detail">{{ entry.name }}</span>
+                    <span class="award-points">{{ entry.points }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="match-stats-placeholder">No player awards tracked for this season yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Pok&eacute;mon Awards</h2>
+    {% if accolades.pokemon_awards %}
+    <div class="award-grid">
+        {% for category in accolades.pokemon_awards %}
+        <div class="award-card">
+            <h3 class="award-card-title">{{ category.category }}</h3>
+            <div class="award-list">
+                {% for entry in category.entries %}
+                <div class="award-row">
+                    <span class="award-rank">{% if forloop.counter == 1 %}&#129351;{% elif forloop.counter == 2 %}&#129352;{% elif forloop.counter == 3 %}&#129353;{% else %}{{ forloop.counter }}.{% endif %}</span>
+                    <span class="award-detail mon-cell">
+                        {% if entry.sprite %}<img src="{{ entry.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                        <span>{{ entry.pokemon }}{% if entry.coach %} ({{ entry.coach }}){% endif %}</span>
+                    </span>
+                    <span class="award-points">{{ entry.points }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="match-stats-placeholder">No Pok&eacute;mon awards tracked for this season yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Match Awards</h2>
+    {% if accolades.match_awards %}
+    <div class="award-list-wide">
+        {% for category in accolades.match_awards %}
+        <div class="award-card award-card-wide">
+            <h3 class="award-card-title">{{ category.category }}</h3>
+            <div class="award-list">
+                {% for entry in category.entries %}
+                <div class="award-row">
+                    <span class="award-rank">{% if forloop.counter == 1 %}&#129351;{% elif forloop.counter == 2 %}&#129352;{% elif forloop.counter == 3 %}&#129353;{% else %}{{ forloop.counter }}.{% endif %}</span>
+                    <span class="award-detail">{{ entry.name }}</span>
+                    <span class="award-points">{{ entry.points }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="match-stats-placeholder">No match awards tracked for this season yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Community Superlatives</h2>
+    {% if accolades.community %}
+    <ul class="community-list">
+        {% for entry in accolades.community %}
+        <li>{{ entry }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="match-stats-placeholder">No community superlatives submitted for this season yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
