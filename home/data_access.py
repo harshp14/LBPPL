@@ -5,6 +5,7 @@ without touching views.py.
 """
 import json
 import re
+from datetime import datetime
 from pathlib import Path
 
 from . import discord_webhooks, replay_parser
@@ -358,6 +359,11 @@ def set_match_game_time(season, week, match_index, day):
     """Persist a coach-proposed day to play an unplayed match, and post it
     to Discord. Returns (True, None) on success or (False, error_message)
     on failure."""
+    try:
+        datetime.strptime(day, "%Y-%m-%d")
+    except ValueError:
+        return False, "Day must be a valid date (YYYY-MM-DD)."
+
     path = _season_dir(season) / "schedule.json"
     if not path.exists():
         return False, "Couldn't find that match."

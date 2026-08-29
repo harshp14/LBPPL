@@ -63,6 +63,19 @@ def notify_battle_concluded(season, team1_name, coach1_name, team2_name, coach2_
     _post(GAME_TIME_WEBHOOK_URL, payload)
 
 
+def notify_todays_battles(matches):
+    lines = [f"{m['player1']} vs {m['player2']}" for m in matches]
+    payload = {
+        "embeds": [
+            {
+                "title": "Today's Scheduled Battles",
+                "description": "\n".join(lines),
+            }
+        ]
+    }
+    _post(GAME_TIME_WEBHOOK_URL, payload)
+
+
 def notify_game_time(season, week_label, player1, player2, day):
     payload = {
         "embeds": [
