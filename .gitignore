@@ -8,6 +8,7 @@ local_settings.py
 db.sqlite3-journal
 media/
 backups/
+staticfiles/
 
 # Env
 .env
