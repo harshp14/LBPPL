@@ -9,9 +9,9 @@
                 <th>Direct</th>
                 <th>Indirect</th>
                 <th>Turns Active</th>
-                <th>Dmg Dealt (Direct)</th>
-                <th>Dmg Taken</th>
-                <th>Healing Received</th>
+                <th>Dmg Dealt % (Direct)</th>
+                <th>Dmg Taken %</th>
+                <th>Healing Received %</th>
                 <th>Statuses Inflicted</th>
                 <th>Crits Dealt</th>
                 <th>Crits Taken</th>
@@ -39,9 +39,9 @@
                 <td>{{ mon.direct_kills }}</td>
                 <td>{{ mon.indirect_kills }}</td>
                 <td>{{ mon.turns_active }}</td>
-                <td>{{ mon.damage_dealt_direct }}</td>
-                <td>{{ mon.damage_taken_direct }}/{{ mon.max_hp }}</td>
-                <td>{{ mon.healing_received_total }}</td>
+                <td>{{ mon.damage_dealt_direct_pct }}%</td>
+                <td>{{ mon.damage_taken_direct_pct }}%</td>
+                <td>{{ mon.healing_received_total_pct }}%</td>
                 <td>{{ mon.statuses_inflicted_psn|add:mon.statuses_inflicted_tox|add:mon.statuses_inflicted_brn|add:mon.statuses_inflicted_slp|add:mon.statuses_inflicted_par|add:mon.statuses_inflicted_frz }}</td>
                 <td>{{ mon.crits_dealt }}</td>
                 <td>{{ mon.crits_taken }}</td>

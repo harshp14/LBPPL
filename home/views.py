@@ -96,7 +96,7 @@ def schedule(request):
         if stats:
             for mon in stats['player1'] + stats['player2']:
                 mon['sprite'] = data_access.get_sprite_url(mon['pokemon'], season)
-                mon['healing_received_total'] = data_access.healing_received_total(mon)
+                mon['healing_received_total_pct'] = data_access.healing_received_total_pct(mon)
 
     return render(request, 'home/schedule.html', {
         'weeks': weeks,

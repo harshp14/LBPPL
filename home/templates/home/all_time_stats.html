@@ -18,9 +18,9 @@
                     <th data-sort="num">Deaths</th>
                     <th data-sort="num">Self-KOs</th>
                     <th data-sort="num">Turns Active</th>
-                    <th data-sort="num">Dmg Dealt (Direct)</th>
-                    <th data-sort="num">Dmg Taken</th>
-                    <th data-sort="num">Healing Received</th>
+                    <th data-sort="num">Dmg Dealt % (Direct)</th>
+                    <th data-sort="num">Dmg Taken %</th>
+                    <th data-sort="num">Healing Received %</th>
                     <th data-sort="num">Crits Dealt</th>
                     <th data-sort="num">Crits Taken</th>
                     <th data-sort="num">Boosts Given</th>
@@ -50,9 +50,9 @@
                     <td data-value="{{ row.deaths }}">{{ row.deaths }}</td>
                     <td data-value="{{ row.self_kos }}">{{ row.self_kos }}</td>
                     <td data-value="{{ row.turns_active }}">{{ row.turns_active }}</td>
-                    <td data-value="{{ row.damage_dealt_direct }}">{{ row.damage_dealt_direct }}</td>
-                    <td data-value="{{ row.damage_taken_direct }}">{{ row.damage_taken_direct }}</td>
-                    <td data-value="{{ row.healing_received_total }}">{{ row.healing_received_total }}</td>
+                    <td data-value="{{ row.damage_dealt_direct_pct }}">{{ row.damage_dealt_direct_pct }}%</td>
+                    <td data-value="{{ row.damage_taken_direct_pct }}">{{ row.damage_taken_direct_pct }}%</td>
+                    <td data-value="{{ row.healing_received_total_pct }}">{{ row.healing_received_total_pct }}%</td>
                     <td data-value="{{ row.crits_dealt }}">{{ row.crits_dealt }}</td>
                     <td data-value="{{ row.crits_taken }}">{{ row.crits_taken }}</td>
                     <td data-value="{{ row.boosts_given }}">{{ row.boosts_given }}</td>

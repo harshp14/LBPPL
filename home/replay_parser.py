@@ -36,35 +36,30 @@ STAT_FIELDS = [
     "moves_used", "hits_landed", "effect_only_landed",
     "missed_moves", "dodged_moves", "moves_failed", "immune_hits",
 
-    # damage dealt: raw HP, and normalized to % of the target's max HP
-    "damage_dealt_direct", "damage_dealt_direct_pct",
-    "damage_dealt_hazard", "damage_dealt_hazard_pct",
-    "damage_dealt_residual", "damage_dealt_residual_pct",
-    "damage_dealt_contact_punish", "damage_dealt_contact_punish_pct",
-    "damage_dealt_delayed", "damage_dealt_delayed_pct",
-    "damage_dealt_other", "damage_dealt_other_pct",
+    # damage dealt, normalized to % of the target's max HP (we never see a
+    # Pokemon's real max HP -- EVs aren't visible to anyone but the creator
+    # -- so a flat HP number is meaningless; % of the HP bar at the moment
+    # of the hit is the only value that's actually comparable)
+    "damage_dealt_direct_pct", "damage_dealt_hazard_pct", "damage_dealt_residual_pct",
+    "damage_dealt_contact_punish_pct", "damage_dealt_delayed_pct", "damage_dealt_other_pct",
 
-    # damage taken: raw HP, and normalized to % of this Pokemon's max HP
-    "damage_taken_direct", "damage_taken_direct_pct",
-    "damage_taken_hazard", "damage_taken_hazard_pct",
-    "damage_taken_residual", "damage_taken_residual_pct",
-    "damage_taken_recoil", "damage_taken_recoil_pct",
-    "damage_taken_contact_punish", "damage_taken_contact_punish_pct",
-    "damage_taken_other", "damage_taken_other_pct",
+    # damage taken, normalized to % of this Pokemon's max HP
+    "damage_taken_direct_pct", "damage_taken_hazard_pct", "damage_taken_residual_pct",
+    "damage_taken_recoil_pct", "damage_taken_contact_punish_pct", "damage_taken_other_pct",
 
-    # residual damage dealt, broken out by source (sums into damage_dealt_residual)
-    "residual_dealt_poison", "residual_dealt_burn", "residual_dealt_weather",
-    "residual_dealt_leech_seed", "residual_dealt_salt_cure", "residual_dealt_curse",
-    "residual_dealt_nightmare", "residual_dealt_binding", "residual_dealt_item_ability",
+    # residual damage dealt, broken out by source (sums into damage_dealt_residual_pct)
+    "residual_dealt_poison_pct", "residual_dealt_burn_pct", "residual_dealt_weather_pct",
+    "residual_dealt_leech_seed_pct", "residual_dealt_salt_cure_pct", "residual_dealt_curse_pct",
+    "residual_dealt_nightmare_pct", "residual_dealt_binding_pct", "residual_dealt_item_ability_pct",
 
-    # self-inflicted/punishment damage taken (sums into damage_taken_recoil)
-    "recoil_damage", "life_orb_damage", "substitute_cost", "belly_drum_cost",
-    "crash_damage", "confusion_self_damage",
+    # self-inflicted/punishment damage taken (sums into damage_taken_recoil_pct)
+    "recoil_damage_pct", "life_orb_damage_pct", "substitute_cost_pct", "belly_drum_cost_pct",
+    "crash_damage_pct", "confusion_self_damage_pct",
 
     # healing received, by source
-    "healing_received_move", "healing_received_wish", "healing_received_leech_seed",
-    "healing_received_item_ability", "healing_received_terrain", "healing_received_other",
-    "healing_done_wish",
+    "healing_received_move_pct", "healing_received_wish_pct", "healing_received_leech_seed_pct",
+    "healing_received_item_ability_pct", "healing_received_terrain_pct", "healing_received_other_pct",
+    "healing_done_wish_pct",
 
     # statuses inflicted/received, by type - Rest's self-inflicted sleep is
     # intentionally excluded from both sides entirely.
@@ -237,9 +232,11 @@ def _parse_log(log):
         return mon
 
     def apply_hp(mon, hp_field):
-        """Returns the raw HP lost (prev - cur), not a percentage - these
-        replays expose real HP numbers (e.g. "330/363"), so damage is
-        tracked and reported as actual HP rather than %-of-max."""
+        """Returns the HP change (prev - cur) as a % of this Pokemon's max
+        HP at the moment of the event, or None if there's no prior HP to
+        diff against. We never see a Pokemon's real max HP -- EVs aren't
+        visible to anyone but the creator -- so a flat HP number isn't a
+        trustworthy or comparable value; % of the HP bar is."""
         cur, mx = _parse_hp(hp_field)
         if mx is not None:
             mon.max_hp = mx
@@ -250,18 +247,17 @@ def _parse_log(log):
         mon.hp = cur
         if prev is None:
             return None
-        return prev - cur
+        delta = prev - cur
+        return round(delta / mon.max_hp * 100, 2) if mon.max_hp else 0.0
 
-    def credit_dealt(attacker, mon, delta, pct, dealt_bucket, taken_bucket=None, credit_kill=True):
-        """Attribute a chunk of indirect/hazard/residual/etc. damage: the
-        dealing mon's damage_dealt_<bucket> (+its %), the receiving mon's
-        damage_taken_<bucket> (+its %), and (if credit_kill) marks the
-        attacker as the fatal-blow source for kill attribution."""
+    def credit_dealt(attacker, mon, pct, dealt_bucket, taken_bucket=None, credit_kill=True):
+        """Attribute a chunk of indirect/hazard/residual/etc. damage (as %
+        of max HP): the dealing mon's damage_dealt_<bucket>_pct, the
+        receiving mon's damage_taken_<bucket>_pct, and (if credit_kill)
+        marks the attacker as the fatal-blow source for kill attribution."""
         taken_bucket = taken_bucket or dealt_bucket
         if attacker:
-            attacker.stats[f"damage_dealt_{dealt_bucket}"] += delta
             attacker.stats[f"damage_dealt_{dealt_bucket}_pct"] += pct
-        mon.stats[f"damage_taken_{taken_bucket}"] += delta
         mon.stats[f"damage_taken_{taken_bucket}_pct"] += pct
         last_damage_source[mon.key] = attacker.key if (attacker and credit_kill) else None
 
@@ -415,10 +411,9 @@ def _parse_log(log):
             if mon is None:
                 continue
             from_text, from_kind, of_slot, silent, _wisher = _extract_tags(parts[4:])
-            delta = apply_hp(mon, hp_field)
-            if not delta or delta <= 0:
+            pct = apply_hp(mon, hp_field)
+            if not pct or pct <= 0:
                 continue
-            pct = round(delta / mon.max_hp * 100, 2) if mon.max_hp else 0.0
             source_mon = mons.get(_nick_of(of_slot)) if of_slot else None
 
             if from_text is None:
@@ -426,121 +421,112 @@ def _parse_log(log):
                 if last_move and last_move[0] == target_key and last_move[2] == target_key:
                     self_cost_field = SELF_COST_MOVES.get(last_move[1])
                 if self_cost_field:
-                    mon.stats[self_cost_field] += delta
-                    mon.stats["damage_taken_recoil"] += delta
+                    mon.stats[f"{self_cost_field}_pct"] += pct
                     mon.stats["damage_taken_recoil_pct"] += pct
                     last_damage_source[target_key] = None
                 elif last_move and last_move[2] == target_key and last_move[0] != target_key:
                     attacker = mons.get(last_move[0])
                     move_name = last_move[1]
                     if attacker and attacker.side != mon.side:
-                        credit_dealt(attacker, mon, delta, pct, "direct",
+                        credit_dealt(attacker, mon, pct, "direct",
                                      credit_kill=move_name not in SELF_KO_MOVES)
                         attacker.stats["hits_landed"] += 1
                         landed_flag[0] = True
                     else:
-                        mon.stats["damage_taken_other"] += delta
                         mon.stats["damage_taken_other_pct"] += pct
                         last_damage_source[target_key] = None
                 else:
-                    mon.stats["damage_taken_other"] += delta
                     mon.stats["damage_taken_other_pct"] += pct
                     last_damage_source[target_key] = None
 
             elif from_text == "Recoil":
-                mon.stats["recoil_damage"] += delta
-                mon.stats["damage_taken_recoil"] += delta
+                mon.stats["recoil_damage_pct"] += pct
                 mon.stats["damage_taken_recoil_pct"] += pct
                 last_damage_source[target_key] = None
 
             elif from_kind == "item" and from_text == "Life Orb":
-                mon.stats["life_orb_damage"] += delta
-                mon.stats["damage_taken_recoil"] += delta
+                mon.stats["life_orb_damage_pct"] += pct
                 mon.stats["damage_taken_recoil_pct"] += pct
                 last_damage_source[target_key] = None
 
             elif "Jump Kick" in from_text:
-                mon.stats["crash_damage"] += delta
-                mon.stats["damage_taken_recoil"] += delta
+                mon.stats["crash_damage_pct"] += pct
                 mon.stats["damage_taken_recoil_pct"] += pct
                 last_damage_source[target_key] = None
 
             elif from_text == "confusion":
-                mon.stats["confusion_self_damage"] += delta
-                mon.stats["damage_taken_recoil"] += delta
+                mon.stats["confusion_self_damage_pct"] += pct
                 mon.stats["damage_taken_recoil_pct"] += pct
                 last_damage_source[target_key] = None
 
             elif from_text in STATUS_DAMAGE_NAMES:
                 attacker = mons.get(status_source.get(target_key))
-                credit_dealt(attacker, mon, delta, pct, "residual")
+                credit_dealt(attacker, mon, pct, "residual")
                 if attacker:
-                    field = "residual_dealt_burn" if from_text == "brn" else "residual_dealt_poison"
-                    attacker.stats[field] += delta
+                    field = "residual_dealt_burn_pct" if from_text == "brn" else "residual_dealt_poison_pct"
+                    attacker.stats[field] += pct
 
             elif weather[0] and from_text == weather[0]:
                 attacker = mons.get(weather[1])
                 opposing = attacker if (attacker and attacker.side != mon.side) else None
-                credit_dealt(opposing, mon, delta, pct, "residual")
+                credit_dealt(opposing, mon, pct, "residual")
                 if opposing:
-                    opposing.stats["residual_dealt_weather"] += delta
+                    opposing.stats["residual_dealt_weather_pct"] += pct
 
             elif from_text == "Leech Seed":
                 seeder_key = (of_slot and _nick_of(of_slot)) or effect_source.get((target_key, "Leech Seed"))
                 attacker = mons.get(seeder_key) if seeder_key else None
-                credit_dealt(attacker, mon, delta, pct, "residual")
+                credit_dealt(attacker, mon, pct, "residual")
                 if attacker:
-                    attacker.stats["residual_dealt_leech_seed"] += delta
+                    attacker.stats["residual_dealt_leech_seed_pct"] += pct
                     pending_leech_heal.add(attacker.key)
 
             elif from_text == "Salt Cure":
                 source_key = (of_slot and _nick_of(of_slot)) or effect_source.get((target_key, "Salt Cure"))
                 attacker = mons.get(source_key) if source_key else None
-                credit_dealt(attacker, mon, delta, pct, "residual")
+                credit_dealt(attacker, mon, pct, "residual")
                 if attacker:
-                    attacker.stats["residual_dealt_salt_cure"] += delta
+                    attacker.stats["residual_dealt_salt_cure_pct"] += pct
 
             elif from_text in ("Curse", "Nightmare"):
                 source_key = (of_slot and _nick_of(of_slot)) or effect_source.get((target_key, from_text))
                 attacker = mons.get(source_key) if source_key else None
-                credit_dealt(attacker, mon, delta, pct, "residual")
+                credit_dealt(attacker, mon, pct, "residual")
                 if attacker:
-                    field = "residual_dealt_curse" if from_text == "Curse" else "residual_dealt_nightmare"
-                    attacker.stats[field] += delta
+                    field = "residual_dealt_curse_pct" if from_text == "Curse" else "residual_dealt_nightmare_pct"
+                    attacker.stats[field] += pct
 
             elif from_text in BINDING_MOVES:
                 source_key = (of_slot and _nick_of(of_slot)) or effect_source.get((target_key, from_text))
                 attacker = mons.get(source_key) if source_key else None
-                credit_dealt(attacker, mon, delta, pct, "residual")
+                credit_dealt(attacker, mon, pct, "residual")
                 if attacker:
-                    attacker.stats["residual_dealt_binding"] += delta
+                    attacker.stats["residual_dealt_binding_pct"] += pct
 
             elif from_text in HAZARD_NAMES:
                 setter_key = hazard_setter.get((mon.side, from_text))
                 attacker = mons.get(setter_key) if setter_key else None
-                credit_dealt(attacker, mon, delta, pct, "hazard")
+                credit_dealt(attacker, mon, pct, "hazard")
 
             elif from_text in DELAYED_MOVES:
                 source_key = effect_source.get((target_key, from_text))
                 attacker = mons.get(source_key) if source_key else None
-                credit_dealt(attacker, mon, delta, pct, "delayed", taken_bucket="other")
+                credit_dealt(attacker, mon, pct, "delayed", taken_bucket="other")
 
             elif from_kind in ("item", "ability") and source_mon and source_mon.side != mon.side:
                 # Contact punishment (Rocky Helmet, Rough Skin, etc.) -
                 # credited to the defending Pokemon whose item/ability it is.
-                credit_dealt(source_mon, mon, delta, pct, "contact_punish")
+                credit_dealt(source_mon, mon, pct, "contact_punish")
                 if from_kind == "item":
-                    source_mon.stats["residual_dealt_item_ability"] += delta
+                    source_mon.stats["residual_dealt_item_ability_pct"] += pct
 
             elif from_kind in ("item", "ability"):
                 # Self-caused (e.g. Solar Power, Bad Dreams on the mon
                 # itself) - no external attacker to credit.
-                mon.stats["damage_taken_other"] += delta
                 mon.stats["damage_taken_other_pct"] += pct
                 last_damage_source[target_key] = None
 
             else:
-                mon.stats["damage_taken_other"] += delta
                 mon.stats["damage_taken_other_pct"] += pct
                 last_damage_source[target_key] = None
 
@@ -550,30 +536,30 @@ def _parse_log(log):
             if mon is None:
                 continue
             from_text, from_kind, of_slot, silent, wisher_nick = _extract_tags(parts[4:])
-            lost = apply_hp(mon, hp_field)
-            delta = -lost if lost else None  # apply_hp reports HP lost; healing is a gain
-            if not delta or delta <= 0:
+            hp_lost_pct = apply_hp(mon, hp_field)
+            pct = -hp_lost_pct if hp_lost_pct else None  # apply_hp reports HP lost; healing is a gain
+            if not pct or pct <= 0:
                 continue
 
             if wisher_nick:
-                mon.stats["healing_received_wish"] += delta
+                mon.stats["healing_received_wish_pct"] += pct
                 wisher_key = f"{mon.side}|{wisher_nick}"
                 wisher = mons.get(wisher_key)
                 if wisher:
-                    wisher.stats["healing_done_wish"] += delta
+                    wisher.stats["healing_done_wish_pct"] += pct
             elif mon.key in pending_leech_heal:
-                mon.stats["healing_received_leech_seed"] += delta
+                mon.stats["healing_received_leech_seed_pct"] += pct
                 pending_leech_heal.discard(mon.key)
             elif from_text == "drain":
-                mon.stats["healing_received_move"] += delta
+                mon.stats["healing_received_move_pct"] += pct
             elif from_text == "Grassy Terrain":
-                mon.stats["healing_received_terrain"] += delta
+                mon.stats["healing_received_terrain_pct"] += pct
             elif from_kind in ("item", "ability"):
-                mon.stats["healing_received_item_ability"] += delta
+                mon.stats["healing_received_item_ability_pct"] += pct
             elif from_kind == "move" or from_text is None:
-                mon.stats["healing_received_move"] += delta
+                mon.stats["healing_received_move_pct"] += pct
             else:
-                mon.stats["healing_received_other"] += delta
+                mon.stats["healing_received_other_pct"] += pct
 
         elif cmd == "-miss":
             attacker_slot = parts[2]
@@ -780,7 +766,6 @@ def _parse_log(log):
             "indirect_kills": mon.indirect_kills,
             "died": mon.died,
             "self_ko": mon.self_ko,
-            "max_hp": mon.max_hp or 0,
         }
         for f in STAT_FIELDS:
             v = mon.stats[f]

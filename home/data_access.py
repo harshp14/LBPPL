@@ -207,22 +207,23 @@ def get_upcoming_games(season):
 # in career totals automatically.
 STAT_SUM_FIELDS = replay_parser.STAT_FIELDS
 
-_HEALING_FIELDS = [
-    "healing_received_move", "healing_received_wish", "healing_received_leech_seed",
-    "healing_received_item_ability", "healing_received_terrain", "healing_received_other",
+_HEALING_PCT_FIELDS = [
+    "healing_received_move_pct", "healing_received_wish_pct", "healing_received_leech_seed_pct",
+    "healing_received_item_ability_pct", "healing_received_terrain_pct", "healing_received_other_pct",
 ]
 
 
-def healing_received_total(mon):
-    """Sum of a Pokemon's healing_received_* breakdown fields (works on
-    both a single match's per-mon stats dict and a get_statistics() row)."""
-    return sum(mon.get(f, 0) for f in _HEALING_FIELDS)
+def healing_received_total_pct(mon):
+    """Sum of a Pokemon's healing_received_*_pct breakdown fields, as a %
+    of max HP (works on both a single match's per-mon stats dict and a
+    get_statistics() row)."""
+    return sum(mon.get(f, 0) for f in _HEALING_PCT_FIELDS)
 
 
 def _new_stat_row():
     return {
         "games_played": 0, "kills": 0, "direct_kills": 0,
-        "indirect_kills": 0, "deaths": 0, "self_kos": 0, "max_hp": 0,
+        "indirect_kills": 0, "deaths": 0, "self_kos": 0,
         **{f: 0 for f in STAT_SUM_FIELDS},
     }
 
@@ -234,7 +235,6 @@ def _accumulate_stat_row(row, mon):
     row["indirect_kills"] += mon.get("indirect_kills", 0)
     row["deaths"] += 1 if mon["died"] else 0
     row["self_kos"] += 1 if mon.get("self_ko") else 0
-    row["max_hp"] += mon.get("max_hp", 0)
     for field in STAT_SUM_FIELDS:
         row[field] += mon.get(field, 0)
 
@@ -258,12 +258,10 @@ def _aggregate_schedule_stats(weeks):
 
 def get_statistics(season):
     """Aggregate per-Pokémon career stats across every logged battle in a
-    season's schedule.json. Every stat (turns active, statuses inflicted,
-    raw damage dealt/taken/indirect, etc.) is summed across appearances --
-    no percentages, except the parser's own "_pct" fields (damage already
-    normalized to % of the target's max HP per hit). "Dmg Taken" is shown
-    as damage_taken / max_hp, both flat sums with no division, so a career
-    total reads like "820/1089" rather than a computed ratio. Only
+    season's schedule.json. Every damage/healing stat is a "_pct" field --
+    % of max HP per hit, summed across appearances -- never a flat HP
+    number: replays never reveal a Pokemon's real max HP (EVs are only
+    known to the creator), so a flat HP total would be meaningless. Only
     Pokémon that have appeared in at least one battle are included.
     Returns rows sorted by kills, most first."""
     agg = _aggregate_schedule_stats(get_schedule(season))
@@ -283,10 +281,9 @@ def get_statistics(season):
             "self_kos": row["self_kos"],
             "kills_per_death": round(row["kills"] / row["deaths"], 2) if row["deaths"] else row["kills"],
             "kills_per_point": round(row["kills"] / points, 2) if points else None,
-            "max_hp": row["max_hp"],
         }
         entry.update({f: row[f] for f in STAT_SUM_FIELDS})
-        entry["healing_received_total"] = healing_received_total(row)
+        entry["healing_received_total_pct"] = healing_received_total_pct(row)
         rows.append(entry)
 
     return sorted(rows, key=lambda r: r["kills"], reverse=True)
@@ -326,10 +323,9 @@ def get_all_time_statistics():
             "deaths": row["deaths"],
             "self_kos": row["self_kos"],
             "kills_per_death": round(row["kills"] / row["deaths"], 2) if row["deaths"] else row["kills"],
-            "max_hp": row["max_hp"],
         }
         entry.update({f: row[f] for f in STAT_SUM_FIELDS})
-        entry["healing_received_total"] = healing_received_total(row)
+        entry["healing_received_total_pct"] = healing_received_total_pct(row)
         rows.append(entry)
 
     return sorted(rows, key=lambda r: r["kills"], reverse=True)
