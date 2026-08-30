@@ -168,6 +168,30 @@ def submit_game_time(request):
     return redirect(f"{reverse('schedule')}?week={week}&match={match_index}")
 
 
+def prep_sheet(request):
+    season = _get_season(request)
+    teams = data_access.get_prep_sheet_teams(season)
+    coach_names = [t['coach_name'] for t in teams]
+
+    team1 = request.GET.get('team1') or (coach_names[0] if coach_names else None)
+    team2 = request.GET.get('team2') or (coach_names[1] if len(coach_names) > 1 else None)
+    if team1 not in coach_names:
+        team1 = coach_names[0] if coach_names else None
+    if team2 not in coach_names:
+        team2 = coach_names[1] if len(coach_names) > 1 else None
+
+    sort = request.GET.get('sort', 'name')
+    move_category = request.GET.get('move_category')
+    prep = data_access.get_prep_sheet(season, team1, team2, sort, move_category) if team1 and team2 else None
+
+    return render(request, 'home/prep_sheet.html', {
+        'teams': teams,
+        'team1': team1,
+        'team2': team2,
+        'prep': prep,
+    })
+
+
 def playoffs(request):
     season = _get_season(request)
     return render(request, 'home/playoffs.html', {'season': season})

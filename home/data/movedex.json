@@ -1,0 +1,398 @@
+{
+  "accelerock": {
+    "name": "Accelerock"
+  },
+  "allyswitch": {
+    "name": "Ally Switch"
+  },
+  "aquajet": {
+    "name": "Aqua Jet"
+  },
+  "aromatherapy": {
+    "name": "Aromatherapy"
+  },
+  "auroraveil": {
+    "name": "Aurora Veil"
+  },
+  "babydolleyes": {
+    "name": "Baby-Doll Eyes"
+  },
+  "banefulbunker": {
+    "name": "Baneful Bunker"
+  },
+  "batonpass": {
+    "name": "Baton Pass"
+  },
+  "bide": {
+    "name": "Bide"
+  },
+  "brickbreak": {
+    "name": "Brick Break"
+  },
+  "bulldoze": {
+    "name": "Bulldoze"
+  },
+  "bulletpunch": {
+    "name": "Bullet Punch"
+  },
+  "burningbulwark": {
+    "name": "Burning Bulwark"
+  },
+  "ceaselessedge": {
+    "name": "Ceaseless Edge"
+  },
+  "chillyreception": {
+    "name": "Chilly Reception"
+  },
+  "circlethrow": {
+    "name": "Circle Throw"
+  },
+  "clearsmog": {
+    "name": "Clear Smog"
+  },
+  "coaching": {
+    "name": "Coaching"
+  },
+  "confuseray": {
+    "name": "Confuse Ray"
+  },
+  "courtchange": {
+    "name": "Court Change"
+  },
+  "covet": {
+    "name": "Covet"
+  },
+  "craftyshield": {
+    "name": "Crafty Shield"
+  },
+  "darkvoid": {
+    "name": "Dark Void"
+  },
+  "defog": {
+    "name": "Defog"
+  },
+  "destinybond": {
+    "name": "Destiny Bond"
+  },
+  "detect": {
+    "name": "Detect"
+  },
+  "disable": {
+    "name": "Disable"
+  },
+  "dragontail": {
+    "name": "Dragon Tail"
+  },
+  "electroweb": {
+    "name": "Electroweb"
+  },
+  "encore": {
+    "name": "Encore"
+  },
+  "endure": {
+    "name": "Endure"
+  },
+  "extremespeed": {
+    "name": "Extreme Speed"
+  },
+  "fakeout": {
+    "name": "Fake Out"
+  },
+  "feint": {
+    "name": "Feint"
+  },
+  "firstimpression": {
+    "name": "First Impression"
+  },
+  "flatter": {
+    "name": "Flatter"
+  },
+  "flipturn": {
+    "name": "Flip Turn"
+  },
+  "followme": {
+    "name": "Follow Me"
+  },
+  "glare": {
+    "name": "Glare"
+  },
+  "grasswhistle": {
+    "name": "Grass Whistle"
+  },
+  "haze": {
+    "name": "Haze"
+  },
+  "healbell": {
+    "name": "Heal Bell"
+  },
+  "healorder": {
+    "name": "Heal Order"
+  },
+  "helpinghand": {
+    "name": "Helping Hand"
+  },
+  "hypnosis": {
+    "name": "Hypnosis"
+  },
+  "iceshard": {
+    "name": "Ice Shard"
+  },
+  "icywind": {
+    "name": "Icy Wind"
+  },
+  "imprison": {
+    "name": "Imprison"
+  },
+  "iondeluge": {
+    "name": "Ion Deluge"
+  },
+  "jetpunch": {
+    "name": "Jet Punch"
+  },
+  "junglehealing": {
+    "name": "Jungle Healing"
+  },
+  "kingsshield": {
+    "name": "King's Shield"
+  },
+  "knockoff": {
+    "name": "Knock Off"
+  },
+  "leechseed": {
+    "name": "Leech Seed"
+  },
+  "lifedew": {
+    "name": "Life Dew"
+  },
+  "lightscreen": {
+    "name": "Light Screen"
+  },
+  "lovelykiss": {
+    "name": "Lovely Kiss"
+  },
+  "machpunch": {
+    "name": "Mach Punch"
+  },
+  "magiccoat": {
+    "name": "Magic Coat"
+  },
+  "maxguard": {
+    "name": "Max Guard"
+  },
+  "milkdrink": {
+    "name": "Milk Drink"
+  },
+  "moonlight": {
+    "name": "Moonlight"
+  },
+  "morningsun": {
+    "name": "Morning Sun"
+  },
+  "mortalspin": {
+    "name": "Mortal Spin"
+  },
+  "nuzzle": {
+    "name": "Nuzzle"
+  },
+  "obstruct": {
+    "name": "Obstruct"
+  },
+  "painsplit": {
+    "name": "Pain Split"
+  },
+  "partingshot": {
+    "name": "Parting Shot"
+  },
+  "poisonpowder": {
+    "name": "Poison Powder"
+  },
+  "powder": {
+    "name": "Powder"
+  },
+  "present": {
+    "name": "Present"
+  },
+  "protect": {
+    "name": "Protect"
+  },
+  "purify": {
+    "name": "Purify"
+  },
+  "quickattack": {
+    "name": "Quick Attack"
+  },
+  "quickguard": {
+    "name": "Quick Guard"
+  },
+  "ragepowder": {
+    "name": "Rage Powder"
+  },
+  "rapidspin": {
+    "name": "Rapid Spin"
+  },
+  "recover": {
+    "name": "Recover"
+  },
+  "reflect": {
+    "name": "Reflect"
+  },
+  "rest": {
+    "name": "Rest"
+  },
+  "roar": {
+    "name": "Roar"
+  },
+  "roost": {
+    "name": "Roost"
+  },
+  "shadowsneak": {
+    "name": "Shadow Sneak"
+  },
+  "shedtail": {
+    "name": "Shed Tail"
+  },
+  "shoreup": {
+    "name": "Shore Up"
+  },
+  "silktrap": {
+    "name": "Silk Trap"
+  },
+  "sing": {
+    "name": "Sing"
+  },
+  "slackoff": {
+    "name": "Slack Off"
+  },
+  "sleeppowder": {
+    "name": "Sleep Powder"
+  },
+  "snarl": {
+    "name": "Snarl"
+  },
+  "snatch": {
+    "name": "Snatch"
+  },
+  "softboiled": {
+    "name": "Soft-Boiled"
+  },
+  "spikes": {
+    "name": "Spikes"
+  },
+  "spikyshield": {
+    "name": "Spiky Shield"
+  },
+  "spite": {
+    "name": "Spite"
+  },
+  "spore": {
+    "name": "Spore"
+  },
+  "spotlight": {
+    "name": "Spotlight"
+  },
+  "stealthrock": {
+    "name": "Stealth Rock"
+  },
+  "stickyweb": {
+    "name": "Sticky Web"
+  },
+  "stoneaxe": {
+    "name": "Stone Axe"
+  },
+  "strengthsap": {
+    "name": "Strength Sap"
+  },
+  "stunspore": {
+    "name": "Stun Spore"
+  },
+  "suckerpunch": {
+    "name": "Sucker Punch"
+  },
+  "swagger": {
+    "name": "Swagger"
+  },
+  "swallow": {
+    "name": "Swallow"
+  },
+  "sweetkiss": {
+    "name": "Sweet Kiss"
+  },
+  "switcheroo": {
+    "name": "Switcheroo"
+  },
+  "synthesis": {
+    "name": "Synthesis"
+  },
+  "tailwind": {
+    "name": "Tailwind"
+  },
+  "taunt": {
+    "name": "Taunt"
+  },
+  "teleport": {
+    "name": "Teleport"
+  },
+  "thief": {
+    "name": "Thief"
+  },
+  "thunderclap": {
+    "name": "Thunderclap"
+  },
+  "thunderwave": {
+    "name": "Thunder Wave"
+  },
+  "tidyup": {
+    "name": "Tidy Up"
+  },
+  "torment": {
+    "name": "Torment"
+  },
+  "toxic": {
+    "name": "Toxic"
+  },
+  "toxicspikes": {
+    "name": "Toxic Spikes"
+  },
+  "toxicthread": {
+    "name": "Toxic Thread"
+  },
+  "trick": {
+    "name": "Trick"
+  },
+  "trickroom": {
+    "name": "Trick Room"
+  },
+  "upperhand": {
+    "name": "Upper Hand"
+  },
+  "uturn": {
+    "name": "U-turn"
+  },
+  "vacuumwave": {
+    "name": "Vacuum Wave"
+  },
+  "voltswitch": {
+    "name": "Volt Switch"
+  },
+  "watershuriken": {
+    "name": "Water Shuriken"
+  },
+  "whirlwind": {
+    "name": "Whirlwind"
+  },
+  "wideguard": {
+    "name": "Wide Guard"
+  },
+  "willowisp": {
+    "name": "Will-O-Wisp"
+  },
+  "wish": {
+    "name": "Wish"
+  },
+  "yawn": {
+    "name": "Yawn"
+  },
+  "zippyzap": {
+    "name": "Zippy Zap"
+  }
+}

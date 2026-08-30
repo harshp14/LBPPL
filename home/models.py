@@ -61,8 +61,8 @@ class S4Pokedex(PokedexBase):
 
 
 class RostersBase(models.Model):
-    """One row per team roster, loaded from rosters.json -- see
-    home/management/commands/load_s4_rosters.py."""
+    """One row per team roster -- the source of truth for a coach's
+    drafted Pokemon, read/written through data_access.py."""
 
     coach_name = models.CharField(max_length=64, primary_key=True)
     team_name = models.CharField(max_length=128, null=True)
@@ -102,10 +102,9 @@ class S4Rosters(RostersBase):
 
 
 class ScheduleBase(models.Model):
-    """One row per scheduled match, loaded from schedule.json -- see
-    home/management/commands/load_s4_schedule.py. (week, match_index) is
-    this season's stable address for a match, mirroring how schedule.json
-    itself is indexed by set_match_replay()/set_match_from_replay()."""
+    """One row per scheduled match. (week, match_index) is this season's
+    stable address for a match, used by set_match_replay()/
+    set_match_from_replay() in data_access.py to look a row up."""
 
     week = models.IntegerField()
     week_label = models.CharField(max_length=32)
@@ -116,6 +115,7 @@ class ScheduleBase(models.Model):
     winner = models.CharField(max_length=8, null=True)
     margin = models.IntegerField(null=True)
     stats = models.JSONField(null=True, help_text="{'player1': [...], 'player2': [...]} per-Pokemon stat dicts.")
+    scheduled_day = models.DateField(null=True, blank=True, help_text="Coach-proposed day to play, before a replay is submitted.")
 
     class Meta:
         abstract = True
@@ -157,9 +157,8 @@ class S4Schedule(ScheduleBase):
 
 
 class FreeAgencyLogBase(models.Model):
-    """One row per free agency transaction, loaded from
-    free_agency_log.json -- see
-    home/management/commands/load_s4_free_agency_log.py."""
+    """One row per free agency transaction, created by
+    data_access.submit_free_agency()."""
 
     coach = models.CharField(max_length=64)
     team_name = models.CharField(max_length=128, null=True)
@@ -199,3 +198,47 @@ class S4FreeAgencyLog(FreeAgencyLogBase):
         db_table = "s4_free_agency_log"
         verbose_name_plural = "S4 free agency log"
         ordering = ["id"]
+
+
+class AccoladesBase(models.Model):
+    """Singleton row per season: awards/superlatives voted on at season's
+    end. Hand-edited via Django admin, never written by the app itself,
+    so this stays a handful of loosely-typed JSONFields rather than a
+    normalized schema -- nothing queries into it, it's read whole and
+    handed to a template."""
+
+    finals = models.JSONField(null=True, default=None, help_text="{'team1': ..., 'team2': ..., 'winner': ...} or null.")
+    player_awards = models.JSONField(default=list, help_text="List of {category, entries}.")
+    pokemon_awards = models.JSONField(default=list, help_text="List of {category, entries}.")
+    match_awards = models.JSONField(default=list, help_text="List of {category, entries}.")
+    community = models.JSONField(default=list, help_text="List of {category, entries}.")
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.__class__.__name__
+
+
+class S1Accolades(AccoladesBase):
+    class Meta:
+        db_table = "s1_accolades"
+        verbose_name_plural = "S1 accolades"
+
+
+class S2Accolades(AccoladesBase):
+    class Meta:
+        db_table = "s2_accolades"
+        verbose_name_plural = "S2 accolades"
+
+
+class S3Accolades(AccoladesBase):
+    class Meta:
+        db_table = "s3_accolades"
+        verbose_name_plural = "S3 accolades"
+
+
+class S4Accolades(AccoladesBase):
+    class Meta:
+        db_table = "s4_accolades"
+        verbose_name_plural = "S4 accolades"

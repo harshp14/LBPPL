@@ -1,0 +1,175 @@
+{% extends "home/base.html" %}
+{% load prep_extras %}
+{% block content %}
+<h1>Prep Sheet</h1>
+<p>Pick two teams to compare rosters, type coverage, and support-move coverage before a match.</p>
+
+<form method="get" class="prep-sheet-picker" id="prep-sheet-form">
+    <label class="picker">
+        <span class="picker-label">Team A</span>
+        <select name="team1" class="picker-select" onchange="this.form.submit()">
+            {% for t in teams %}
+            <option value="{{ t.coach_name }}" {% if t.coach_name == team1 %}selected{% endif %}>{{ t.team_name|default:t.coach_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label class="picker">
+        <span class="picker-label">Team B</span>
+        <select name="team2" class="picker-select" onchange="this.form.submit()">
+            {% for t in teams %}
+            <option value="{{ t.coach_name }}" {% if t.coach_name == team2 %}selected{% endif %}>{{ t.team_name|default:t.coach_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+</form>
+
+{% if prep %}
+<div class="prep-section-header">
+    <h2>Overview</h2>
+    <label class="picker">
+        <span class="picker-label">Sort by</span>
+        <select name="sort" form="prep-sheet-form" class="picker-select" onchange="this.form.submit()">
+            {% for key, label in prep.sort_options %}
+            <option value="{{ key }}" {% if key == prep.sort %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </label>
+</div>
+<div class="prep-sheet-grid">
+    {% for team in prep.teams %}
+    <div class="card prep-sheet-card">
+        <div class="roster-card-header">
+            {% if team.logo %}<img src="{{ team.logo }}" alt="{{ team.team_name }} logo" class="roster-logo">{% endif %}
+            <div>
+                <h3>{{ team.team_name|default:team.coach_name }}</h3>
+                <p class="roster-coach">Coach: {{ team.coach_name }}</p>
+            </div>
+        </div>
+        {% for mon in team.pokemon %}
+        <div class="prep-mon">
+            <div class="prep-mon-row">
+                <div class="prep-mon-row-left mon-cell">
+                    {% if mon.sprite %}<img src="{{ mon.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                    <span class="prep-mon-name">{{ mon.name }}</span>
+                    {% for type in mon.types %}<span class="type-badge type-{{ type|lower }}">{{ type }}</span>{% endfor %}
+                </div>
+                <div class="prep-mon-row-right prep-abilities">{{ mon.abilities|join:", " }}</div>
+            </div>
+            <div class="prep-mon-row">
+                <table class="prep-stats-table prep-mon-row-left">
+                    <tbody>
+                        <tr>
+                            {% for label, value in mon.stats %}<th>{{ label }}</th>{% endfor %}
+                        </tr>
+                        <tr>
+                            {% for label, value in mon.stats %}<td>{{ value|default:"-" }}</td>{% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="prep-mon-row-right type-matchup-inline">
+                    <span class="type-matchup-label">Weak</span>
+                    {% for type, mult in mon.type_profile.weak %}<span class="type-badge type-{{ type|lower }}">{{ type }} &times;{{ mult }}</span>{% empty %}<span class="prep-move-none">None</span>{% endfor %}
+                </div>
+            </div>
+            <div class="prep-mon-row right-only">
+                <div class="prep-mon-row-right type-matchup-inline">
+                    <span class="type-matchup-label">Resist</span>
+                    {% for type, mult in mon.type_profile.resist %}<span class="type-badge type-{{ type|lower }}">{{ type }} &times;{{ mult }}</span>{% empty %}<span class="prep-move-none">None</span>{% endfor %}
+                </div>
+            </div>
+            {% if mon.type_profile.immune %}
+            <div class="prep-mon-row right-only">
+                <div class="prep-mon-row-right type-matchup-inline">
+                    <span class="type-matchup-label">Immune</span>
+                    {% for type in mon.type_profile.immune %}<span class="type-badge type-{{ type|lower }}">{{ type }}</span>{% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+<h2>Type Matchup Chart</h2>
+<p class="prep-section-note">Each row is one roster Pok&eacute;mon's defensive multiplier per attacking type (blank = normal damage). "Team Types" tallies how many mons carry that type; "Net Weakness" scores the team's overall exposure to that attacking type (positive = more weak than resistant, negative = the reverse).</p>
+<div class="prep-sheet-grid">
+    {% for team in prep.teams %}
+    <div class="card prep-sheet-card">
+        <div class="roster-card-header">
+            {% if team.logo %}<img src="{{ team.logo }}" alt="{{ team.team_name }} logo" class="roster-logo">{% endif %}
+            <h3>{{ team.team_name|default:team.coach_name }}</h3>
+        </div>
+        <div class="type-matrix-scroll">
+            <table class="type-matrix">
+                <thead>
+                    <tr>
+                        {% for col in prep.type_columns %}<th class="type-th type-{{ col.name|lower }}">{{ col.abbrev }}</th>{% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in team.type_matrix_rows %}
+                    <tr>
+                        {% for col, mult in prep.type_columns|zip_lists:row %}
+                        <td class="{% if mult > 1 %}mult-weak{% elif mult < 1 %}mult-resist{% endif %}">{% if mult != 1 %}{{ mult }}{% endif %}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="matrix-summary-row">
+                        <td colspan="{{ prep.type_columns|length }}" class="matrix-summary-label">Team Types</td>
+                    </tr>
+                    <tr>
+                        {% for col, count in prep.type_columns|zip_lists:team.team_type_counts %}<td>{% if count %}{{ count }}{% endif %}</td>{% endfor %}
+                    </tr>
+                    <tr class="matrix-summary-row">
+                        <td colspan="{{ prep.type_columns|length }}" class="matrix-summary-label">Net Weakness</td>
+                    </tr>
+                    <tr>
+                        {% for col, score in prep.type_columns|zip_lists:team.team_weak_net %}
+                        <td class="{% if score > 0 %}mult-weak{% elif score < 0 %}mult-resist{% endif %}">{% if score %}{{ score }}{% endif %}</td>
+                        {% endfor %}
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="prep-section-header">
+    <h2>Moves</h2>
+    <label class="picker">
+        <span class="picker-label">Group</span>
+        <select name="move_category" form="prep-sheet-form" class="picker-select" onchange="this.form.submit()">
+            {% for category in prep.move_categories %}
+            <option value="{{ category.key }}" {% if category.key == prep.move_category %}selected{% endif %}>{{ category.label }}</option>
+            {% endfor %}
+        </select>
+    </label>
+</div>
+<div class="prep-sheet-grid">
+    <div class="card prep-sheet-card prep-move-card">
+        <div class="prep-move-columns">
+            {% for team in prep.teams %}
+            <div class="prep-move-column">
+                <p class="prep-move-team-name">{{ team.team_name|default:team.coach_name }}</p>
+                {% for entry in team.category_moves|get_item:prep.move_category %}
+                <p class="prep-move-entry">
+                    <span class="mon-cell">
+                        {% if entry.sprite %}<img src="{{ entry.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                        <span>{{ entry.pokemon }}</span>
+                    </span>
+                    <span class="prep-move-list">{{ entry.move }}</span>
+                </p>
+                {% empty %}
+                <p class="prep-move-none">None</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

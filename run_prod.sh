@@ -13,6 +13,7 @@ fi
 
 export DJANGO_DEBUG=False
 
+python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
 exec gunicorn draftleague.wsgi:application \

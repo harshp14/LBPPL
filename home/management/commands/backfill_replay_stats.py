@@ -1,6 +1,6 @@
 """
-Bulk-parses every match in a season's schedule.json that has a replay_url
-but no stats yet, and persists the parsed per-Pokemon stats via
+Bulk-parses every match in a season's schedule that has a replay_url but
+no stats yet, and persists the parsed per-Pokemon stats via
 data_access.set_match_from_replay -- the same path the per-match "parse
 replay" button in the UI uses, just looped over the whole schedule.
 """
@@ -12,7 +12,7 @@ from home import data_access, replay_parser
 
 
 class Command(BaseCommand):
-    help = "Backfill match stats for every replay in a season's schedule.json that doesn't have stats yet."
+    help = "Backfill match stats for every replay in a season's schedule that doesn't have stats yet."
 
     def add_arguments(self, parser):
         parser.add_argument("season", choices=["1", "2", "3", "4"])
@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
         weeks = data_access.get_schedule(season)
         if not weeks:
-            raise CommandError(f"No schedule.json found for season {season}.")
+            raise CommandError(f"No schedule found for season {season}.")
 
         targets = []
         for week in weeks:

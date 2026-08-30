@@ -11,4 +11,5 @@ elif [ -d ".venv" ]; then
     source .venv/bin/activate
 fi
 
+python manage.py migrate --noinput
 exec python manage.py runserver "${PORT:-8001}"

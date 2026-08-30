@@ -5,7 +5,7 @@ Fetches the replay HTML, pulls the raw protocol log out of it, and walks
 the log line by line tracking two sides' rosters, active Pokemon, and HP,
 attributing kills/damage/healing/status/hazards/misses to whichever
 Pokemon caused them. Returns one row per Pokemon per side, ready to drop
-into a match's "stats" object in schedule.json.
+into a match's "stats" field on a Schedule model row.
 
 Attribution is deliberately conservative: where the log doesn't expose a
 reliable source (an effect with no `[of]` tag and no matching prior move),

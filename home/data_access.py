@@ -1,15 +1,26 @@
 """
-Data access layer. All roster data reads/writes go through here, so the
-backend (currently a JSON file) can be swapped for a real database later
-without touching views.py.
+Data access layer. All reads/writes of mutable app state (rosters,
+schedule/battle stats, free agency log, accolades) go through here and
+the database -- views.py and templates never touch the ORM directly.
+DATA_DIR is now only for static reference data (species dex, sprites,
+draft boards, the Smogon movesets/type-chart mirrors), not app state.
 """
 import json
 import re
 from datetime import datetime
+from itertools import groupby
 from pathlib import Path
 
+from django.db import transaction
+
 from . import discord_webhooks, replay_parser
-from .models import S1Pokedex, S2Pokedex, S3Pokedex, S4Pokedex
+from .models import (
+    S1Accolades, S2Accolades, S3Accolades, S4Accolades,
+    S1FreeAgencyLog, S2FreeAgencyLog, S3FreeAgencyLog, S4FreeAgencyLog,
+    S1Pokedex, S2Pokedex, S3Pokedex, S4Pokedex,
+    S1Rosters, S2Rosters, S3Rosters, S4Rosters,
+    S1Schedule, S2Schedule, S3Schedule, S4Schedule,
+)
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 
@@ -26,10 +37,10 @@ SPRITE_BASE_URL = "https://play.pokemonshowdown.com/sprites/home/"
 # of DATA_DIR for backwards compatibility; seasons 1-3 live in their own
 # subdirectory (e.g. home/data/s2/).
 POKEDEX_MODELS = {"1": S1Pokedex, "2": S2Pokedex, "3": S3Pokedex, "4": S4Pokedex}
-
-
-def _season_dir(season):
-    return DATA_DIR if season == "4" else DATA_DIR / f"s{season}"
+ROSTERS_MODELS = {"1": S1Rosters, "2": S2Rosters, "3": S3Rosters, "4": S4Rosters}
+SCHEDULE_MODELS = {"1": S1Schedule, "2": S2Schedule, "3": S3Schedule, "4": S4Schedule}
+FREE_AGENCY_MODELS = {"1": S1FreeAgencyLog, "2": S2FreeAgencyLog, "3": S3FreeAgencyLog, "4": S4FreeAgencyLog}
+ACCOLADES_MODELS = {"1": S1Accolades, "2": S2Accolades, "3": S3Accolades, "4": S4Accolades}
 
 
 # Each season's *_pokedex table (points + sprite + species data for every
@@ -125,25 +136,19 @@ def get_sprite_url(pokemon_name, season):
     return f"{SPRITE_BASE_URL}{entry.sprite_id}.png" if entry and entry.sprite_id else None
 
 
-def _load(season, filename, default):
-    path = _season_dir(season) / filename
-    if not path.exists():
-        return default
-    with open(path, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def _save(season, filename, data):
-    path = _season_dir(season) / filename
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-
-
 def get_rosters(season):
     """Return the list of team roster dicts (team_name, coach_name, logo,
-    pokemon) for a season, or [] if that season has no rosters.json yet."""
-    return _load(season, "rosters.json", {"teams": []})["teams"]
+    pokemon) for a season, or [] if that season has no rosters rows yet."""
+    return [
+        {
+            "coach_name": r.coach_name,
+            "team_name": r.team_name,
+            "logo": r.logo,
+            "pokemon": r.pokemon,
+            "free_agents_used": r.free_agents_used,
+        }
+        for r in ROSTERS_MODELS[season].objects.all()
+    ]
 
 
 def get_draft_board(season):
@@ -167,17 +172,30 @@ def get_draft_board(season):
 
 def get_schedule(season):
     """Return the list of week dicts (week, label, matches) for a season's
-    schedule, or [] if that season has no schedule.json yet. Pokémon names
+    schedule, or [] if that season has no schedule rows yet. Pokémon names
     in each match's stats are canonicalized to the draft board's naming
     convention, so callers never see raw Showdown-style names regardless of
     how they ended up in the stored data."""
-    weeks = _load(season, "schedule.json", {"weeks": []})["weeks"]
-    for week in weeks:
-        for match in week["matches"]:
-            stats = match.get("stats")
+    rows = SCHEDULE_MODELS[season].objects.all()  # already ordered by (week, match_index)
+
+    weeks = []
+    for (week_num, week_label), week_rows in groupby(rows, key=lambda r: (r.week, r.week_label)):
+        matches = []
+        for r in week_rows:
+            stats = r.stats
             if stats:
                 for mon in stats["player1"] + stats["player2"]:
                     mon["pokemon"] = canonicalize_pokemon_name(mon["pokemon"], season)
+            matches.append({
+                "player1": r.player1,
+                "player2": r.player2,
+                "replay_url": r.replay_url,
+                "winner": r.winner,
+                "margin": r.margin,
+                "stats": stats,
+                "scheduled_day": r.scheduled_day.isoformat() if r.scheduled_day else None,
+            })
+        weeks.append({"week": week_num, "label": week_label, "matches": matches})
     return weeks
 
 
@@ -258,7 +276,7 @@ def _aggregate_schedule_stats(weeks):
 
 def get_statistics(season):
     """Aggregate per-Pokémon career stats across every logged battle in a
-    season's schedule.json. Every damage/healing stat is a "_pct" field --
+    season's schedule. Every damage/healing stat is a "_pct" field --
     % of max HP per hit, summed across appearances -- never a flat HP
     number: replays never reveal a Pokemon's real max HP (EVs are only
     known to the creator), so a flat HP total would be meaningless. Only
@@ -294,10 +312,10 @@ ALL_TIME_SEASONS = ["1", "2", "3", "4"]
 
 def get_all_time_statistics():
     """Aggregate per-Pokémon career stats across every logged battle in
-    every season's schedule.json (see get_statistics for field semantics).
+    every season's schedule (see get_statistics for field semantics).
     Point costs vary season to season, so there's no single "kills per
     point" that means anything across seasons -- that field is omitted
-    here. A season with no schedule.json yet (no battles logged) simply
+    here. A season with no schedule rows yet (no battles logged) simply
     contributes nothing. Returns rows sorted by kills, most first."""
     agg = {}
     sprite_by_name = {}
@@ -333,21 +351,13 @@ def get_all_time_statistics():
 
 def set_match_replay(season, week, match_index, replay_url):
     """Persist a user-submitted replay link for one match. Returns False if
-    the season has no schedule.json yet or the week/match couldn't be
-    found, True on success."""
-    path = _season_dir(season) / "schedule.json"
-    if not path.exists():
-        return False
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
-
-    target_week = next((w for w in data["weeks"] if w["week"] == week), None)
-    if target_week is None or not (0 <= match_index < len(target_week["matches"])):
+    the week/match couldn't be found, True on success."""
+    obj = SCHEDULE_MODELS[season].objects.filter(week=week, match_index=match_index).first()
+    if obj is None:
         return False
 
-    target_week["matches"][match_index]["replay_url"] = replay_url
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    obj.replay_url = replay_url
+    obj.save(update_fields=["replay_url"])
     return True
 
 
@@ -356,26 +366,18 @@ def set_match_game_time(season, week, match_index, day):
     to Discord. Returns (True, None) on success or (False, error_message)
     on failure."""
     try:
-        datetime.strptime(day, "%Y-%m-%d")
+        parsed_day = datetime.strptime(day, "%Y-%m-%d").date()
     except ValueError:
         return False, "Day must be a valid date (YYYY-MM-DD)."
 
-    path = _season_dir(season) / "schedule.json"
-    if not path.exists():
+    obj = SCHEDULE_MODELS[season].objects.filter(week=week, match_index=match_index).first()
+    if obj is None:
         return False, "Couldn't find that match."
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
 
-    target_week = next((w for w in data["weeks"] if w["week"] == week), None)
-    if target_week is None or not (0 <= match_index < len(target_week["matches"])):
-        return False, "Couldn't find that match."
-    match = target_week["matches"][match_index]
+    obj.scheduled_day = parsed_day
+    obj.save(update_fields=["scheduled_day"])
 
-    match["scheduled_day"] = day
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-
-    discord_webhooks.notify_game_time(season, target_week["label"], match["player1"], match["player2"], day)
+    discord_webhooks.notify_game_time(season, obj.week_label, obj.player1, obj.player2, day)
     return True, None
 
 
@@ -399,22 +401,15 @@ def set_match_from_replay(season, week, match_index, replay_url):
     winner/margin for one match. Returns (True, None) on success or
     (False, error_message) on failure. Raises replay_parser.ReplayParseError
     on fetch/parse failure (caller decides how to handle that)."""
-    path = _season_dir(season) / "schedule.json"
-    if not path.exists():
+    obj = SCHEDULE_MODELS[season].objects.filter(week=week, match_index=match_index).first()
+    if obj is None:
         return False, "Couldn't find that match."
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
-
-    target_week = next((w for w in data["weeks"] if w["week"] == week), None)
-    if target_week is None or not (0 <= match_index < len(target_week["matches"])):
-        return False, "Couldn't find that match."
-    match = target_week["matches"][match_index]
 
     parsed = replay_parser.parse_replay(replay_url)
 
     rosters = {team["coach_name"]: team for team in get_rosters(season)}
-    team1 = rosters.get(match["player1"])
-    team2 = rosters.get(match["player2"])
+    team1 = rosters.get(obj.player1)
+    team2 = rosters.get(obj.player2)
     if team1 is None or team2 is None:
         return False, "Couldn't match the players in this replay to a coach's roster."
 
@@ -450,13 +445,11 @@ def set_match_from_replay(season, week, match_index, replay_url):
     else:
         winner = None
 
-    match["replay_url"] = replay_url
-    match["stats"] = stats
-    match["winner"] = winner
-    match["margin"] = abs(deaths1 - deaths2) if winner else None
-
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+    obj.replay_url = replay_url
+    obj.stats = stats
+    obj.winner = winner
+    obj.margin = abs(deaths1 - deaths2) if winner else None
+    obj.save(update_fields=["replay_url", "stats", "winner", "margin"])
 
     match_url = f"{discord_webhooks.SITE_BASE_URL}/schedule/?week={week}&match={match_index}"
     discord_webhooks.notify_battle_concluded(
@@ -464,6 +457,219 @@ def set_match_from_replay(season, week, match_index, replay_url):
         team2.get("team_name"), team2["coach_name"], replay_url, match_url,
     )
     return True, None
+
+
+MOVE_CATEGORY_ORDER = [
+    "entry_hazard", "hazard_removal", "healing", "momentum", "item_removal",
+    "status", "priority", "disruption", "screens", "vgc_moves", "speed_control",
+]
+MOVE_CATEGORY_LABELS = {
+    "entry_hazard": "Entry Hazards",
+    "hazard_removal": "Hazard Removal",
+    "healing": "Healing Moves",
+    "momentum": "Momentum",
+    "item_removal": "Item Removal",
+    "status": "Status Moves",
+    "priority": "Priority Moves",
+    "disruption": "Disruption",
+    "screens": "Screens Support",
+    "vgc_moves": "VGC Moves",
+    "speed_control": "Speed Control",
+}
+
+TYPE_ORDER = [
+    "Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying",
+    "Ghost", "Grass", "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock",
+    "Steel", "Water",
+]
+TYPE_ABBREV = {
+    "Bug": "Bug", "Dark": "Dark", "Dragon": "Drag", "Electric": "Elec", "Fairy": "Fairy",
+    "Fighting": "Fight", "Fire": "Fire", "Flying": "Fly", "Ghost": "Ghost", "Grass": "Gras",
+    "Ground": "Grd", "Ice": "Ice", "Normal": "Nrm", "Poison": "Psn", "Psychic": "Psy",
+    "Rock": "Rock", "Steel": "Steel", "Water": "Wtr",
+}
+# Net-weakness weighting for the cross chart's "Weak" summary row: how
+# many "weakness points" a single team member contributes to a type
+# column, based on the multiplier they take from it. Resistances/immunity
+# subtract, so a type the team is well-covered against can go negative.
+_WEAKNESS_WEIGHT = {4: 2, 2: 1, 1: 0, 0.5: -1, 0.25: -2, 0: -2}
+
+_type_chart_cache = {}
+
+
+def _get_type_chart():
+    """Lazily load the type_chart.json mirror built by
+    `manage.py load_type_chart` -- shared across all seasons, so it lives
+    at DATA_DIR's root rather than under a per-season directory."""
+    if not _type_chart_cache:
+        with open(DATA_DIR / "type_chart.json", encoding="utf-8") as f:
+            _type_chart_cache.update(json.load(f))
+    return _type_chart_cache
+
+
+def type_defense_profile(types):
+    """Combined defensive multiplier per attacking type for a Pokemon with
+    one or two types, e.g. {'Water': 4, 'Grass': 0.5, ...} -- each of its
+    own types' damage-taken row gets multiplied together."""
+    chart = _get_type_chart()
+    multipliers = {}
+    for defending_type in types:
+        for attacking_type, mult in chart.get(defending_type, {}).items():
+            multipliers[attacking_type] = multipliers.get(attacking_type, 1) * mult
+    return multipliers
+
+
+def _type_profile_summary(multipliers):
+    """Split a type_defense_profile() result into weak/resist/immune
+    lists, each an ordered list of (type, multiplier) pairs, most extreme
+    first, for display on the prep sheet's Type Matchup section."""
+    weak = sorted(((t, m) for t, m in multipliers.items() if m > 1), key=lambda p: -p[1])
+    resist = sorted(((t, m) for t, m in multipliers.items() if 0 < m < 1), key=lambda p: p[1])
+    immune = sorted(t for t, m in multipliers.items() if m == 0)
+    return {"weak": weak, "resist": resist, "immune": immune}
+
+
+_movedata_cache = {}
+
+
+def _get_movedata():
+    """Lazily load the movesets/movedex/move_categories mirror built by
+    `manage.py load_movesets` -- shared across all seasons (species
+    movepools don't vary by draft league season), so this lives at
+    DATA_DIR's root rather than under a per-season directory."""
+    if not _movedata_cache:
+        with open(DATA_DIR / "movesets.json", encoding="utf-8") as f:
+            _movedata_cache["movesets"] = json.load(f)
+        with open(DATA_DIR / "movedex.json", encoding="utf-8") as f:
+            _movedata_cache["movedex"] = json.load(f)
+        with open(DATA_DIR / "move_categories.json", encoding="utf-8") as f:
+            _movedata_cache["categories"] = json.load(f)
+    return _movedata_cache
+
+
+SORT_OPTIONS = [
+    ("name", "Name (A-Z)"), ("points", "Point Cost"), ("hp", "HP"), ("atk", "Attack"),
+    ("def", "Defense"), ("spa", "Sp. Atk"), ("spd", "Sp. Def"), ("spe", "Speed"),
+]
+_SORT_STAT_FIELD = {
+    "hp": "base_hp", "atk": "base_atk", "def": "base_def",
+    "spa": "base_spa", "spd": "base_spd", "spe": "base_spe",
+}
+
+
+def _prep_sheet_sort_key(mon, pokedex, sort):
+    """Ascending sort key: name sorts A-Z; point cost and every stat
+    option sort highest-first (so it doubles as "biggest threat first"),
+    with mons missing dex data pushed to the end rather than
+    crashing/erroring."""
+    if sort == "name":
+        return (0, mon["name"].lower())
+    if sort == "points":
+        return (0, -mon["points"])
+    entry = pokedex.get(mon["name"])
+    value = getattr(entry, _SORT_STAT_FIELD[sort], None) if entry else None
+    return (1, 0) if value is None else (0, -value)
+
+
+def get_prep_sheet_teams(season):
+    """Coach/team-name pairs for the prep sheet's team pickers."""
+    return [
+        {"coach_name": team["coach_name"], "team_name": team.get("team_name")}
+        for team in get_rosters(season)
+    ]
+
+
+def _prep_sheet_team(season, coach_name, sort):
+    team = next((t for t in get_rosters(season) if t["coach_name"] == coach_name), None)
+    if team is None:
+        return None
+
+    pokedex = _get_pokedex(season)
+    movedata = _get_movedata()
+    movesets, movedex, categories = movedata["movesets"], movedata["movedex"], movedata["categories"]
+
+    mons = []
+    type_matrix_rows = []
+    team_type_counts = {t: 0 for t in TYPE_ORDER}
+    team_weak_net = {t: 0 for t in TYPE_ORDER}
+    category_moves = {cat: [] for cat in MOVE_CATEGORY_ORDER}
+
+    ordered_pokemon = sorted(team["pokemon"], key=lambda m: _prep_sheet_sort_key(m, pokedex, sort))
+    for mon in ordered_pokemon:
+        name = mon["name"]
+        entry = pokedex.get(name)
+        sprite = get_sprite_url(name, season)
+        move_ids = movesets.get(name, [])
+        multipliers = type_defense_profile(entry.types) if entry else {}
+
+        mons.append({
+            "name": name,
+            "points": mon["points"],
+            "sprite": sprite,
+            "types": entry.types if entry else [],
+            "stats": [
+                ("HP", entry.base_hp), ("Atk", entry.base_atk), ("Def", entry.base_def),
+                ("SpA", entry.base_spa), ("SpD", entry.base_spd), ("Spe", entry.base_spe),
+            ] if entry else [],
+            "abilities": list(entry.abilities.values()) if entry else [],
+            "type_profile": _type_profile_summary(multipliers) if entry else None,
+        })
+
+        if entry:
+            type_matrix_rows.append([multipliers.get(t, 1) for t in TYPE_ORDER])
+            for t in entry.types:
+                if t in team_type_counts:
+                    team_type_counts[t] += 1
+            for t in TYPE_ORDER:
+                team_weak_net[t] += _WEAKNESS_WEIGHT.get(multipliers.get(t, 1), 0)
+
+        for cat in MOVE_CATEGORY_ORDER:
+            category_moves[cat] += [
+                {"move": movedex[m]["name"], "pokemon": name, "sprite": sprite}
+                for m in move_ids if m in categories.get(cat, [])
+            ]
+
+    for cat in category_moves:
+        category_moves[cat].sort(key=lambda e: (e["move"], e["pokemon"]))
+
+    return {
+        "coach_name": team["coach_name"],
+        "team_name": team.get("team_name"),
+        "logo": team.get("logo"),
+        "pokemon": mons,
+        "type_matrix_rows": type_matrix_rows,
+        "team_type_counts": [team_type_counts[t] for t in TYPE_ORDER],
+        "team_weak_net": [team_weak_net[t] for t in TYPE_ORDER],
+        "category_moves": category_moves,
+    }
+
+
+def get_prep_sheet(season, coach1, coach2, sort="name", move_category=None):
+    """Side-by-side prep sheet data for two coaches: each team's roster
+    with types/base stats/abilities (each mon's own weak/resist/immune
+    profile folded in), an anonymized team-wide type effectiveness cross
+    chart, and a move-category breakdown (which Pokemon on either team has
+    a move in the selected category) -- for the prep sheet's Overview,
+    Type Matchup, and Moves sections respectively.
+    `sort` orders each team's roster (name A-Z, or a stat highest-first)
+    and is shared by the Overview cards and the Type Matchup rows, since
+    both walk the same per-team Pokemon list. `move_category` picks which
+    single category the Moves section displays; defaults to the first."""
+    if sort not in _SORT_STAT_FIELD and sort not in ("name", "points"):
+        sort = "name"
+    if move_category not in MOVE_CATEGORY_ORDER:
+        move_category = MOVE_CATEGORY_ORDER[0]
+    return {
+        "teams": [_prep_sheet_team(season, coach1, sort), _prep_sheet_team(season, coach2, sort)],
+        "sort": sort,
+        "sort_options": SORT_OPTIONS,
+        "type_columns": [{"name": t, "abbrev": TYPE_ABBREV[t]} for t in TYPE_ORDER],
+        "move_category": move_category,
+        "move_categories": [
+            {"key": cat, "label": MOVE_CATEGORY_LABELS[cat]}
+            for cat in MOVE_CATEGORY_ORDER
+        ],
+    }
 
 
 def get_roster_points(team):
@@ -484,21 +690,26 @@ def get_free_agents(season):
 
 def get_accolades(season):
     """Season awards/superlatives (finals matchup, player/Pokémon/match
-    award categories, community superlatives) from that season's
-    superlatives.json, or an empty structure if that season hasn't had
-    any voted on yet."""
-    return _load(season, "superlatives.json", {
-        "finals": None,
-        "player_awards": [],
-        "pokemon_awards": [],
-        "match_awards": [],
-        "community": [],
-    })
+    award categories, community superlatives) for a season, or an empty
+    structure if that season hasn't had any voted on yet."""
+    obj = ACCOLADES_MODELS[season].objects.first()
+    if obj is None:
+        return {"finals": None, "player_awards": [], "pokemon_awards": [], "match_awards": [], "community": []}
+    return {
+        "finals": obj.finals,
+        "player_awards": obj.player_awards,
+        "pokemon_awards": obj.pokemon_awards,
+        "match_awards": obj.match_awards,
+        "community": obj.community,
+    }
 
 
 def get_free_agency_log(season):
     """Past free agency transactions for a season, most recent first."""
-    return list(reversed(_load(season, "free_agency_log.json", {"transactions": []})["transactions"]))
+    return [
+        {"coach": r.coach, "team_name": r.team_name, "drops": r.drops, "pickups": r.pickups}
+        for r in reversed(FREE_AGENCY_MODELS[season].objects.all())
+    ]
 
 
 def submit_free_agency(season, coach_name, drop_names, pickup_names):
@@ -514,10 +725,15 @@ def submit_free_agency(season, coach_name, drop_names, pickup_names):
         return False, "The same free agent was selected more than once."
 
     pokedex = _get_pokedex(season)
-    rosters = _load(season, "rosters.json", {"teams": []})
-    team = next((t for t in rosters["teams"] if t["coach_name"] == coach_name), None)
-    if team is None:
+    team_obj = ROSTERS_MODELS[season].objects.filter(coach_name=coach_name).first()
+    if team_obj is None:
         return False, "Unknown coach."
+    team = {
+        "coach_name": team_obj.coach_name,
+        "team_name": team_obj.team_name,
+        "pokemon": team_obj.pokemon,
+        "free_agents_used": team_obj.free_agents_used,
+    }
 
     roster_by_name = {mon["name"]: mon["points"] for mon in team["pokemon"]}
     for name in drop_names:
@@ -526,9 +742,8 @@ def submit_free_agency(season, coach_name, drop_names, pickup_names):
 
     rostered_elsewhere = {
         mon["name"]
-        for t in rosters["teams"]
-        for mon in t["pokemon"]
-        if t is not team
+        for pokemon in ROSTERS_MODELS[season].objects.exclude(coach_name=coach_name).values_list("pokemon", flat=True)
+        for mon in pokemon
     }
     for name in pickup_names:
         entry = pokedex.get(name)
@@ -551,18 +766,18 @@ def submit_free_agency(season, coach_name, drop_names, pickup_names):
 
     remaining_pokemon = [mon for mon in team["pokemon"] if mon["name"] not in drop_names]
     remaining_pokemon += [{"name": name, "points": pokedex[name].points} for name in pickup_names]
-    team["pokemon"] = remaining_pokemon
-    team["free_agents_used"] = team.get("free_agents_used", 0) + len(pickup_names)
-    _save(season, "rosters.json", rosters)
 
-    log = _load(season, "free_agency_log.json", {"transactions": []})
-    log["transactions"].append({
-        "coach": coach_name,
-        "team_name": team.get("team_name"),
-        "drops": [{"name": name, "points": roster_by_name[name]} for name in drop_names],
-        "pickups": [{"name": name, "points": pokedex[name].points} for name in pickup_names],
-    })
-    _save(season, "free_agency_log.json", log)
+    with transaction.atomic():
+        team_obj.pokemon = remaining_pokemon
+        team_obj.free_agents_used = team.get("free_agents_used", 0) + len(pickup_names)
+        team_obj.save(update_fields=["pokemon", "free_agents_used"])
+
+        FREE_AGENCY_MODELS[season].objects.create(
+            coach=coach_name,
+            team_name=team.get("team_name"),
+            drops=[{"name": name, "points": roster_by_name[name]} for name in drop_names],
+            pickups=[{"name": name, "points": pokedex[name].points} for name in pickup_names],
+        )
 
     discord_webhooks.notify_free_agency(season, coach_name, team.get("team_name"), drop_names, pickup_names)
 
