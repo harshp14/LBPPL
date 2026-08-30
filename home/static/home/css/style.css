@@ -1455,6 +1455,24 @@ table.type-matrix td {
     min-width: 34px;
 }
 
+td.type-matrix-name-col,
+th.type-matrix-name-col {
+    text-align: left;
+    white-space: nowrap;
+    min-width: 120px;
+    border: none;
+    padding-right: 10px;
+}
+
+td.type-matrix-name-col .mon-cell {
+    gap: 6px;
+}
+
+td.type-matrix-name-col .mon-sprite {
+    width: 22px;
+    height: 22px;
+}
+
 th.type-th {
     color: #fff;
     font-weight: 700;

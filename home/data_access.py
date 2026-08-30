@@ -507,15 +507,55 @@ def _get_type_chart():
     return _type_chart_cache
 
 
-def type_defense_profile(types):
+# Ability-granted type immunities that aren't in the base type chart
+# (Showdown's typechart.ts is type-only, no ability interactions).
+ABILITY_TYPE_IMMUNITIES = {
+    "Levitate": "Ground",
+    "Volt Absorb": "Electric",
+    "Motor Drive": "Electric",
+    "Lightning Rod": "Electric",
+    "Water Absorb": "Water",
+    "Storm Drain": "Water",
+    "Dry Skin": "Water",
+    "Sap Sipper": "Grass",
+    "Flash Fire": "Fire",
+    "Well-Baked Body": "Fire",
+    "Earth Eater": "Ground",
+}
+# Flat multipliers an ability applies on top of the normal type chart
+# (not full immunity) -- excludes conditional/non-type mechanics that
+# don't reduce to a fixed per-type multiplier (Wonder Guard, Filter/Solid
+# Rock/Prism Armor's flat reduction to *any* super-effective hit, Fluffy's
+# contact-only rule, Ice Face, etc.).
+ABILITY_TYPE_MULTIPLIERS = {
+    "Thick Fat": {"Fire": 0.5, "Ice": 0.5},
+    "Heatproof": {"Fire": 0.5},
+    "Water Bubble": {"Fire": 0.5},
+    "Purifying Salt": {"Ghost": 0.5},
+    "Dry Skin": {"Fire": 1.25},
+}
+
+
+def type_defense_profile(types, abilities=()):
     """Combined defensive multiplier per attacking type for a Pokemon with
     one or two types, e.g. {'Water': 4, 'Grass': 0.5, ...} -- each of its
-    own types' damage-taken row gets multiplied together."""
+    own types' damage-taken row gets multiplied together, then any of its
+    abilities that alter type matchups are folded in. `abilities` should
+    be every ability slot the Pokemon *could* have (not just whichever one
+    it's actually running) -- a prep sheet is scouting possibilities
+    before a matchup is known, not a specific confirmed build."""
     chart = _get_type_chart()
     multipliers = {}
     for defending_type in types:
         for attacking_type, mult in chart.get(defending_type, {}).items():
             multipliers[attacking_type] = multipliers.get(attacking_type, 1) * mult
+
+    for ability in abilities:
+        if ability in ABILITY_TYPE_IMMUNITIES:
+            multipliers[ABILITY_TYPE_IMMUNITIES[ability]] = 0
+        for t, mult in ABILITY_TYPE_MULTIPLIERS.get(ability, {}).items():
+            multipliers[t] = multipliers.get(t, 1) * mult
+
     return multipliers
 
 
@@ -600,7 +640,7 @@ def _prep_sheet_team(season, coach_name, sort):
         entry = pokedex.get(name)
         sprite = get_sprite_url(name, season)
         move_ids = movesets.get(name, [])
-        multipliers = type_defense_profile(entry.types) if entry else {}
+        multipliers = type_defense_profile(entry.types, entry.abilities.values()) if entry else {}
 
         mons.append({
             "name": name,
@@ -616,7 +656,11 @@ def _prep_sheet_team(season, coach_name, sort):
         })
 
         if entry:
-            type_matrix_rows.append([multipliers.get(t, 1) for t in TYPE_ORDER])
+            type_matrix_rows.append({
+                "name": name,
+                "sprite": sprite,
+                "values": [multipliers.get(t, 1) for t in TYPE_ORDER],
+            })
             for t in entry.types:
                 if t in team_type_counts:
                     team_type_counts[t] += 1

@@ -104,13 +104,20 @@
             <table class="type-matrix">
                 <thead>
                     <tr>
+                        <th class="type-matrix-name-col"></th>
                         {% for col in prep.type_columns %}<th class="type-th type-{{ col.name|lower }}">{{ col.abbrev }}</th>{% endfor %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in team.type_matrix_rows %}
                     <tr>
-                        {% for col, mult in prep.type_columns|zip_lists:row %}
+                        <td class="type-matrix-name-col">
+                            <span class="mon-cell">
+                                {% if row.sprite %}<img src="{{ row.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
+                                <span>{{ row.name }}</span>
+                            </span>
+                        </td>
+                        {% for col, mult in prep.type_columns|zip_lists:row.values %}
                         <td class="{% if mult > 1 %}mult-weak{% elif mult < 1 %}mult-resist{% endif %}">{% if mult != 1 %}{{ mult }}{% endif %}</td>
                         {% endfor %}
                     </tr>
@@ -118,15 +125,19 @@
                 </tbody>
                 <tfoot>
                     <tr class="matrix-summary-row">
+                        <td class="type-matrix-name-col"></td>
                         <td colspan="{{ prep.type_columns|length }}" class="matrix-summary-label">Team Types</td>
                     </tr>
                     <tr>
+                        <td class="type-matrix-name-col"></td>
                         {% for col, count in prep.type_columns|zip_lists:team.team_type_counts %}<td>{% if count %}{{ count }}{% endif %}</td>{% endfor %}
                     </tr>
                     <tr class="matrix-summary-row">
+                        <td class="type-matrix-name-col"></td>
                         <td colspan="{{ prep.type_columns|length }}" class="matrix-summary-label">Net Weakness</td>
                     </tr>
                     <tr>
+                        <td class="type-matrix-name-col"></td>
                         {% for col, score in prep.type_columns|zip_lists:team.team_weak_net %}
                         <td class="{% if score > 0 %}mult-weak{% elif score < 0 %}mult-resist{% endif %}">{% if score %}{{ score }}{% endif %}</td>
                         {% endfor %}
