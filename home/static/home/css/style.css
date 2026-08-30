@@ -1489,10 +1489,12 @@ table.type-matrix td.mult-resist {
     font-weight: 700;
 }
 
-tr.matrix-summary-row td {
+tr.matrix-summary-row:first-of-type td {
+    padding-top: 14px;
+}
+
+tr.matrix-summary-row td.matrix-summary-label {
     border: none;
-    padding-top: 12px;
-    padding-bottom: 2px;
 }
 
 .matrix-summary-label {

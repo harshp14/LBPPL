@@ -9,7 +9,7 @@
         <span class="picker-label">Team A</span>
         <select name="team1" class="picker-select" onchange="this.form.submit()">
             {% for t in teams %}
-            <option value="{{ t.coach_name }}" {% if t.coach_name == team1 %}selected{% endif %}>{{ t.team_name|default:t.coach_name }}</option>
+            <option value="{{ t.coach_name }}" {% if t.coach_name == team1 %}selected{% endif %}>{{ t.team_name|default:t.coach_name }}{% if t.team_name %} ({{ t.coach_name }}){% endif %}</option>
             {% endfor %}
         </select>
     </label>
@@ -17,7 +17,7 @@
         <span class="picker-label">Team B</span>
         <select name="team2" class="picker-select" onchange="this.form.submit()">
             {% for t in teams %}
-            <option value="{{ t.coach_name }}" {% if t.coach_name == team2 %}selected{% endif %}>{{ t.team_name|default:t.coach_name }}</option>
+            <option value="{{ t.coach_name }}" {% if t.coach_name == team2 %}selected{% endif %}>{{ t.team_name|default:t.coach_name }}{% if t.team_name %} ({{ t.coach_name }}){% endif %}</option>
             {% endfor %}
         </select>
     </label>
@@ -125,19 +125,11 @@
                 </tbody>
                 <tfoot>
                     <tr class="matrix-summary-row">
-                        <td class="type-matrix-name-col"></td>
-                        <td colspan="{{ prep.type_columns|length }}" class="matrix-summary-label">Team Types</td>
-                    </tr>
-                    <tr>
-                        <td class="type-matrix-name-col"></td>
+                        <td class="type-matrix-name-col matrix-summary-label">Team Types</td>
                         {% for col, count in prep.type_columns|zip_lists:team.team_type_counts %}<td>{% if count %}{{ count }}{% endif %}</td>{% endfor %}
                     </tr>
                     <tr class="matrix-summary-row">
-                        <td class="type-matrix-name-col"></td>
-                        <td colspan="{{ prep.type_columns|length }}" class="matrix-summary-label">Net Weakness</td>
-                    </tr>
-                    <tr>
-                        <td class="type-matrix-name-col"></td>
+                        <td class="type-matrix-name-col matrix-summary-label">Net Weakness</td>
                         {% for col, score in prep.type_columns|zip_lists:team.team_weak_net %}
                         <td class="{% if score > 0 %}mult-weak{% elif score < 0 %}mult-resist{% endif %}">{% if score %}{{ score }}{% endif %}</td>
                         {% endfor %}
