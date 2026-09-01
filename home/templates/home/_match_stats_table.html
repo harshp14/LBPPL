@@ -26,7 +26,7 @@
         </thead>
         <tbody>
             {% for mon in mons %}
-            <tr class="{% if mon.died %}died{% endif %}">
+            <tr class="{% if mon.died %}died{% endif %}{% if mon.appeared == False %} unused{% endif %}">
                 <td>
                     <span class="mon-cell">
                         {% if mon.sprite %}<img src="{{ mon.sprite }}" alt="" class="mon-sprite" loading="lazy">{% endif %}
@@ -34,7 +34,7 @@
                         {% if mon.terastallized %}<span class="mon-tera-badge" title="Terastallized{% if mon.tera_type %} ({{ mon.tera_type }}){% endif %}">Tera</span>{% endif %}
                     </span>
                 </td>
-                <td class="match-stats-fainted-cell">{% if mon.died %}&#10005;{% else %}&#10003;{% endif %}</td>
+                <td class="match-stats-fainted-cell">{% if mon.appeared == False %}&mdash;{% elif mon.died %}&#10005;{% else %}&#10003;{% endif %}</td>
                 <td>{{ mon.kills }}</td>
                 <td>{{ mon.direct_kills }}</td>
                 <td>{{ mon.indirect_kills }}</td>

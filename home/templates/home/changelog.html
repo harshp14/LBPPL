@@ -29,6 +29,10 @@
 <h2>Changelog</h2>
 <div class="changelog-feed">
     <div class="changelog-entry">
+        <div class="changelog-date">Aug 31, 2026</div>
+        <div class="changelog-text">Schedule match stats now always list the 6 Pok&eacute;mon each player brought, taken from the replay's team preview at match start. Previously only Pok&eacute;mon that actually switched in were shown, so a game that ended 4&ndash;2 (or with unused bench mons) looked like a 4-Pok&eacute;mon team. Unused brought Pok&eacute;mon still appear, muted, with empty battle stats, and they don't count as a game played on the Statistics page.</div>
+    </div>
+    <div class="changelog-entry">
         <div class="changelog-date">Aug 29, 2026</div>
         <div class="changelog-text">Dropped every raw-HP damage/healing field from the stat tracker &mdash; damage dealt/taken, residual damage by source (poison, burn, weather, Leech Seed, Salt Cure, Curse, Nightmare, binding moves, item/ability), self-inflicted damage (recoil, Life Orb, Substitute/Belly Drum cost, crash damage, confusion), and healing received are now stored and displayed purely as % of max HP, with no flat-HP counterpart. Also dropped the <code>max_hp</code> field itself. Reason: replays never reveal a Pok&eacute;mon's real max HP (EVs are only visible to the creator), so a flat HP number was never actually comparable across Pok&eacute;mon or trustworthy on its own &mdash; % of the HP bar at the moment of the event is the only value that means anything. The Statistics, All-Time Stats, and Schedule match view tables now show "Dmg Dealt %", "Dmg Taken %", and "Healing Received %" instead of flat numbers.</div>
     </div>

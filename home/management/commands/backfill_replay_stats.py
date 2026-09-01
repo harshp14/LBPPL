@@ -42,7 +42,9 @@ class Command(BaseCommand):
         for week_num, idx, p1, p2, url in targets:
             label = f"week {week_num} #{idx} ({p1} vs {p2})"
             try:
-                success, err = data_access.set_match_from_replay(season, week_num, idx, url)
+                success, err = data_access.set_match_from_replay(
+                    season, week_num, idx, url, notify=False,
+                )
                 if success:
                     ok += 1
                     self.stdout.write(self.style.SUCCESS(f"  OK  {label}"))

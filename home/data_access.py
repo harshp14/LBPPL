@@ -269,6 +269,10 @@ def _aggregate_schedule_stats(weeks):
             if not stats:
                 continue
             for mon in stats["player1"] + stats["player2"]:
+                # Bench Pokemon (brought at team preview, never switched in)
+                # stay on the match page but do not count as a game played.
+                if mon.get("appeared") is False:
+                    continue
                 row = agg.setdefault(mon["pokemon"], _new_stat_row())
                 _accumulate_stat_row(row, mon)
     return agg
@@ -395,12 +399,14 @@ def _normalize_pokemon_name(name):
     return re.sub(r"[^a-z0-9]", "", n)
 
 
-def set_match_from_replay(season, week, match_index, replay_url):
+def set_match_from_replay(season, week, match_index, replay_url, notify=True):
     """Fetch and parse a replay, then persist the full per-Pokemon stats
     (kills, deaths, turns active, damage%, etc.) plus the derived
     winner/margin for one match. Returns (True, None) on success or
     (False, error_message) on failure. Raises replay_parser.ReplayParseError
-    on fetch/parse failure (caller decides how to handle that)."""
+    on fetch/parse failure (caller decides how to handle that). Set
+    notify=False to skip the Discord "battle concluded" post (used when
+    re-parsing existing matches)."""
     obj = SCHEDULE_MODELS[season].objects.filter(week=week, match_index=match_index).first()
     if obj is None:
         return False, "Couldn't find that match."
@@ -451,11 +457,12 @@ def set_match_from_replay(season, week, match_index, replay_url):
     obj.margin = abs(deaths1 - deaths2) if winner else None
     obj.save(update_fields=["replay_url", "stats", "winner", "margin"])
 
-    match_url = f"{discord_webhooks.SITE_BASE_URL}/schedule/?week={week}&match={match_index}"
-    discord_webhooks.notify_battle_concluded(
-        season, team1.get("team_name"), team1["coach_name"],
-        team2.get("team_name"), team2["coach_name"], replay_url, match_url,
-    )
+    if notify:
+        match_url = f"{discord_webhooks.SITE_BASE_URL}/schedule/?week={week}&match={match_index}"
+        discord_webhooks.notify_battle_concluded(
+            season, team1.get("team_name"), team1["coach_name"],
+            team2.get("team_name"), team2["coach_name"], replay_url, match_url,
+        )
     return True, None
 
 

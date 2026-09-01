@@ -11,6 +11,11 @@ Attribution is deliberately conservative: where the log doesn't expose a
 reliable source (an effect with no `[of]` tag and no matching prior move),
 the event is recorded as taken/received but left unattributed rather than
 guessed at.
+
+Every Pokemon listed in the replay's team-preview `|poke|` lines is
+included in the result, even if it never switched in (`appeared` is
+False and its stats are zeros). That is how a 6v6 match still shows
+all 6 brought Pokemon when two sat on the bench.
 """
 import json
 import re
@@ -126,6 +131,62 @@ def _side_of(slot):
     return slot.split(":")[0].strip()[:2]
 
 
+def _clean_preview_species(species):
+    """Strip Showdown's concealed-forme wildcard ('Zacian-*' -> 'Zacian')."""
+    species = species.strip()
+    if species.endswith("-*"):
+        return species[:-2]
+    return species
+
+
+def _species_matches_preview(preview_species, actual_species):
+    """True when a switched-in species is the same Pokemon as a team-preview
+    |poke| line, including mega/tera/concealed-forme variants
+    ('Tyranitar' vs 'Tyranitar-Mega', 'Zacian-*' vs 'Zacian-Crowned')."""
+    preview = _clean_preview_species(preview_species).lower()
+    actual = _clean_preview_species(actual_species).lower()
+    if preview == actual:
+        return True
+    return actual.startswith(preview + "-") or preview.startswith(actual + "-")
+
+
+def _fill_preview_mons(mons, team_order):
+    """Make sure every Pokemon listed at team preview has a stats row, even
+    if it never switched in. Positions are rematched from each mon's final
+    species (not the switch-in species) so Illusion disguises don't steal
+    the real teammate's preview slot."""
+    for side in ("p1", "p2"):
+        preview = team_order.get(side) or []
+        if not preview:
+            continue
+        appeared = [m for m in mons.values() if m.side == side]
+        claimed = set()
+        for mon in appeared:
+            mon.team_position = None
+
+        def try_claim(predicate):
+            for mon in appeared:
+                if mon.team_position is not None:
+                    continue
+                for i, species in enumerate(preview):
+                    if i in claimed:
+                        continue
+                    if predicate(species, mon.species):
+                        mon.team_position = i + 1
+                        claimed.add(i)
+                        break
+
+        try_claim(lambda p, a: _clean_preview_species(p).lower() == _clean_preview_species(a).lower())
+        try_claim(_species_matches_preview)
+
+        for i, species in enumerate(preview):
+            if i in claimed:
+                continue
+            stub = _Mon(f"{side}|_preview_{i}", side, _clean_preview_species(species))
+            stub.team_position = i + 1
+            mons[stub.key] = stub
+
+
 def _nick_of(slot):
     """'p1a: Foo' -> 'p1|Foo' (a stable per-side nickname key)."""
     side, _, name = slot.partition(": ")
@@ -194,10 +255,12 @@ class _Mon:
 
 
 def parse_replay(replay_url):
-    """Fetch + parse a replay. Returns {'player1': [...], 'player2': [...]}
-    where player1/player2 correspond to Showdown p1/p2 respectively (the
-    caller is responsible for matching those to the schedule's actual
-    player1/player2, e.g. by comparing rosters)."""
+    """Fetch + parse a replay. Returns {'p1': [...], 'p2': [...],
+    'usernames': ..., 'winner_side': ...} corresponding to Showdown p1/p2
+    (the caller is responsible for matching those to the schedule's actual
+    player1/player2, e.g. by comparing rosters). Each side includes every
+    Pokemon brought at team preview, with appeared=False for ones that
+    never switched in."""
     log = fetch_replay_log(replay_url)
     return _parse_log(log)
 
@@ -268,7 +331,10 @@ def _parse_log(log):
         parts = line.split("|")
         cmd = parts[1] if len(parts) > 1 else ""
 
-        if cmd == "poke":
+        if cmd == "clearpoke":
+            team_order = {"p1": [], "p2": []}
+
+        elif cmd == "poke":
             side, details = parts[2], parts[3] if len(parts) > 3 else ""
             species = details.split(",")[0].strip()
             if species:
@@ -747,6 +813,8 @@ def _parse_log(log):
                 if username == winner_username:
                     winner_side = side
 
+    _fill_preview_mons(mons, team_order)
+
     result = {
         "p1": [],
         "p2": [],
@@ -766,9 +834,12 @@ def _parse_log(log):
             "indirect_kills": mon.indirect_kills,
             "died": mon.died,
             "self_ko": mon.self_ko,
+            "appeared": mon.stats["switch_ins"] > 0,
         }
         for f in STAT_FIELDS:
             v = mon.stats[f]
             row[f] = round(v, 2) if isinstance(v, float) else v
         result[mon.side].append(row)
+    for side in ("p1", "p2"):
+        result[side].sort(key=lambda r: (r["team_position"] is None, r["team_position"] or 99))
     return result

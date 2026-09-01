@@ -900,6 +900,14 @@ table.match-stats-table tbody tr.died .match-stats-fainted-cell {
     color: #c0392b;
 }
 
+table.match-stats-table tbody tr.unused {
+    opacity: 0.55;
+}
+
+table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
+    color: var(--color-text-muted);
+}
+
 .match-actions {
     margin-left: auto;
     display: flex;
