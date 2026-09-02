@@ -1,192 +1,204 @@
 /* ---------------------------------------------------------------------
-   Six self-contained designs. Each bakes in its own light/dark identity,
-   accent colors, heading/body fonts, and a stained-glass background wash
-   — there is no separate light/dark toggle, picking a design picks a mode.
+   Olympus command-center themes, remapped onto Draft League tokens.
+   Each theme owns light/dark, type, radius, and a quiet atmosphere wash.
    --------------------------------------------------------------------- */
 
 :root,
-:root[data-scheme="slate"] {
-    /* dark, cool, understated — plain modern baseline. Square card corners,
-       a technical blueprint grid, quiet underline tabs. The default. */
-    --color-bg: #12161c;
-    --color-surface: #1b212b;
-    --color-text: #e7ebf1;
-    --color-text-muted: #93a1b5;
-    --color-border: #2b3442;
+:root[data-scheme="bronze-night"] {
+    /* Quiet bronze night — Olympus default. */
+    color-scheme: dark;
+    --color-bg: #12141a;
+    --color-surface: #1a1d26;
+    --color-text: #e8e6e1;
+    --color-text-muted: #9a968c;
+    --color-border: #2a2e3a;
+    --color-primary: #c4a574;
+    --color-primary-dark: #a88a5a;
+    --color-danger: #c47a6a;
+    --color-success: #7a9e7e;
+    --color-wash-cool: #5a788c;
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    --color-drafted-bg: #232b37;
-    --color-primary: #5b7ba3;
-    --color-primary-dark: #43607f;
-    --font-heading: "Inter", "Segoe UI", sans-serif;
-    --font-body: "Inter", "Segoe UI", sans-serif;
+    --color-drafted-bg: #161922;
+    --font-heading: "Fraunces", Georgia, serif;
+    --font-body: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
-    --radius: 8px;
+    --radius: 0.375rem;
+    --radius-control: 0.375rem;
+    --card-padding: 1.5rem 1.75rem;
+    --control-min-height: 2.5rem;
+    --section-gap: 2.25rem;
+    --btn-padding-inline: 1rem;
     --card-border: 1px solid var(--color-border);
     --card-accent-border: none;
     --card-ring: 0 0 0 0 transparent;
-
-    --glass-line: rgba(140, 168, 204, 0.10);
-    --glass-pattern:
-        repeating-linear-gradient(0deg, var(--glass-line) 0 1px, transparent 1px 40px),
-        repeating-linear-gradient(90deg, var(--glass-line) 0 1px, transparent 1px 40px);
-    --glass-pattern-size: auto;
-    --glass-wash:
-        radial-gradient(circle at 15% 20%, rgba(91, 123, 163, 0.16), transparent 42%),
-        radial-gradient(circle at 85% 15%, rgba(67, 96, 127, 0.14), transparent 45%),
-        radial-gradient(circle at 50% 95%, rgba(43, 52, 66, 0.5), transparent 55%);
 }
 
-:root[data-scheme="crimson"] {
-    /* dark, dramatic cathedral red. Arched card tops, a leaded-glass
-       diamond lattice, an arch-topped active tab. */
-    --color-bg: #180b0b;
-    --color-surface: #241012;
-    --color-text: #f2e6e6;
-    --color-text-muted: #b98f8f;
-    --color-border: #3a1c1e;
-    --shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-    --color-drafted-bg: #2e1517;
-    --color-primary: #c0392b;
-    --color-primary-dark: #96281b;
+:root[data-scheme="bronze-day"] {
+    color-scheme: light;
+    --color-bg: #eef1f4;
+    --color-surface: #ffffff;
+    --color-text: #16181f;
+    --color-text-muted: #6b6e78;
+    --color-border: #d5d8e0;
+    --color-primary: #9a7b4f;
+    --color-primary-dark: #7d6240;
+    --color-danger: #b85c52;
+    --color-success: #4f7a58;
+    --color-wash-cool: #8aa0b0;
+    --shadow: 0 1px 3px rgba(22, 24, 31, 0.10);
+    --color-drafted-bg: #e4e8ee;
+    --font-heading: "Source Serif 4", Georgia, serif;
+    --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+    --radius: 0.75rem;
+    --radius-control: 999px;
+    --card-padding: 1.75rem;
+    --control-min-height: 2.75rem;
+    --section-gap: 2.75rem;
+    --btn-padding-inline: 1.25rem;
+    --card-border: 1px solid var(--color-border);
+    --card-accent-border: none;
+    --card-ring: 0 0 0 0 transparent;
+}
+
+:root[data-scheme="obsidian-crimson"] {
+    color-scheme: dark;
+    --color-bg: #0a0a0c;
+    --color-surface: #141416;
+    --color-text: #f0eeeb;
+    --color-text-muted: #8c8686;
+    --color-border: #2a2224;
+    --color-primary: #c23b3b;
+    --color-primary-dark: #9a2c2c;
+    --color-danger: #e08a8a;
+    --color-success: #6e8f72;
+    --color-wash-cool: #5c2a2a;
+    --shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
+    --color-drafted-bg: #121214;
+    --font-heading: "Instrument Serif", Georgia, serif;
+    --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+    --radius: 0;
+    --radius-control: 0;
+    --card-padding: 0.85rem 1rem;
+    --control-min-height: 2.25rem;
+    --section-gap: 1.5rem;
+    --btn-padding-inline: 0.75rem;
+    --card-border: 1px solid var(--color-border);
+    --card-accent-border: none;
+    --card-ring: 0 0 0 0 transparent;
+}
+
+:root[data-scheme="cool-slate"] {
+    color-scheme: dark;
+    --color-bg: #12151a;
+    --color-surface: #1a1f28;
+    --color-text: #e4e8ef;
+    --color-text-muted: #8b93a3;
+    --color-border: #2a3140;
+    --color-primary: #7a8fa3;
+    --color-primary-dark: #62768a;
+    --color-danger: #c47a6a;
+    --color-success: #7a9e8e;
+    --color-wash-cool: #4a6a8c;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --color-drafted-bg: #161b24;
+    --font-heading: "IBM Plex Serif", Georgia, serif;
+    --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+    --radius: 0.125rem;
+    --radius-control: 0.125rem;
+    --card-padding: 1rem 1.15rem;
+    --control-min-height: 2rem;
+    --section-gap: 1.75rem;
+    --btn-padding-inline: 0.85rem;
+    --card-border: 1px solid var(--color-border);
+    --card-accent-border: none;
+    --card-ring: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+:root[data-scheme="soft-parchment"] {
+    color-scheme: dark;
+    --color-bg: #1a1612;
+    --color-surface: #241f19;
+    --color-text: #ebe4d8;
+    --color-text-muted: #a39888;
+    --color-border: #3a3228;
+    --color-primary: #d4a574;
+    --color-primary-dark: #b88a5c;
+    --color-danger: #c47a6a;
+    --color-success: #8a9e7a;
+    --color-wash-cool: #6a5a48;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    --color-drafted-bg: #1f1a15;
+    --font-heading: "Literata", Georgia, serif;
+    --font-body: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+
+    --radius: 1.25rem;
+    --radius-control: 1rem;
+    --card-padding: 1.6rem;
+    --control-min-height: 2.85rem;
+    --section-gap: 2.5rem;
+    --btn-padding-inline: 1.35rem;
+    --card-border: 1px solid var(--color-border);
+    --card-accent-border: none;
+    --card-ring: 0 0 0 0 transparent;
+}
+
+:root[data-scheme="eros-blush"] {
+    color-scheme: light;
+    --color-bg: #fdf0f5;
+    --color-surface: #ffffff;
+    --color-text: #3d1f2e;
+    --color-text-muted: #a6788c;
+    --color-border: #f5d9e5;
+    --color-primary: #e0538f;
+    --color-primary-dark: #c43d78;
+    --color-danger: #d1495b;
+    --color-success: #5f9370;
+    --color-wash-cool: #f3b8d1;
+    --shadow: 0 1px 3px rgba(61, 31, 46, 0.10);
+    --color-drafted-bg: #f7e4ec;
     --font-heading: "Playfair Display", Georgia, serif;
-    --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-body: "Quicksand", ui-sans-serif, system-ui, sans-serif;
 
-    --radius: 28px 28px 6px 6px;
-    --card-border: 1px solid var(--color-border);
-    --card-accent-border: 3px solid var(--color-primary);
-    --card-ring: 0 0 0 0 transparent;
-
-    --glass-line: rgba(224, 122, 100, 0.13);
-    --glass-pattern:
-        repeating-linear-gradient(45deg, var(--glass-line) 0 2px, transparent 2px 64px),
-        repeating-linear-gradient(-45deg, var(--glass-line) 0 2px, transparent 2px 64px);
-    --glass-pattern-size: auto;
-    --glass-wash:
-        radial-gradient(circle at 20% 15%, rgba(192, 57, 43, 0.22), transparent 42%),
-        radial-gradient(circle at 80% 20%, rgba(122, 32, 32, 0.22), transparent 45%),
-        radial-gradient(circle at 50% 95%, rgba(58, 15, 17, 0.55), transparent 55%);
-}
-
-:root[data-scheme="ocean"] {
-    /* light, sea-glass blues. Pill-shaped everything, soft ripple dots,
-       filled pill tabs. */
-    --color-bg: #eef5f7;
-    --color-surface: #ffffff;
-    --color-text: #10262c;
-    --color-text-muted: #4d707a;
-    --color-border: #cfe3e8;
-    --shadow: 0 1px 3px rgba(16, 60, 70, 0.12);
-    --color-drafted-bg: #dcecef;
-    --color-primary: #2563eb;
-    --color-primary-dark: #1d4ed8;
-    --font-heading: "Poppins", "Segoe UI", sans-serif;
-    --font-body: "Poppins", "Segoe UI", sans-serif;
-
-    --radius: 26px;
-    --card-border: none;
-    --card-accent-border: none;
-    --card-ring: 0 0 0 1px var(--color-border);
-
-    --glass-line: rgba(37, 99, 235, 0.16);
-    --glass-pattern:
-        radial-gradient(circle at 50% 50%, var(--glass-line) 0 6px, transparent 7px);
-    --glass-pattern-size: 64px 64px;
-    --glass-wash:
-        radial-gradient(circle at 15% 20%, rgba(37, 99, 235, 0.12), transparent 42%),
-        radial-gradient(circle at 85% 10%, rgba(94, 189, 200, 0.16), transparent 45%),
-        radial-gradient(circle at 50% 95%, rgba(163, 208, 218, 0.3), transparent 55%);
-}
-
-:root[data-scheme="forest"] {
-    /* light, nature-chapel greens and gold. Asymmetric leaf-shaped cards,
-       dappled-light dot scatter, left-bar headings. */
-    --color-bg: #f3f6ee;
-    --color-surface: #ffffff;
-    --color-text: #1d2b1a;
-    --color-text-muted: #55694f;
-    --color-border: #dbe6d2;
-    --shadow: 0 1px 3px rgba(20, 60, 30, 0.12);
-    --color-drafted-bg: #e4ecdb;
-    --color-primary: #1e8f5f;
-    --color-primary-dark: #146b47;
-    --font-heading: "Merriweather", Georgia, serif;
-    --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-    --radius: 28px 10px 28px 10px;
+    --radius: 1.5rem;
+    --radius-control: 999px;
+    --card-padding: 1.5rem;
+    --control-min-height: 2.75rem;
+    --section-gap: 2.25rem;
+    --btn-padding-inline: 1.5rem;
     --card-border: 1px solid var(--color-border);
     --card-accent-border: none;
     --card-ring: 0 0 0 0 transparent;
-
-    --glass-line: rgba(30, 143, 95, 0.18);
-    --glass-pattern:
-        radial-gradient(circle at 30% 30%, var(--glass-line) 0 10px, transparent 11px),
-        radial-gradient(circle at 70% 70%, var(--glass-line) 0 5px, transparent 6px);
-    --glass-pattern-size: 110px 110px, 70px 70px;
-    --glass-wash:
-        radial-gradient(circle at 15% 15%, rgba(30, 143, 95, 0.14), transparent 42%),
-        radial-gradient(circle at 85% 20%, rgba(216, 189, 110, 0.18), transparent 45%),
-        radial-gradient(circle at 50% 95%, rgba(195, 220, 174, 0.35), transparent 55%);
 }
 
-:root[data-scheme="sunset"] {
-    /* dark, warm sunset-through-glass, playful. Bold rounded cards with
-       colored glow, sunburst rays, chunky pill tabs. */
-    --color-bg: #1c1018;
-    --color-surface: #271521;
-    --color-text: #f7e9e1;
-    --color-text-muted: #cf9f92;
-    --color-border: #422334;
-    --shadow: 0 4px 16px rgba(224, 123, 57, 0.22);
-    --color-drafted-bg: #331c2a;
-    --color-primary: #e07b39;
-    --color-primary-dark: #c2621f;
-    --font-heading: "Fredoka", "Segoe UI", sans-serif;
-    --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-    --radius: 20px;
-    --card-border: 2px solid var(--color-primary);
-    --card-accent-border: none;
-    --card-ring: 0 0 0 0 transparent;
-
-    --glass-line: rgba(224, 123, 57, 0.16);
-    --glass-pattern:
-        repeating-conic-gradient(from 0deg at 50% -30%, var(--glass-line) 0deg 4deg, transparent 4deg 20deg);
-    --glass-pattern-size: auto;
-    --glass-wash:
-        radial-gradient(circle at 20% 15%, rgba(224, 123, 57, 0.24), transparent 42%),
-        radial-gradient(circle at 80% 20%, rgba(164, 68, 42, 0.24), transparent 45%),
-        radial-gradient(circle at 50% 95%, rgba(58, 26, 58, 0.5), transparent 55%);
-}
-
-:root[data-scheme="royal"] {
-    /* light, regal purple and gold. Sharp cards in a double-line frame,
-       fine hairline lattice, small-caps letter-spaced tabs. */
-    --color-bg: #f6f3fb;
-    --color-surface: #ffffff;
-    --color-text: #241a38;
-    --color-text-muted: #6b5d85;
-    --color-border: #e3dbf2;
-    --shadow: 0 1px 3px rgba(60, 20, 90, 0.12);
-    --color-drafted-bg: #ece4f7;
-    --color-primary: #7c3aed;
-    --color-primary-dark: #6425c4;
+:root[data-scheme="cupid-velvet"] {
+    color-scheme: dark;
+    --color-bg: #1c0f16;
+    --color-surface: #2a1620;
+    --color-text: #f5e3ec;
+    --color-text-muted: #b98da3;
+    --color-border: #40202f;
+    --color-primary: #ec6fa0;
+    --color-primary-dark: #d45a8a;
+    --color-danger: #e2817a;
+    --color-success: #7fa88a;
+    --color-wash-cool: #6b2c46;
+    --shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    --color-drafted-bg: #231218;
     --font-heading: "Cormorant Garamond", Georgia, serif;
-    --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
 
-    --radius: 10px;
+    --radius: 0.5rem;
+    --radius-control: 0.5rem;
+    --card-padding: 1.35rem;
+    --control-min-height: 2.5rem;
+    --section-gap: 2rem;
+    --btn-padding-inline: 1.1rem;
     --card-border: 1px solid var(--color-border);
     --card-accent-border: none;
-    --card-ring: 0 0 0 4px var(--color-bg), 0 0 0 5px var(--color-primary);
-
-    --glass-line: rgba(124, 58, 237, 0.12);
-    --glass-pattern:
-        repeating-linear-gradient(60deg, var(--glass-line) 0 1px, transparent 1px 120px),
-        repeating-linear-gradient(-60deg, var(--glass-line) 0 1px, transparent 1px 120px);
-    --glass-pattern-size: auto;
-    --glass-wash:
-        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.14), transparent 42%),
-        radial-gradient(circle at 85% 15%, rgba(216, 189, 110, 0.16), transparent 45%),
-        radial-gradient(circle at 50% 95%, rgba(216, 194, 238, 0.35), transparent 55%);
+    --card-ring: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 * {
@@ -197,39 +209,45 @@ body {
     margin: 0;
     font-family: var(--font-body);
     background-color: var(--color-bg);
-    background-image: var(--glass-pattern), var(--glass-wash);
-    background-size: var(--glass-pattern-size, auto), cover;
-    background-repeat: repeat, no-repeat;
-    background-position: 0 0, center;
+    background-image:
+        radial-gradient(ellipse at top, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 55%),
+        radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--color-wash-cool) 10%, transparent), transparent 50%);
     background-attachment: fixed;
     color: var(--color-text);
     line-height: 1.55;
 }
 
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 header.site-header {
-    background: var(--color-primary);
-    color: #fff;
-    padding: 20px 32px;
+    background: transparent;
+    color: var(--color-text);
+    padding: 28px 32px 8px;
 }
 
 header.site-header h1 {
     margin: 0;
     font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 1.85rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
 }
 
 nav.tabs {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    background: var(--color-surface);
+    gap: 2px;
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
     border-bottom: 1px solid var(--color-border);
-    padding: 0 24px;
+    padding: 8px 24px;
     position: sticky;
     top: 0;
     z-index: 10;
+    backdrop-filter: blur(10px);
     transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -257,8 +275,9 @@ nav.tabs {
     background: var(--color-bg);
     color: var(--color-text);
     border: 1px solid var(--color-border);
-    border-radius: 6px;
-    padding: 6px 10px;
+    border-radius: var(--radius-control);
+    min-height: var(--control-min-height);
+    padding: 4px 12px;
     font-size: 0.85rem;
     font-family: inherit;
     cursor: pointer;
@@ -274,23 +293,31 @@ nav.tabs {
     outline-offset: 2px;
 }
 
+.picker-select option {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
 nav.tabs a {
-    padding: 14px 18px;
+    padding: 8px 12px;
+    margin: 2px 0;
     text-decoration: none;
-    color: var(--color-text-muted);
+    color: color-mix(in srgb, var(--color-text) 80%, transparent);
     font-weight: 500;
-    font-size: 0.95rem;
-    border-bottom: 3px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    font-size: 0.875rem;
+    border-radius: var(--radius-control);
+    border-bottom: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 nav.tabs a:hover {
     color: var(--color-text);
+    background: var(--color-surface);
 }
 
 nav.tabs a.active {
     color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
     font-weight: 600;
 }
 
@@ -311,7 +338,7 @@ main h2 {
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 1.25rem;
-    margin-top: 2.25rem;
+    margin-top: var(--section-gap, 2.25rem);
     padding-bottom: 6px;
     border-bottom: 2px solid var(--color-border);
     color: var(--color-primary-dark);
@@ -343,7 +370,7 @@ main a:hover {
     border-top: var(--card-accent-border, none);
     border-radius: var(--radius);
     box-shadow: var(--shadow), var(--card-ring, 0 0 0 0 transparent);
-    padding: 24px 28px;
+    padding: var(--card-padding, 1.5rem 1.75rem);
     transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -525,7 +552,7 @@ table.stats-table thead th {
     position: sticky;
     top: 0;
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-bg);
     font-weight: 600;
 }
 
@@ -777,7 +804,7 @@ table.draft-board td.drafted .mon-sprite {
 .week-card.active {
     border-left-color: var(--color-primary);
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-bg);
 }
 
 .week-card-label {
@@ -791,7 +818,7 @@ table.draft-board td.drafted .mon-sprite {
 }
 
 .week-card.active .week-card-meta {
-    color: rgba(255, 255, 255, 0.85);
+    color: color-mix(in srgb, var(--color-bg) 85%, transparent);
 }
 
 .week-matches {
@@ -814,7 +841,7 @@ table.draft-board td.drafted .mon-sprite {
     padding: 8px 14px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 999px;
+    border-radius: var(--radius-control);
     text-decoration: none;
     color: var(--color-text-muted);
     font-size: 0.82rem;
@@ -830,7 +857,7 @@ table.draft-board td.drafted .mon-sprite {
 .match-nav-item.active {
     background: var(--color-primary);
     border-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-bg);
     font-weight: 600;
 }
 
@@ -839,7 +866,7 @@ table.draft-board td.drafted .mon-sprite {
 }
 
 .match-nav-item.active .match-nav-player.winner {
-    color: #fff;
+    color: var(--color-bg);
     text-decoration: underline;
 }
 
@@ -942,11 +969,11 @@ table.match-stats-table td {
 }
 
 table.match-stats-table tbody tr:not(.died) .match-stats-fainted-cell {
-    color: #2f9e57;
+    color: var(--color-success);
 }
 
 table.match-stats-table tbody tr.died .match-stats-fainted-cell {
-    color: #c0392b;
+    color: var(--color-danger);
 }
 
 table.match-stats-table tbody tr.unused {
@@ -1041,10 +1068,12 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 .modal-input {
     padding: 10px 12px;
     border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: var(--radius-control);
+    min-height: var(--control-min-height);
     background: var(--color-bg);
     color: var(--color-text);
     font-size: 0.9rem;
+    font-family: inherit;
 }
 
 .modal-input:focus {
@@ -1053,13 +1082,13 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 }
 
 .modal-submit {
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
+    padding: 10px var(--btn-padding-inline, 16px);
+    min-height: var(--control-min-height);
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-bg);
     font-weight: 600;
     font-size: 0.9rem;
+    font-family: inherit;
     cursor: pointer;
 }
 
@@ -1078,7 +1107,7 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 
 .message {
     padding: 10px 16px;
-    border-radius: 6px;
+    border-radius: var(--radius-control);
     font-size: 0.9rem;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
@@ -1090,8 +1119,8 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 }
 
 .message-error {
-    border-color: #c0392b;
-    color: #c0392b;
+    border-color: var(--color-danger);
+    color: var(--color-danger);
 }
 
 .message-warning {
@@ -1112,11 +1141,14 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 }
 
 .btn-primary {
-    display: inline-block;
-    padding: 10px 18px;
-    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px var(--btn-padding-inline, 18px);
+    border-radius: var(--radius-control);
+    min-height: var(--control-min-height);
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-bg);
     font-weight: 600;
     font-size: 0.9rem;
     text-decoration: none;
@@ -1125,7 +1157,7 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 
 .btn-primary:hover {
     background: var(--color-primary-dark);
-    color: #fff;
+    color: var(--color-bg);
 }
 
 .fa-status-card,
@@ -1156,7 +1188,7 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
     align-self: flex-start;
     padding: 8px 14px;
     border: 1px dashed var(--color-border);
-    border-radius: 6px;
+    border-radius: var(--radius-control);
     background: transparent;
     color: var(--color-text-muted);
     font-size: 0.85rem;
@@ -1179,96 +1211,108 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 }
 
 /* ---------------------------------------------------------------------
-   Per-scheme structural treatments: shapes, tab styles and heading
-   decoration that can't be expressed as a color swap. Slate (above) is
-   the plain baseline; every other scheme changes the actual silhouette.
+   Per-theme silhouette — Olympus themes.css mapped onto Draft League chrome.
+   Bronze night is the baseline in the token block above.
    --------------------------------------------------------------------- */
 
-/* Crimson — arched cards (via --radius), arch-topped active tab,
-   an underline flourish beneath page headings. */
-[data-scheme="crimson"] nav.tabs a.active {
-    background: rgba(192, 57, 43, 0.12);
-    border-radius: 10px 10px 0 0;
+[data-scheme="bronze-day"] main h1 {
+    letter-spacing: -0.03em;
 }
 
-[data-scheme="crimson"] main h1::after {
-    content: "";
-    display: block;
-    width: 70px;
-    height: 3px;
-    margin-top: 10px;
-    background: linear-gradient(90deg, var(--color-primary), transparent);
+[data-scheme="bronze-day"] .picker-select,
+[data-scheme="bronze-day"] .modal-input {
+    padding-inline: 1rem;
 }
 
-/* Ocean — pill cards (via --radius), filled pill tabs, no underline. */
-[data-scheme="ocean"] nav.tabs a {
-    border-radius: 999px;
-    margin: 8px 2px;
+[data-scheme="obsidian-crimson"] header.site-header,
+[data-scheme="obsidian-crimson"] .page-header {
+    border-bottom: 2px solid color-mix(in srgb, var(--color-primary) 55%, var(--color-border));
+    padding-bottom: 1.25rem;
+    gap: 1rem;
 }
 
-[data-scheme="ocean"] nav.tabs a.active {
-    background: var(--color-primary);
-    color: #fff;
-    border-bottom-color: transparent;
+[data-scheme="obsidian-crimson"] header.site-header h1,
+[data-scheme="obsidian-crimson"] main h1 {
+    font-weight: 400;
+    font-style: italic;
 }
 
-[data-scheme="ocean"] main h1 {
-    display: inline-block;
-    padding: 2px 4px;
+[data-scheme="obsidian-crimson"] .btn-primary,
+[data-scheme="obsidian-crimson"] .modal-submit,
+[data-scheme="obsidian-crimson"] nav.tabs a,
+[data-scheme="obsidian-crimson"] .match-nav-item,
+[data-scheme="obsidian-crimson"] .fa-add-row {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
 }
 
-/* Forest — leaf-shaped asymmetric cards (via --radius), left-bar
-   headings instead of underlines, rounded-bottom active tab. */
-[data-scheme="forest"] main h2 {
-    border-bottom: none;
-    border-left: 4px solid var(--color-primary);
-    padding-left: 12px;
-    margin-top: 2rem;
+[data-scheme="cool-slate"] .picker-label {
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 0.68rem;
 }
 
-[data-scheme="forest"] nav.tabs a.active {
-    border-bottom-width: 4px;
-    border-radius: 0 0 10px 10px;
+[data-scheme="cool-slate"] main h2,
+[data-scheme="cool-slate"] .prep-section-header h2,
+[data-scheme="cool-slate"] .award-card-title,
+[data-scheme="cool-slate"] .roster-card-header h2 {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
-/* Sunset — bold glowing cards (via --radius/--shadow), sunburst rays,
-   chunky filled pill tabs, a highlighter chip behind the page title. */
-[data-scheme="sunset"] nav.tabs a {
-    border-radius: 999px;
-    margin: 8px 3px;
+[data-scheme="cool-slate"] .btn-primary,
+[data-scheme="cool-slate"] .modal-submit {
+    padding-block: 0.35rem;
+    font-size: 0.8125rem;
+}
+
+[data-scheme="cool-slate"] .picker-select,
+[data-scheme="cool-slate"] .modal-input {
+    font-size: 0.8125rem;
+}
+
+[data-scheme="soft-parchment"] main h1 {
+    font-weight: 500;
+}
+
+[data-scheme="soft-parchment"] body {
+    background-image:
+        radial-gradient(ellipse at top, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 55%),
+        radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--color-wash-cool) 8%, transparent), transparent 50%);
+}
+
+[data-scheme="soft-parchment"] .changelog-entry,
+[data-scheme="soft-parchment"] .upcoming-game-card,
+[data-scheme="soft-parchment"] .prep-mon,
+[data-scheme="soft-parchment"] .award-row {
+    padding-block: 1.15rem;
+}
+
+[data-scheme="eros-blush"] header.site-header h1,
+[data-scheme="eros-blush"] main h1 {
+    font-style: italic;
     font-weight: 600;
 }
 
-[data-scheme="sunset"] nav.tabs a.active {
-    background: var(--color-primary);
-    color: #1c1018;
-    border-bottom-color: transparent;
+[data-scheme="eros-blush"] .picker-select,
+[data-scheme="eros-blush"] .modal-input {
+    padding-inline: 1.1rem;
 }
 
-[data-scheme="sunset"] main h1 {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 10px;
-    background: linear-gradient(120deg, rgba(224, 123, 57, 0.28), rgba(224, 123, 57, 0.05));
+[data-scheme="cupid-velvet"] header.site-header,
+[data-scheme="cupid-velvet"] .page-header {
+    border-bottom: 2px solid color-mix(in srgb, var(--color-primary) 55%, var(--color-border));
+    padding-bottom: 1.25rem;
 }
 
-/* Royal — double-ring framed cards (via --radius/--card-ring), fine
-   hairline lattice, small-caps letter-spaced tabs and headings. */
-[data-scheme="royal"] nav.tabs a {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.78rem;
-}
-
-[data-scheme="royal"] main h1,
-[data-scheme="royal"] main h2 {
-    letter-spacing: 0.03em;
-}
-
-[data-scheme="royal"] main h2 {
-    text-transform: uppercase;
-    font-size: 1.05rem;
-    border-bottom-color: var(--color-primary);
+[data-scheme="cupid-velvet"] header.site-header h1,
+[data-scheme="cupid-velvet"] main h1 {
+    font-style: italic;
+    font-weight: 500;
 }
 
 /* ---------------------------------------------------------------------
@@ -1328,7 +1372,7 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
     justify-content: space-between;
     gap: 16px;
     border-bottom: 2px solid var(--color-border);
-    margin-top: 2.25rem;
+    margin-top: var(--section-gap, 2.25rem);
     padding-bottom: 6px;
 }
 

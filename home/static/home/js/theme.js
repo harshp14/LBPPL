@@ -2,19 +2,44 @@
     var root = document.documentElement;
     var schemeSelect = document.getElementById('scheme-select');
     var leagueSelect = document.getElementById('league-select');
+    var known = {
+        'bronze-night': true,
+        'bronze-day': true,
+        'obsidian-crimson': true,
+        'cool-slate': true,
+        'soft-parchment': true,
+        'eros-blush': true,
+        'cupid-velvet': true
+    };
+    var legacy = {
+        slate: 'cool-slate',
+        crimson: 'obsidian-crimson',
+        ocean: 'bronze-day',
+        forest: 'soft-parchment',
+        sunset: 'cupid-velvet',
+        royal: 'bronze-night'
+    };
+
+    function resolveScheme(scheme) {
+        if (legacy[scheme]) {
+            scheme = legacy[scheme];
+        }
+        return known[scheme] ? scheme : 'bronze-night';
+    }
 
     function applyScheme(scheme) {
+        scheme = resolveScheme(scheme);
         root.setAttribute('data-scheme', scheme);
         if (schemeSelect) {
             schemeSelect.value = scheme;
         }
     }
 
-    applyScheme(root.getAttribute('data-scheme') || 'slate');
+    applyScheme(root.getAttribute('data-scheme') || localStorage.getItem('draftleague-scheme') || 'bronze-night');
 
     if (schemeSelect) {
         schemeSelect.addEventListener('change', function () {
-            var scheme = schemeSelect.value;
+            var scheme = resolveScheme(schemeSelect.value);
             localStorage.setItem('draftleague-scheme', scheme);
             applyScheme(scheme);
         });
