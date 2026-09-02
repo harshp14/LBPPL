@@ -9,14 +9,14 @@
         'cool-slate': true,
         'soft-parchment': true,
         'eros-blush': true,
-        'cupid-velvet': true
+        'cupid-velvet': true,
+        sunset: true
     };
     var legacy = {
         slate: 'cool-slate',
         crimson: 'obsidian-crimson',
         ocean: 'bronze-day',
         forest: 'soft-parchment',
-        sunset: 'cupid-velvet',
         royal: 'bronze-night'
     };
 

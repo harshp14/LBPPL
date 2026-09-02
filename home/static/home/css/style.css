@@ -201,6 +201,35 @@
     --card-ring: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
+:root[data-scheme="sunset"] {
+    /* Dark, warm sunset-through-glass — the original Draft League scheme. */
+    color-scheme: dark;
+    --color-bg: #1c1018;
+    --color-surface: #271521;
+    --color-text: #f7e9e1;
+    --color-text-muted: #cf9f92;
+    --color-border: #422334;
+    --color-primary: #e07b39;
+    --color-primary-dark: #c2621f;
+    --color-danger: #e08a8a;
+    --color-success: #7a9e7e;
+    --color-wash-cool: #a4442a;
+    --shadow: 0 4px 16px rgba(224, 123, 57, 0.22);
+    --color-drafted-bg: #331c2a;
+    --font-heading: "Fredoka", "Segoe UI", sans-serif;
+    --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    --radius: 20px;
+    --radius-control: 999px;
+    --card-padding: 1.5rem 1.75rem;
+    --control-min-height: 2.5rem;
+    --section-gap: 2.25rem;
+    --btn-padding-inline: 1.25rem;
+    --card-border: 2px solid var(--color-primary);
+    --card-accent-border: none;
+    --card-ring: 0 0 0 0 transparent;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -1313,6 +1342,31 @@ table.match-stats-table tbody tr.unused .match-stats-fainted-cell {
 [data-scheme="cupid-velvet"] main h1 {
     font-style: italic;
     font-weight: 500;
+}
+
+[data-scheme="sunset"] body {
+    background-image:
+        repeating-conic-gradient(from 0deg at 50% -30%, rgba(224, 123, 57, 0.16) 0deg 4deg, transparent 4deg 20deg),
+        radial-gradient(circle at 20% 15%, rgba(224, 123, 57, 0.24), transparent 42%),
+        radial-gradient(circle at 80% 20%, rgba(164, 68, 42, 0.24), transparent 45%),
+        radial-gradient(circle at 50% 95%, rgba(58, 26, 58, 0.5), transparent 55%);
+}
+
+[data-scheme="sunset"] nav.tabs a {
+    font-weight: 600;
+}
+
+[data-scheme="sunset"] nav.tabs a.active {
+    background: var(--color-primary);
+    color: var(--color-bg);
+}
+
+[data-scheme="sunset"] header.site-header h1,
+[data-scheme="sunset"] main h1 {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 10px;
+    background: linear-gradient(120deg, rgba(224, 123, 57, 0.28), rgba(224, 123, 57, 0.05));
 }
 
 /* ---------------------------------------------------------------------
