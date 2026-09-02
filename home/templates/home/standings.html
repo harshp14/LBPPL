@@ -1,0 +1,49 @@
+{% extends "home/base.html" %}
+{% block content %}
+<h1>Standings</h1>
+<p>Ranked by wins, then head-to-head, then differential, then fewest losses. Populates as weeks are played.</p>
+
+<div class="card draft-board-card">
+    <div class="draft-board-scroll">
+        <table class="stats-table standings-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>Coach</th>
+                    <th>GP</th>
+                    <th>W</th>
+                    <th>L</th>
+                    <th>Diff</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td class="standings-rank">{{ row.rank }}</td>
+                    <td>
+                        <span class="standings-team">
+                            {% if row.logo %}
+                            <img src="{{ row.logo }}" alt="" class="standings-logo">
+                            {% else %}
+                            <span class="standings-logo standings-logo-placeholder"></span>
+                            {% endif %}
+                            <span>{{ row.team_name }}</span>
+                        </span>
+                    </td>
+                    <td>{{ row.coach_name }}</td>
+                    <td>{{ row.games_played }}</td>
+                    <td class="standings-wins">{{ row.wins }}</td>
+                    <td>{{ row.losses }}</td>
+                    <td class="{% if row.differential > 0 %}standings-diff-pos{% elif row.differential < 0 %}standings-diff-neg{% endif %}">{{ row.differential_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No teams in this league yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

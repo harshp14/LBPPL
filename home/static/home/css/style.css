@@ -582,6 +582,55 @@ table.stats-table th.sortable[aria-sort="descending"]::after {
     opacity: 1;
 }
 
+table.standings-table td:first-child {
+    position: static;
+    background: transparent;
+}
+
+table.standings-table tbody tr:nth-child(even) td:first-child {
+    background: transparent;
+}
+
+.standings-rank {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    width: 1%;
+}
+
+.standings-team {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.standings-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.standings-logo-placeholder {
+    display: inline-block;
+    background: var(--color-bg);
+    border: 1px dashed var(--color-border);
+}
+
+.standings-wins {
+    font-weight: 700;
+}
+
+.standings-diff-pos {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.standings-diff-neg {
+    color: var(--color-text-muted);
+}
+
 .mon-cell {
     display: flex;
     align-items: center;

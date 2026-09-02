@@ -219,6 +219,126 @@ def get_upcoming_games(season):
     return sorted(upcoming, key=lambda m: m["scheduled_day"])
 
 
+def _played_match_result(match):
+    """(winner_coach, loser_coach, margin) for a completed match, or None
+    if it hasn't been played. winner is stored as 'player1'/'player2';
+    margin is the kill differential (always non-negative on the row)."""
+    winner = match.get("winner")
+    if winner not in ("player1", "player2"):
+        return None
+    player1, player2 = match["player1"], match["player2"]
+    margin = match.get("margin") or 0
+    if winner == "player1":
+        return player1, player2, margin
+    return player2, player1, margin
+
+
+def _h2h_wins_among(coaches, results):
+    """Wins each coach has against the others in `coaches` only."""
+    group = set(coaches)
+    wins = {coach: 0 for coach in coaches}
+    for winner, loser in results:
+        if winner in group and loser in group:
+            wins[winner] += 1
+    return wins
+
+
+def _split_by_h2h(group, results):
+    """Break a wins-tied group into subgroups by head-to-head record
+    among those teams, recursing so a remaining subset is ranked only
+    on games they played against each other. Groups H2H cannot split
+    (never played, split series, or a cycle) are returned intact."""
+    if len(group) <= 1:
+        return [group]
+    h2h = _h2h_wins_among([row["coach_name"] for row in group], results)
+    if len(set(h2h.values())) <= 1:
+        return [group]
+    ordered = sorted(group, key=lambda row: h2h[row["coach_name"]], reverse=True)
+    subgroups = []
+    for _, tied in groupby(ordered, key=lambda row: h2h[row["coach_name"]]):
+        subgroups.extend(_split_by_h2h(list(tied), results))
+    return subgroups
+
+
+def _rank_standings(rows, results):
+    """Sort standings rows: most wins, then head-to-head among teams
+    tied on wins, then differential, then fewest losses. Coach name is
+    a final stable key so a total tie doesn't shuffle between requests."""
+    ranked = []
+    by_wins = sorted(rows, key=lambda row: row["wins"], reverse=True)
+    for _, win_group in groupby(by_wins, key=lambda row: row["wins"]):
+        for h2h_group in _split_by_h2h(list(win_group), results):
+            ranked.extend(sorted(
+                h2h_group,
+                key=lambda row: (
+                    -row["differential"],
+                    row["losses"],
+                    row["coach_name"].lower(),
+                ),
+            ))
+    return ranked
+
+
+def _empty_standings_row(coach_name, team_name=None, logo=""):
+    return {
+        "coach_name": coach_name,
+        "team_name": team_name or coach_name,
+        "logo": logo or "",
+        "wins": 0,
+        "losses": 0,
+        "differential": 0,
+    }
+
+
+def compute_standings(teams, matches):
+    """Build ranked standings from roster dicts and schedule match dicts.
+    Unplayed matches are ignored. Coaches who appear in the schedule but
+    not on a roster still get a row. Differential is winner +margin /
+    loser -margin, using each match's stored kill margin."""
+    rows_by_coach = {
+        team["coach_name"]: _empty_standings_row(
+            team["coach_name"], team.get("team_name"), team.get("logo"),
+        )
+        for team in teams
+    }
+    results = []
+    for match in matches:
+        played = _played_match_result(match)
+        if played is None:
+            continue
+        winner, loser, margin = played
+        for name in (winner, loser):
+            if name not in rows_by_coach:
+                rows_by_coach[name] = _empty_standings_row(name)
+        rows_by_coach[winner]["wins"] += 1
+        rows_by_coach[winner]["differential"] += margin
+        rows_by_coach[loser]["losses"] += 1
+        rows_by_coach[loser]["differential"] -= margin
+        results.append((winner, loser))
+
+    ranked = _rank_standings(list(rows_by_coach.values()), results)
+    for rank, row in enumerate(ranked, start=1):
+        row["rank"] = rank
+        row["games_played"] = row["wins"] + row["losses"]
+        diff = row["differential"]
+        row["differential_display"] = f"+{diff}" if diff > 0 else str(diff)
+    return ranked
+
+
+def get_standings(season):
+    """Ranked standings for a season, using that season's rosters and
+    completed regular-season matches. Playoff weeks (label contains
+    'playoff') are excluded so knockout results don't move the table."""
+    teams = get_rosters(season)
+    matches = [
+        match
+        for week in get_schedule(season)
+        for match in week["matches"]
+        if "playoff" not in week["label"].lower()
+    ]
+    return compute_standings(teams, matches)
+
+
 # Every numeric per-Pokemon field the replay parser produces (damage
 # splits, healing, statuses, hazards, boosts, etc.) - kept in sync with
 # the parser instead of duplicated here, so a new tracked stat shows up

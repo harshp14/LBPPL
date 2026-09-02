@@ -135,6 +135,13 @@ def submit_replay(request):
     return redirect(f"{reverse('schedule')}?week={week}&match={match_index}")
 
 
+def standings(request):
+    season = _get_season(request)
+    return render(request, 'home/standings.html', {
+        'rows': data_access.get_standings(season),
+    })
+
+
 def upcoming_games(request):
     season = _get_season(request)
     return render(request, 'home/upcoming_games.html', {

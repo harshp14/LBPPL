@@ -23,6 +23,7 @@
         <a href="{% url 'rosters' %}" class="{% if request.resolver_match.url_name == 'rosters' %}active{% endif %}">Rosters</a>
         <a href="{% url 'draft_board' %}" class="{% if request.resolver_match.url_name == 'draft_board' %}active{% endif %}">Draft Board</a>
         <a href="{% url 'schedule' %}" class="{% if request.resolver_match.url_name == 'schedule' %}active{% endif %}">Schedule</a>
+        <a href="{% url 'standings' %}" class="{% if request.resolver_match.url_name == 'standings' %}active{% endif %}">Standings</a>
         <a href="{% url 'prep_sheet' %}" class="{% if request.resolver_match.url_name == 'prep_sheet' %}active{% endif %}">Prep Sheet</a>
         <a href="{% url 'upcoming_games' %}" class="{% if request.resolver_match.url_name == 'upcoming_games' %}active{% endif %}">Upcoming Games</a>
         <a href="{% url 'playoffs' %}" class="{% if request.resolver_match.url_name == 'playoffs' %}active{% endif %}">Playoffs</a>
