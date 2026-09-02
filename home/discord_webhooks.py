@@ -6,9 +6,8 @@ saved successfully.
 """
 import requests
 
-# Base URL for links back to the site in Discord messages. Update this once
-# the app has a real production domain.
-SITE_BASE_URL = "http://127.0.0.1:8001"
+# Base URL for links back to the site in Discord messages.
+SITE_BASE_URL = "http://147.5.114.148:8000"
 
 # Free agency tracker: posts every drop/pickup move.
 FREE_AGENCY_WEBHOOK_URL = "https://discord.com/api/webhooks/1542556245486075995/UaKu_0Lu6hDDWbLDqMiYaOZFhRkl3T2tP7Ybbj8_q1YuM9sewVFwc1m_Fb8OSEq6h8Dn"
