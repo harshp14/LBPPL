@@ -21,5 +21,6 @@ urlpatterns = [
     path('changelog/', views.changelog, name='changelog'),
     path('api/schedule/', views.schedule_api, name='schedule_api'),
     path('api/upcoming-games/', views.upcoming_games_api, name='upcoming_games_api'),
-    path('api/rosters/', views.rosters_api, name='rosters_api'),
+    path('api/teams/', views.teams_api, name='teams_api'),
+    path('api/roster/', views.roster_api, name='roster_api'),
 ]

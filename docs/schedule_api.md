@@ -111,44 +111,64 @@ Only matches with a proposed `scheduled_day` and no `replay_url` yet appear
 here — once a replay is submitted the match drops out of this list (it still
 shows up in `/api/schedule/`).
 
-## `GET /api/rosters/`
+## `GET /api/teams/`
 
-Every coach's team name and full drafted roster for a season. Pass `coach`
-to get a single team instead of the whole list.
+Every coach's name paired with their team name, for a season.
 
 ### Query parameters
 
-| Param    | Required | Default | Notes                                          |
-|----------|----------|---------|--------------------------------------------------|
-| `season` | No       | `4`     | One of `1`, `2`, `3`, `4`.                      |
-| `coach`  | No       | —       | Case-insensitive exact match on `coach_name`.   |
+| Param    | Required | Default | Notes                      |
+|----------|----------|---------|-----------------------------|
+| `season` | No       | `4`     | One of `1`, `2`, `3`, `4`. |
 
 ### Example requests
 
 ```bash
-curl "http://147.5.114.148:8000/api/rosters/"
-curl "http://147.5.114.148:8000/api/rosters/?season=3"
-curl "http://147.5.114.148:8000/api/rosters/?coach=Harsh"
+curl "http://147.5.114.148:8000/api/teams/"
+curl "http://147.5.114.148:8000/api/teams/?season=3"
 ```
 
 ### Response
 
-Without `coach` — `200 OK` with a JSON array, one entry per team:
+`200 OK` with a JSON array, one entry per team:
 
 ```json
 [
-  {
-    "coach_name": "Harsh",
-    "team_name": "Some Team Name",
-    "logo": "https://.../logo.png",
-    "pokemon": [ { "name": "Landorus-Therian", "points": 20 } ],
-    "free_agents_used": 1
-  }
+  { "coach_name": "Harsh", "team_name": "Mewtiny" }
 ]
 ```
 
-With `coach` — `200 OK` with a single team object (same shape as above, not
-wrapped in an array).
+## `GET /api/roster/`
+
+One coach's full drafted roster for a season. `coach` is required.
+
+### Query parameters
+
+| Param    | Required | Default | Notes                                         |
+|----------|----------|---------|-------------------------------------------------|
+| `season` | No       | `4`     | One of `1`, `2`, `3`, `4`.                     |
+| `coach`  | Yes      | —       | Case-insensitive exact match on `coach_name`.  |
+
+### Example requests
+
+```bash
+curl "http://147.5.114.148:8000/api/roster/?coach=Harsh"
+curl "http://147.5.114.148:8000/api/roster/?coach=Harsh&season=3"
+```
+
+### Response
+
+`200 OK` with a single team object:
+
+```json
+{
+  "coach_name": "Harsh",
+  "team_name": "Mewtiny",
+  "logo": "",
+  "pokemon": [ { "name": "Terapagos", "points": 17 } ],
+  "free_agents_used": 2
+}
+```
 
 - `coach_name` — the coach's name (matches `player1`/`player2` in the
   schedule endpoints).
@@ -165,7 +185,13 @@ wrapped in an array).
 { "error": "Invalid season" }
 ```
 
-`404 Not Found` from `/api/rosters/?coach=...` when no team matches:
+`400 Bad Request` from `/api/roster/` when `coach` is missing:
+
+```json
+{ "error": "coach parameter is required" }
+```
+
+`404 Not Found` from `/api/roster/` when no team matches `coach`:
 
 ```json
 { "error": "Coach not found" }
@@ -174,9 +200,9 @@ wrapped in an array).
 ## Implementation
 
 - Views: [`home/views.py`](../home/views.py) — `schedule_api`,
-  `upcoming_games_api`, `rosters_api`
+  `upcoming_games_api`, `teams_api`, `roster_api`
 - URLs: [`home/urls.py`](../home/urls.py) — `api/schedule/`,
-  `api/upcoming-games/`, `api/rosters/`
+  `api/upcoming-games/`, `api/teams/`, `api/roster/`
 - Data source: `home/data_access.py` — `get_schedule(season)`,
   `get_upcoming_games(season)`, `get_rosters(season)` (same functions the
   site's own pages use)

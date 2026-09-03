@@ -33,21 +33,35 @@ def upcoming_games_api(request):
     return JsonResponse(data_access.get_upcoming_games(season), safe=False)
 
 
-def rosters_api(request):
+def teams_api(request):
     season = request.GET.get('season', DEFAULT_SEASON)
     if season not in VALID_SEASONS:
         return JsonResponse({'error': 'Invalid season'}, status=400)
 
-    teams = data_access.get_rosters(season)
+    teams = [
+        {'coach_name': t['coach_name'], 'team_name': t['team_name']}
+        for t in data_access.get_rosters(season)
+    ]
+    return JsonResponse(teams, safe=False)
+
+
+def roster_api(request):
+    season = request.GET.get('season', DEFAULT_SEASON)
+    if season not in VALID_SEASONS:
+        return JsonResponse({'error': 'Invalid season'}, status=400)
 
     coach = request.GET.get('coach')
-    if coach is not None:
-        team = next((t for t in teams if t['coach_name'].lower() == coach.lower()), None)
-        if team is None:
-            return JsonResponse({'error': 'Coach not found'}, status=404)
-        return JsonResponse(team)
+    if not coach:
+        return JsonResponse({'error': 'coach parameter is required'}, status=400)
 
-    return JsonResponse(teams, safe=False)
+    team = next(
+        (t for t in data_access.get_rosters(season) if t['coach_name'].lower() == coach.lower()),
+        None,
+    )
+    if team is None:
+        return JsonResponse({'error': 'Coach not found'}, status=404)
+
+    return JsonResponse(team)
 
 
 def index(request):
