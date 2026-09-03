@@ -111,17 +111,72 @@ Only matches with a proposed `scheduled_day` and no `replay_url` yet appear
 here — once a replay is submitted the match drops out of this list (it still
 shows up in `/api/schedule/`).
 
+## `GET /api/rosters/`
+
+Every coach's team name and full drafted roster for a season. Pass `coach`
+to get a single team instead of the whole list.
+
+### Query parameters
+
+| Param    | Required | Default | Notes                                          |
+|----------|----------|---------|--------------------------------------------------|
+| `season` | No       | `4`     | One of `1`, `2`, `3`, `4`.                      |
+| `coach`  | No       | —       | Case-insensitive exact match on `coach_name`.   |
+
+### Example requests
+
+```bash
+curl "http://147.5.114.148:8000/api/rosters/"
+curl "http://147.5.114.148:8000/api/rosters/?season=3"
+curl "http://147.5.114.148:8000/api/rosters/?coach=Harsh"
+```
+
+### Response
+
+Without `coach` — `200 OK` with a JSON array, one entry per team:
+
+```json
+[
+  {
+    "coach_name": "Harsh",
+    "team_name": "Some Team Name",
+    "logo": "https://.../logo.png",
+    "pokemon": [ { "name": "Landorus-Therian", "points": 20 } ],
+    "free_agents_used": 1
+  }
+]
+```
+
+With `coach` — `200 OK` with a single team object (same shape as above, not
+wrapped in an array).
+
+- `coach_name` — the coach's name (matches `player1`/`player2` in the
+  schedule endpoints).
+- `team_name` — display name for the team, or `null` if unset.
+- `logo` — logo URL/path, or `""` if unset.
+- `pokemon` — the coach's full drafted roster, each entry `{name, points}`.
+- `free_agents_used` — count of free-agency pickups made this season.
+
 ## Errors
 
-`400 Bad Request` for an unrecognized `season`, from either endpoint:
+`400 Bad Request` for an unrecognized `season`, from any endpoint:
 
 ```json
 { "error": "Invalid season" }
 ```
 
+`404 Not Found` from `/api/rosters/?coach=...` when no team matches:
+
+```json
+{ "error": "Coach not found" }
+```
+
 ## Implementation
 
-- Views: [`home/views.py`](../home/views.py) — `schedule_api`, `upcoming_games_api`
-- URLs: [`home/urls.py`](../home/urls.py) — `api/schedule/`, `api/upcoming-games/`
-- Data source: `home/data_access.py` — `get_schedule(season)` and
-  `get_upcoming_games(season)` (same functions the site's own pages use)
+- Views: [`home/views.py`](../home/views.py) — `schedule_api`,
+  `upcoming_games_api`, `rosters_api`
+- URLs: [`home/urls.py`](../home/urls.py) — `api/schedule/`,
+  `api/upcoming-games/`, `api/rosters/`
+- Data source: `home/data_access.py` — `get_schedule(season)`,
+  `get_upcoming_games(season)`, `get_rosters(season)` (same functions the
+  site's own pages use)
