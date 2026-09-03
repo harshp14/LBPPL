@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -14,6 +15,14 @@ DEFAULT_SEASON = '4'
 def _get_season(request):
     season = request.COOKIES.get('draftleague-season')
     return season if season in VALID_SEASONS else DEFAULT_SEASON
+
+
+def schedule_api(request):
+    season = request.GET.get('season', DEFAULT_SEASON)
+    if season not in VALID_SEASONS:
+        return JsonResponse({'error': 'Invalid season'}, status=400)
+
+    return JsonResponse(data_access.get_schedule(season), safe=False)
 
 
 def index(request):
