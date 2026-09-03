@@ -20,4 +20,5 @@ urlpatterns = [
     path('free-agency-tracker/submit/', views.submit_free_agency, name='submit_free_agency'),
     path('changelog/', views.changelog, name='changelog'),
     path('api/schedule/', views.schedule_api, name='schedule_api'),
+    path('api/upcoming-games/', views.upcoming_games_api, name='upcoming_games_api'),
 ]

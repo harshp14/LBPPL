@@ -25,6 +25,14 @@ def schedule_api(request):
     return JsonResponse(data_access.get_schedule(season), safe=False)
 
 
+def upcoming_games_api(request):
+    season = request.GET.get('season', DEFAULT_SEASON)
+    if season not in VALID_SEASONS:
+        return JsonResponse({'error': 'Invalid season'}, status=400)
+
+    return JsonResponse(data_access.get_upcoming_games(season), safe=False)
+
+
 def index(request):
     season = _get_season(request)
     return render(request, 'home/index.html', {
